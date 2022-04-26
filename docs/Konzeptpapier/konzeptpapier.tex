@@ -12,38 +12,56 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Konzeptpapier\\Graphvio}
+\title{Konzeptpapier\\Twitter-Dash}
 
 % Authoren	
 \author{
-	\IEEEauthorblockN{Kreussel Lukas}
-	\IEEEauthorblockA{
-		\textit{l.kreussel@oth-aw.de}\\
-	}
-	\and
+        \IEEEauthorblockN{Hahn Bastian}
+        \IEEEauthorblockA{
+                \textit{b.hahn@oth-aw.de}\\
+        }
+        \and
 
-	\IEEEauthorblockN{Ziegler Andreas}
-	\IEEEauthorblockA{
-		\textit{a.ziegler1@oth-aw.de}\\
-	}
+        \IEEEauthorblockN{Kleber Martin}
+        \IEEEauthorblockA{
+                \textit{m.kleber2@oth-aw.de}\\
+        }
+        \and
+
+        \IEEEauthorblockN{Klier Andreas}
+        \IEEEauthorblockA{
+                \textit{a.klier@oth-aw.de}\\
+        }
+        \and
+
+        \IEEEauthorblockN{Kreussel Lukas}
+        \IEEEauthorblockA{
+                \textit{l.kreussel@oth-aw.de}\\
+        }
+        \and
+
+        \IEEEauthorblockN{Paris Felix}
+        \IEEEauthorblockA{
+                \textit{f.paris@oth-aw.de}\\
+        }
+        \and
+
+        \IEEEauthorblockN{Ziegler Andreas}
+        \IEEEauthorblockA{
+                \textit{a.ziegler1@oth-aw.de}\\
+        }
 }
 
 \maketitle
 
 \begin{abstract}
-	Ziel des Papers ist es, Filmdatenbanken durchsuchbar zu machen, um Informationen über Filme zu erhalten.
+        Ziel des Papers ist es, Filmdatenbanken durchsuchbar zu machen, um Informationen über Filme zu erhalten.
 \end{abstract}
 
 
 \section{Einführung}
 
-Die Filmbranche ist eine der größten Unterhaltungsindustrien und produzieren eine Vielzahl von Filmmaterial.
-Dadurch ist es schwer einen Überblick über alle verfügbaren Filme zu behalten.
-Somit werden Filme nur über aktuelle Werbung oder in Gesprächen mit anderen Menschen bekannt.
-Um diese beschränkten Möglichkeiten der Filmsuche zu erweitern gibt es Online-Filmdatenbanken und Filmempfehlungssysteme.
-Das Projekt ist Teil der Vorlesung "Semantic Web Technologien" an der OTH Amberg-Weiden und soll Filmdatenbanken einfach in mehreren Richtungen durchsuchbar machen.
-Dazu sollen, ausgehend von Filmen, Rückschlüsse auf Mitwirkende und umgekehrt gezogen werden können, um Informationen über diese zu erhalten.
-Weiterhin sollen die Datenbanken mit Filtern durchsuchbar sein, um Filmvorschläge finden zu können.
+%% TODO
 
 
 
@@ -68,14 +86,14 @@ weil ich Metadaten zu diesem Film erhalten möchte.
 \\
 Als Metadaten gelten:
 \begin{itemize}
-	\item Titel
-	\item Streamingdienstanbieter
-	\item Release Year
-	\item IMDB-Rating
-	\item Runtime
-	\item Typ (Film / Serie)
-	\item FSK
-	\item Genre
+        \item Titel
+        \item Streamingdienstanbieter
+        \item Release Year
+        \item IMDB-Rating
+        \item Runtime
+        \item Typ (Film / Serie)
+        \item FSK
+        \item Genre
 \end{itemize}
 
 
@@ -87,19 +105,19 @@ um nach diesen zu suchen.
 Als Filmmitwirkende gelten:
 
 \begin{itemize}
-	\item Regisseur
-	\item Komponist
-	\item Schauspieler
-	\item Kinematograph
+        \item Regisseur
+        \item Komponist
+        \item Schauspieler
+        \item Kinematograph
 \end{itemize}
 
 Als Informationen gelten:
 
 \begin{itemize}
-	\item Name
-	\item Geschlecht
-	\item Alter
-	\item Nationalität
+        \item Name
+        \item Geschlecht
+        \item Alter
+        \item Nationalität
 \end{itemize}
 
 \subsection{Anforderung 3}
@@ -136,12 +154,16 @@ Als Filmliebhaber möchte ich Suchergebnisse nach Kriterien sortieren können.
 Als Kriterien gelten:
 
 \begin{itemize}
-	\item Erscheinungsdatum
-	\item Rating
-	\item Runtime
+        \item Erscheinungsdatum
+        \item Rating
+        \item Runtime
 \end{itemize}
 
 \section{Methoden}
+
+\subsection*{Datenaquise}
+
+Abfragen der Daten durch die offizielle API von Twitter.
 
 \subsection*{Über die Daten}
 
@@ -158,11 +180,11 @@ Für die Interaktion mit dem Benutzer wird React verwendet. Über eine REST-Schn
 %\section*{Referenzen}
 
 \begin{thebibliography}{0}
-	\bibitem{cinemate}Cinemate [Online] \url{https://cinemate.me/} (visited on Nov. 15, 2021)
-	\bibitem{pickamovieforme}Pickamovieforme [Online] \url{https://pickamovieforme.com/} (visited on Nov. 15, 2021)
-	\bibitem{bestsimilar}Bestsimilar [Online] \url{https://bestsimilar.com/} (visited on Nov. 15, 2021)
-	\bibitem{tastedive}Tastedive [Online] \url{https://tastedive.com/movies} (visited on Nov. 15, 2021)
-	\bibitem{MovieGEN}MovieGEN [Online] \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.703.4954\&rep=rep1\&type=pdf} (visited on Nov. 15, 2021)
+        \bibitem{cinemate}Cinemate [Online] \url{https://cinemate.me/} (visited on Nov. 15, 2021)
+        \bibitem{pickamovieforme}Pickamovieforme [Online] \url{https://pickamovieforme.com/} (visited on Nov. 15, 2021)
+        \bibitem{bestsimilar}Bestsimilar [Online] \url{https://bestsimilar.com/} (visited on Nov. 15, 2021)
+        \bibitem{tastedive}Tastedive [Online] \url{https://tastedive.com/movies} (visited on Nov. 15, 2021)
+        \bibitem{MovieGEN}MovieGEN [Online] \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.703.4954\&rep=rep1\&type=pdf} (visited on Nov. 15, 2021)
 \end{thebibliography}
 \vspace{12pt}
 
