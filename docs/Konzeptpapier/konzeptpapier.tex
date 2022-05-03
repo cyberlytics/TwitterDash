@@ -55,7 +55,7 @@
 \maketitle
 
 \begin{abstract}
-        Ziel des Papers ist es, Filmdatenbanken durchsuchbar zu machen, um Informationen über Filme zu erhalten.
+        Ziel des Projekts ist es, ein Dashboard zu erstellen, welches Live-Informationen von der Twitter-API abruft und diese visualisiert.
 \end{abstract}
 
 
@@ -67,97 +67,121 @@
 
 
 
-\section{Verwandte Arbeiten}
+% \section{Verwandte Arbeiten}
 
-Nachdem in der Einleitung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt.
-Es gibt bereits eine große Anzahl an Systemen, die einen gewünschten Film vorschlagen können. Diese Systeme kommen jedoch alle mit gewissen Einschränkungen.
-Bei \cite{cinemate} werden Filme aufgrund einer eingegebenen Liste von Filmen vorgeschlagen.
-Mit einem Fragenkatalog über Anlass und Stimmung wird bei \cite{pickamovieforme} ein kleiner Datensatz nach einem Vorschlag durchsucht.
-Für Informationen und ähnliche Filme in der gleichen Kategorie kann in der Anwendung von \cite{bestsimilar} gesucht werden.
-Aktuelle Filme werden bei \cite{tastedive} vorgeschlagen.
-Einen genaueren Ansatz versucht \cite{MovieGEN} umzusetzen, bei dem die Vorlieben der Nutzer über Machine Learning und Clusteranalyse verglichen werden, um eine Filmauswahl zu treffen.
 
 \section{Anforderungen}
 
 \subsection{Anforderung 1}
-\label{1}
-Als Filmliebhaber möchte ich einen Film anhand des Titels suchen können,
-weil ich Metadaten zu diesem Film erhalten möchte.
+Als Twitter-Nutzer möchte ich die Hashtags sehen, die aktuell auf Twitter trenden,
+weil ich einen Überblick über das aktuelle Geschehen auf Twitter erhalten will.
 \\
-Als Metadaten gelten:
+AZK:
 \begin{itemize}
-        \item Titel
-        \item Streamingdienstanbieter
-        \item Release Year
-        \item IMDB-Rating
-        \item Runtime
-        \item Typ (Film / Serie)
-        \item FSK
-        \item Genre
+        \item Twitter-API Call
+        \item Aufbereitung der Daten durch Backend
+        \item Noch keine Persistenz
+        \item Anzeige auf Tabelle in Webseite
 \end{itemize}
-
 
 \subsection{Anforderung 2}
 \label{2}
-Als Filmliebhaber möchte ich Informationen über Filmmitwirkende angeben können,
-um nach diesen zu suchen.
+Als Twitter-Nutzer möchte ich den zeitlichen Verlauf über ein ausgewähltes Hashtag sehen,
+weil mich die Relevanz eines bestimmten Ereignissen interessiert.
 \\
-Als Filmmitwirkende gelten:
-
+AZK:
 \begin{itemize}
-        \item Regisseur
-        \item Komponist
-        \item Schauspieler
-        \item Kinematograph
-\end{itemize}
-
-Als Informationen gelten:
-
-\begin{itemize}
-        \item Name
-        \item Geschlecht
-        \item Alter
-        \item Nationalität
+        \item Datenhaltung in Datenbank
+        \item Periodische (mind.\ 15 min) Abfrage der Twitter-Daten durch Backend und Speicherung
+        \item Angabe von Hashtag und Zeitrahmen
+        \item Abfrage der Daten aus Datenbank
+        \item Anzeige in Diagramm
 \end{itemize}
 
 \subsection{Anforderung 3}
-
-Als Filmliebhaber möchte ich eine Liste von Filmen angeben können
-und gemeinsame Merkmale dieser erhalten.
-
-Als Merkmale gelten:
+Als Twitter-Nutzer möchte ich auch den zeitlichen Verlauf über mehrere ausgewählte Hashtags sehen,
+weil mich die Relevanz von mehreren Ereignissen interessiert.
 \\
-Siehe Informationen aus Anforderung \ref{1} und \ref{2}.
+AZK:
+\begin{itemize}
+        \item Auswahl mehrere Hashtags
+        \item Ablauf wie in \ref*{2}
+\end{itemize}
 
 \subsection{Anforderung 4}
-
-Als Filmliebhaber möchte ich eine Liste von Filmen angeben können,
-um ähnliche Filme vom System vorgeschlagen zu bekommen.
-
+Als Twitter-Nutzer möchte ich auch nicht durch Hashtags explizit definierte Topics erkennen können,
+weil ich einen Überblick über alle diskutierten Themen haben möchte.
+\\
+AZK:
+\begin{itemize}
+        \item Gruppierung aller Tweets der letzten Periode von der Twitter-API
+        \item Analyse der Tweets mit Topic-Model
+        \item Datenhaltung der gefundenen Topics in Datenbank
+        \item Anzeige der Topics auf Webseite
+\end{itemize}
 
 \subsection{Anforderung 5}
-Als Filmliebhaber möchte ich Informationen über Filmmitwirkende angeben können,
-um nach Filmen zu suchen.
+Als Twitter-Nutzer möchte ich die aktuelle Stimmung zu einem Thema sehen,
+weil ich das Sentiment zu einem bestimmten Thema haben möchte.
+\\
+AZK:
+\begin{itemize}
+        \item Gruppierung der Tweets der letzten Zeitperiode nach Hashtag
+        \item Analyse der Tweets mit Sentiment-Analyse
+        \item Datenhaltung des Sentiments in Datenbank
+        \item Anzeige des Sentiments auf Webseite
+\end{itemize}
 
 \subsection{Anforderung 6}
-
-Als Filmliebhaber möchte ich Filme aufgrund von gesetzten Filtern erhalten.
-
-Als Filter gelten:
-\\
-Siehe Metadaten \ref{1}
+Als Twitter-Nutzer möchte ich einen Tweet angeben können um alle verwandten Informationen dazu sehen zu können.
+Als verwandte Informationen gelten:
+\begin{itemize}
+        \item Zeitlicher Verlauf der im Tweet enthaltenen Hashtags
+        \item Sentiment
+        \item Topics
+\end{itemize}
+AZK:
+\begin{itemize}
+        \item Eingabefeld für URL des Tweets
+        \item Abfrage des Tweets über Twitter-API
+        \item Sentiment-Analyse des Tweets
+        \item Anzeige der verwandten Informationen
+\end{itemize}
 
 \subsection{Anforderung 7}
-
-Als Filmliebhaber möchte ich Suchergebnisse nach Kriterien sortieren können.
+Als Twitter-Nutzer möchte ich sehen,
+welche Hashtags besonders oft mit einem ausgewähltem Hashtag zusammen vorkommen,
+weil mich der Zusammenhang mit anderen Themen interessiert.
 \\
-Als Kriterien gelten:
-
+AZK:
 \begin{itemize}
-        \item Erscheinungsdatum
-        \item Rating
-        \item Runtime
+        \item Gruppierung der Tweets der letzten Periode nach Hashtag
+        \item Zählen der Hashtags der gruppierten Tweets
+        \item Datenhaltung der Hashtag-Beziehungspaare
+        \item Eingabefeld für Hashtag
+        \item Abfrage von Daten aus Datenbank
+        \item Anzeige der verwandten Informationen
 \end{itemize}
+
+\subsection{Anforderung 8}
+Als Twitter-Nutzer möchte ich Twitter-Benutzer abrufen können,
+um deren Metadaten angezeigt zu bekommen.
+\\
+Als Metadaten gelten:
+\begin{itemize}
+        \item Follower
+        \item Tweets
+        \item Engagement
+        \item Activity
+\end{itemize}
+AZK:
+\begin{itemize}
+        \item Eingabefeld für Twitter-Benutzer
+        \item Abfrage der Nutzerdaten von Twitter-API
+        \item Aufbereitung der Metadaten des Benutzers
+        \item Anzeige der Metadaten des Benutzers
+\end{itemize}
+
 
 \section{Methoden}
 
