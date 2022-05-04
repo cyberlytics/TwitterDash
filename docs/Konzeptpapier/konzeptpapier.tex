@@ -63,13 +63,13 @@
 
 %% TODO
 Twitter ist eine der populärsten Informationsquellen im Internet.
-Auf dieser Seite werden täglich eine halbe Milliarden Kurznachrichten\cite{Tweetstatistiken}, sog. Tweets veröffentlicht.
+Auf dieser Seite werden täglich eine halbe Milliarde Kurznachrichten \cite{Tweetstatistiken}, sog. Tweets veröffentlicht.
 Eine solche Kurznachricht hat dabei eine Länge von maximal 280 Zeichen.
 Diese Tweets reichen von lustigen Bildern bis zur Verkündigung von politischen Entscheidungen, zum Beispiel des ehemaligen US-Präsidenten Donald Trump.
 Die schiere Masse an Daten macht es fast unmöglich einen Überblick zu behalten.
-Unter Zuhilfenahme von verschiedenen Maschine-Learning Verfahren können diese aber analysiert werden und interessante Informationen extrahiert werden, beispielsweise der zeitlich Verlauf mit welcher Intensität bestimmte Themen diskutiert wurden.
+Unter Zuhilfenahme von verschiedenen Maschine-Learning Verfahren können diese aber analysiert werden und interessante Informationen extrahiert werden, beispielsweise der zeitliche Verlauf mit welcher Intensität bestimmte Themen diskutiert wurden.
 In diesem Projekt soll ein Dashboard erstellt werden, welches die Tweets ausliest und Informationen zu diesen visualisiert.
-Das Projekt ist Teil der Vorlesung ”Big Data und Cloud-basiertes Computing” an der OTH Amberg-Weiden.
+Das Projekt ist Teil der Vorlesung „Big Data und Cloud-basiertes Computing“ an der OTH Amberg-Weiden.
 
 
 \section{Verwandte Arbeiten}
@@ -81,13 +81,13 @@ Bei der Profil-Analyse wird das Profil eines angegebenen Twitter-Accounts ausgew
 Dabei werden vor allem persönliche Informationen und die Interaktionen mit anderen Accounts ausgewertet.
 Ein Beispiel für eine solche Plattform ist \textit{tweetdeck}\cite{tweetdeck}.
 \subsubsection*{Trend Verlauf}
-Bei der Trend Verlauf Analyse wird der zeitliche Verlauf eines bestimmten Themas ausgewertet. Ein Beispiel für eine solche Plattform ist \textit{trends24}\cite{trends24}.  
+Bei der Trend Verlauf Analyse wird der zeitliche Verlauf eines bestimmten Themas ausgewertet. Ein Beispiel für eine solche Plattform ist \textit{trends24}\cite{trends24}.
 \subsubsection*{Hashtag-Analyse}
-Bei der Hashtag-Analyse wird die Interaktion von Nutzern mit einem Themenfeldern ausgewertet.
-Ein Beispiel für eine solche Plattform ist \textit{trackmyhashtag}\cite{trackmyhashtag}.  
+Bei der Hashtag-Analyse wird die Interaktion von Nutzern mit einem Themenfeld ausgewertet.
+Ein Beispiel für eine solche Plattform ist \textit{trackmyhashtag}\cite{trackmyhashtag}.
 \subsection{Vorgeschlagene Umsetzung}
 Unsere Umsetzung setzt eigene Schwerpunkte, welche in den Anforderungen definiert werden.
-Dabei werden die drei genannten Analysegebiete gestreift, wenn auch unterschiedlich stark. 
+Dabei werden die drei genannten Analysegebiete gestreift, wenn auch unterschiedlich stark.
 \section{Anforderungen}
 
 \subsection{Anforderung 1}
@@ -105,7 +105,7 @@ AK:
 \subsection{Anforderung 2}
 \label{2}
 Als Twitter-Nutzer möchte ich den zeitlichen Verlauf über ein ausgewähltes Hashtag sehen,
-weil mich die Relevanz eines bestimmten Ereignissen interessiert.
+weil mich die Relevanz eines bestimmten Ereignisses interessiert.
 \\
 AK:
 \begin{itemize}
@@ -205,19 +205,19 @@ AK:
 
 \subsection*{Datenakquise}
 
-Abfragen der Daten durch die offizielle API von Twitter oder durch Web-scraper.
+Abfragen der Daten durch die offizielle API von Twitter oder durch Web-Scraper.
 
 \subsection*{Datenfluss}
-Die Daten werden von einem oder mehreren Scraper- oder Api-Containern erzeugt und von einem oder mehreren Backend-Containern verarbeitet.
+Die Daten werden von einem oder mehreren Scraper- oder API-Containern erzeugt und von einem oder mehreren Backend-Containern verarbeitet.
 Diese Daten werden in einer Datenbank gespeichert, die Original Daten werden dabei nicht persistiert.
 Auf der Website werden die aus den Daten erhaltenen Informationen angezeigt.
-Der Datenfluss erfolgt dabei nach einem Push-Prinzip, das bedeutet, dass die Daten alle X Minuten (mind. 15 Min) neu von der Api abgefragt und verarbeitet werden.
+Der Datenfluss erfolgt dabei nach einem Push-Prinzip, das bedeutet, dass die Daten alle X Minuten (mind. 15 Min) neu von der API abgefragt und verarbeitet werden.
 
 \subsection*{Backend}
 
-Als Backend werden mehrere Docker-Container verwendet, dabei werden für die Datenakquise .NET 6 Container verwendet. Die Verarbeitung der Daten erfolgt über Python basierte Container, welche verschiedenste Python-Module und Funktionen verwenden.
+Als Backend werden mehrere Docker-Container verwendet, dabei werden für die Datenakquise .NET 6 Container verwendet. Die Verarbeitung der Daten erfolgt über Python-basierte Container, welche verschiedenste Python-Module und Funktionen verwenden.
 Die Kommunikation zwischen den Containern erfolgt über gRPC.
-Falls nötig kann ein Load-Balancer auf Basis von Kubernetes verwendet werden. 
+Falls nötig kann ein Load-Balancer auf Basis von Kubernetes verwendet werden.
 
 \subsection*{Datenbank}
 Zur Speicherung der Daten wird PostgreSQL verwendet.
