@@ -42,7 +42,7 @@
 
         \IEEEauthorblockN{Paris Felix}
         \IEEEauthorblockA{
-                \textit{f.paris@oth-aw.de}\\
+                \textit{f.paris1@oth-aw.de}\\
         }
         \and
 
@@ -62,21 +62,39 @@
 \section{Einführung}
 
 %% TODO
+Twitter ist eine der populärsten Informationsquellen im Internet.
+Auf dieser Seite werden täglich eine halbe Milliarden Kurznachrichten\cite{Tweetstatistiken}, sog. Tweets veröffentlicht.
+Eine solche Kurznachricht hat dabei eine Länge von maximal 280 Zeichen.
+Diese Tweets reichen von lustigen Bildern bis zur Verkündigung von politischen Entscheidungen, zum Beispiel des ehemaligen US-Präsidenten Donald Trump.
+Die schiere Masse an Daten macht es fast unmöglich einen Überblick zu behalten.
+Unter Zuhilfenahme von verschiedenen Maschine-Learning Verfahren können diese aber analysiert werden und interessante Informationen extrahiert werden, beispielsweise der zeitlich Verlauf mit welcher Intensität bestimmte Themen diskutiert wurden.
+In diesem Projekt soll ein Dashboard erstellt werden, welches die Tweets ausliest und Informationen zu diesen visualisiert.
+Das Projekt ist Teil der Vorlesung ”Big Data und Cloud-basiertes Computing” an der OTH Amberg-Weiden.
 
 
-
-
-
-% \section{Verwandte Arbeiten}
-
-
+\section{Verwandte Arbeiten}
+Nachdem in der Einleitung bereits die Motivation erläutert wurde, werden in diesem Abschnitt verwandte Arbeiten vorgestellt.
+Es gibt bereits mehrere Systeme, welche sich mit der Analyse von Twitter-Daten beschäftigen.
+Diese Angebote lassen sich in drei unterschiedliche Gruppierungen einordnen:
+\subsubsection*{Profil-Analyse}
+Bei der Profil-Analyse wird das Profil eines angegebenen Twitter-Accounts ausgewertet.
+Dabei werden vor allem persönliche Informationen und die Interaktionen mit anderen Accounts ausgewertet.
+Ein Beispiel für eine solche Plattform ist \textit{tweetdeck}\cite{tweetdeck}.
+\subsubsection*{Trend Verlauf}
+Bei der Trend Verlauf Analyse wird der zeitliche Verlauf eines bestimmten Themas ausgewertet. Ein Beispiel für eine solche Plattform ist \textit{trends24}\cite{trends24}.  
+\subsubsection*{Hashtag-Analyse}
+Bei der Hashtag-Analyse wird die Interaktion von Nutzern mit einem Themenfeldern ausgewertet.
+Ein Beispiel für eine solche Plattform ist \textit{trackmyhashtag}\cite{trackmyhashtag}.  
+\subsection{Vorgeschlagene Umsetzung}
+Unsere Umsetzung setzt eigene Schwerpunkte, welche in den Anforderungen definiert werden.
+Dabei werden die drei genannten Analysegebiete gestreift, wenn auch unterschiedlich stark. 
 \section{Anforderungen}
 
 \subsection{Anforderung 1}
 Als Twitter-Nutzer möchte ich die Hashtags sehen, die aktuell auf Twitter trenden,
 weil ich einen Überblick über das aktuelle Geschehen auf Twitter erhalten will.
 \\
-AZK:
+AK:
 \begin{itemize}
         \item Twitter-API Call
         \item Aufbereitung der Daten durch Backend
@@ -89,7 +107,7 @@ AZK:
 Als Twitter-Nutzer möchte ich den zeitlichen Verlauf über ein ausgewähltes Hashtag sehen,
 weil mich die Relevanz eines bestimmten Ereignissen interessiert.
 \\
-AZK:
+AK:
 \begin{itemize}
         \item Datenhaltung in Datenbank
         \item Periodische (mind.\ 15 min) Abfrage der Twitter-Daten durch Backend und Speicherung
@@ -102,7 +120,7 @@ AZK:
 Als Twitter-Nutzer möchte ich auch den zeitlichen Verlauf über mehrere ausgewählte Hashtags sehen,
 weil mich die Relevanz von mehreren Ereignissen interessiert.
 \\
-AZK:
+AK:
 \begin{itemize}
         \item Auswahl mehrere Hashtags
         \item Ablauf wie in \ref*{2}
@@ -112,7 +130,7 @@ AZK:
 Als Twitter-Nutzer möchte ich auch nicht durch Hashtags explizit definierte Topics erkennen können,
 weil ich einen Überblick über alle diskutierten Themen haben möchte.
 \\
-AZK:
+AK:
 \begin{itemize}
         \item Gruppierung aller Tweets der letzten Periode von der Twitter-API
         \item Analyse der Tweets mit Topic-Model
@@ -124,7 +142,7 @@ AZK:
 Als Twitter-Nutzer möchte ich die aktuelle Stimmung zu einem Thema sehen,
 weil ich das Sentiment zu einem bestimmten Thema haben möchte.
 \\
-AZK:
+AK:
 \begin{itemize}
         \item Gruppierung der Tweets der letzten Zeitperiode nach Hashtag
         \item Analyse der Tweets mit Sentiment-Analyse
@@ -140,7 +158,7 @@ Als verwandte Informationen gelten:
         \item Sentiment
         \item Topics
 \end{itemize}
-AZK:
+AK:
 \begin{itemize}
         \item Eingabefeld für URL des Tweets
         \item Abfrage des Tweets über Twitter-API
@@ -153,7 +171,7 @@ Als Twitter-Nutzer möchte ich sehen,
 welche Hashtags besonders oft mit einem ausgewähltem Hashtag zusammen vorkommen,
 weil mich der Zusammenhang mit anderen Themen interessiert.
 \\
-AZK:
+AK:
 \begin{itemize}
         \item Gruppierung der Tweets der letzten Periode nach Hashtag
         \item Zählen der Hashtags der gruppierten Tweets
@@ -174,7 +192,7 @@ Als Metadaten gelten:
         \item Engagement
         \item Activity
 \end{itemize}
-AZK:
+AK:
 \begin{itemize}
         \item Eingabefeld für Twitter-Benutzer
         \item Abfrage der Nutzerdaten von Twitter-API
@@ -185,30 +203,37 @@ AZK:
 
 \section{Methoden}
 
-\subsection*{Datenaquise}
+\subsection*{Datenakquise}
 
-Abfragen der Daten durch die offizielle API von Twitter.
+Abfragen der Daten durch die offizielle API von Twitter oder durch Web-scraper.
 
-\subsection*{Über die Daten}
-
-In einer lokalen Graphdatenbank werden die aktuellen Filme und Serien diverser Streaminganbieter (Netflix, Amazon Prime, Hulu, Disney+) abgespeichert. Außerdem werden diese durch Informationen aus der IMDB (Internet Movie Database) ergänzt. Mithilfe dieses Datenbestandes soll es möglich sein, komplexe Abfragen zu formulieren. Durch den SPARQL-Endpoint der DBpedia ist der Zugriff auf weitere Details möglich.
+\subsection*{Datenfluss}
+Die Daten werden von einem oder mehreren Scraper- oder Api-Containern erzeugt und von einem oder mehreren Backend-Containern verarbeitet.
+Diese Daten werden in einer Datenbank gespeichert, die Original Daten werden dabei nicht persistiert.
+Auf der Website werden die aus den Daten erhaltenen Informationen angezeigt.
+Der Datenfluss erfolgt dabei nach einem Push-Prinzip, das bedeutet, dass die Daten alle X Minuten (mind. 15 Min) neu von der Api abgefragt und verarbeitet werden.
 
 \subsection*{Backend}
 
-Als Backend wird ASP.NET Core verwendet. Dieses von Microsoft entwickelte Framework hat sich in der Welt der Microservices in den letzten Jahren etabliert. Über noch nicht definierte Graph Query Languages soll auf die verwendete Graphdatenbank bzw. DBpedia zugegriffen werden können, um Informationen zu den Filmen und Schauspielern auszulesen.
+Als Backend werden mehrere Docker-Container verwendet, dabei werden für die Datenakquise .NET 6 Container verwendet. Die Verarbeitung der Daten erfolgt über Python basierte Container, welche verschiedenste Python-Module und Funktionen verwenden.
+Die Kommunikation zwischen den Containern erfolgt über gRPC.
+Falls nötig kann ein Load-Balancer auf Basis von Kubernetes verwendet werden. 
+
+\subsection*{Datenbank}
+Zur Speicherung der Daten wird PostgreSQL verwendet.
 
 \subsection*{Frontend}
 
-Für die Interaktion mit dem Benutzer wird React verwendet. Über eine REST-Schnittstelle des Backends kann auf benötigte Informationen zugegriffen werden.
+Für die Interaktion mit dem Benutzer wird React verwendet.
+Über eine REST-Schnittstelle des Backends kann auf benötigte Informationen zugegriffen werden.
 
 %\section*{Referenzen}
 
 \begin{thebibliography}{0}
-        \bibitem{cinemate}Cinemate [Online] \url{https://cinemate.me/} (visited on Nov. 15, 2021)
-        \bibitem{pickamovieforme}Pickamovieforme [Online] \url{https://pickamovieforme.com/} (visited on Nov. 15, 2021)
-        \bibitem{bestsimilar}Bestsimilar [Online] \url{https://bestsimilar.com/} (visited on Nov. 15, 2021)
-        \bibitem{tastedive}Tastedive [Online] \url{https://tastedive.com/movies} (visited on Nov. 15, 2021)
-        \bibitem{MovieGEN}MovieGEN [Online] \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.703.4954\&rep=rep1\&type=pdf} (visited on Nov. 15, 2021)
+        \bibitem{trends24}trends24 [Online] \url{https://trends24.in/germany/} (visited on \today)
+        \bibitem{tweetdeck}tweetdeck [Online] \url{https://tweetdeck.twitter.com/} (visited on \today)
+        \bibitem{trackmyhashtag}trackmyhashtag [Online] \url{https://www.trackmyhashtag.com/} (visited on \today)
+        \bibitem{Tweetstatistiken} [Online] \url{https://www.brandwatch.com/de/blog/twitter-statistiken/#:~:text=Zahlen%20zur%20Twitter%2DNutzung,sind%206.000%20Tweets%20pro%20Sekunde.} (visited on \today)
 \end{thebibliography}
 \vspace{12pt}
 
