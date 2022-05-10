@@ -67,7 +67,7 @@ Auf dieser Seite werden täglich eine halbe Milliarde Kurznachrichten \cite{Twee
 Eine solche Kurznachricht hat dabei eine Länge von maximal 280 Zeichen.
 Diese Tweets reichen von lustigen Bildern bis zur Verkündigung von politischen Entscheidungen, zum Beispiel des ehemaligen US-Präsidenten Donald Trump.
 Die schiere Masse an Daten macht es fast unmöglich einen Überblick zu behalten.
-Unter Zuhilfenahme von verschiedenen Maschine-Learning Verfahren können diese aber analysiert werden und interessante Informationen extrahiert werden, beispielsweise der zeitliche Verlauf mit welcher Intensität bestimmte Themen diskutiert wurden.
+Unter Zuhilfenahme von verschiedenen Maschine-Learning Verfahren können diese aber analysiert und interessante Informationen extrahiert werden, beispielsweise der zeitliche Verlauf mit welcher Intensität bestimmte Themen diskutiert wurden.
 In diesem Projekt soll ein Dashboard erstellt werden, welches die Tweets ausliest und Informationen zu diesen visualisiert.
 Das Projekt ist Teil der Vorlesung „Big Data und Cloud-basiertes Computing“ an der OTH Amberg-Weiden.
 
@@ -94,7 +94,7 @@ Dabei werden die drei genannten Analysegebiete gestreift, wenn auch unterschiedl
 Als Twitter-Nutzer möchte ich die Hashtags sehen, die aktuell auf Twitter trenden,
 weil ich einen Überblick über das aktuelle Geschehen auf Twitter erhalten will.
 \\
-AK:
+Akzeptanzkriterien:
 \begin{itemize}
         \item Twitter-API Call
         \item Aufbereitung der Daten durch Backend
@@ -107,7 +107,7 @@ AK:
 Als Twitter-Nutzer möchte ich den zeitlichen Verlauf über ein ausgewähltes Hashtag sehen,
 weil mich die Relevanz eines bestimmten Ereignisses interessiert.
 \\
-AK:
+Akzeptanzkriterien:
 \begin{itemize}
         \item Datenhaltung in Datenbank
         \item Periodische (mind.\ 15 min) Abfrage der Twitter-Daten durch Backend und Speicherung
@@ -120,7 +120,7 @@ AK:
 Als Twitter-Nutzer möchte ich auch den zeitlichen Verlauf über mehrere ausgewählte Hashtags sehen,
 weil mich die Relevanz von mehreren Ereignissen interessiert.
 \\
-AK:
+Akzeptanzkriterien:
 \begin{itemize}
         \item Auswahl mehrere Hashtags
         \item Ablauf wie in \ref*{2}
@@ -130,7 +130,7 @@ AK:
 Als Twitter-Nutzer möchte ich auch nicht durch Hashtags explizit definierte Topics erkennen können,
 weil ich einen Überblick über alle diskutierten Themen haben möchte.
 \\
-AK:
+Akzeptanzkriterien:
 \begin{itemize}
         \item Gruppierung aller Tweets der letzten Periode von der Twitter-API
         \item Analyse der Tweets mit Topic-Model
@@ -142,7 +142,7 @@ AK:
 Als Twitter-Nutzer möchte ich die aktuelle Stimmung zu einem Thema sehen,
 weil ich das Sentiment zu einem bestimmten Thema haben möchte.
 \\
-AK:
+Akzeptanzkriterien:
 \begin{itemize}
         \item Gruppierung der Tweets der letzten Zeitperiode nach Hashtag
         \item Analyse der Tweets mit Sentiment-Analyse
@@ -158,7 +158,7 @@ Als verwandte Informationen gelten:
         \item Sentiment
         \item Topics
 \end{itemize}
-AK:
+Akzeptanzkriterien:
 \begin{itemize}
         \item Eingabefeld für URL des Tweets
         \item Abfrage des Tweets über Twitter-API
@@ -171,7 +171,7 @@ Als Twitter-Nutzer möchte ich sehen,
 welche Hashtags besonders oft mit einem ausgewähltem Hashtag zusammen vorkommen,
 weil mich der Zusammenhang mit anderen Themen interessiert.
 \\
-AK:
+Akzeptanzkriterien:
 \begin{itemize}
         \item Gruppierung der Tweets der letzten Periode nach Hashtag
         \item Zählen der Hashtags der gruppierten Tweets
@@ -192,7 +192,7 @@ Als Metadaten gelten:
         \item Engagement
         \item Activity
 \end{itemize}
-AK:
+Akzeptanzkriterien:
 \begin{itemize}
         \item Eingabefeld für Twitter-Benutzer
         \item Abfrage der Nutzerdaten von Twitter-API
@@ -220,12 +220,12 @@ Die Kommunikation zwischen den Containern erfolgt über gRPC.
 Falls nötig kann ein Load-Balancer auf Basis von Kubernetes verwendet werden.
 
 \subsection*{Datenbank}
-Zur Speicherung der Daten wird PostgreSQL verwendet.
+Zur Speicherung der Daten wird MongoDB oder Cassandra verwendet.
 
 \subsection*{Frontend}
 
-Für die Interaktion mit dem Benutzer wird React verwendet.
-Über eine REST-Schnittstelle des Backends kann auf benötigte Informationen zugegriffen werden.
+Für die Interaktion mit dem Benutzer wird Angular, React oder Vue verwendet.
+Über eine REST-Schnittstelle oder gRPC-Schnittstelle des Backends kann auf benötigte Informationen zugegriffen werden.
 
 %\section*{Referenzen}
 
