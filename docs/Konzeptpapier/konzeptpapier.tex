@@ -8,6 +8,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{hyperref}
+\usepackage[ngerman]{babel}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -16,37 +17,37 @@
 
 % Authoren	
 \author{
-        \IEEEauthorblockN{Hahn Bastian}
+        \IEEEauthorblockN{Hahn, Bastian}
         \IEEEauthorblockA{
                 \textit{b.hahn@oth-aw.de}\\
         }
         \and
 
-        \IEEEauthorblockN{Kleber Martin}
+        \IEEEauthorblockN{Kleber, Martin}
         \IEEEauthorblockA{
                 \textit{m.kleber2@oth-aw.de}\\
         }
         \and
 
-        \IEEEauthorblockN{Klier Andreas}
+        \IEEEauthorblockN{Klier, Andreas}
         \IEEEauthorblockA{
                 \textit{a.klier@oth-aw.de}\\
         }
         \and
 
-        \IEEEauthorblockN{Kreussel Lukas}
+        \IEEEauthorblockN{Kreussel, Lukas}
         \IEEEauthorblockA{
                 \textit{l.kreussel@oth-aw.de}\\
         }
         \and
 
-        \IEEEauthorblockN{Paris Felix}
+        \IEEEauthorblockN{Paris, Felix}
         \IEEEauthorblockA{
                 \textit{f.paris1@oth-aw.de}\\
         }
         \and
 
-        \IEEEauthorblockN{Ziegler Andreas}
+        \IEEEauthorblockN{Ziegler, Andreas}
         \IEEEauthorblockA{
                 \textit{a.ziegler1@oth-aw.de}\\
         }
@@ -73,7 +74,6 @@ Das Projekt ist Teil der Vorlesung „Big Data und Cloud-basiertes Computing“ 
 
 
 \section{Verwandte Arbeiten}
-Nachdem in der Einleitung bereits die Motivation erläutert wurde, werden in diesem Abschnitt verwandte Arbeiten vorgestellt.
 Es gibt bereits mehrere Systeme, welche sich mit der Analyse von Twitter-Daten beschäftigen.
 Diese Angebote lassen sich in drei unterschiedliche Gruppierungen einordnen:
 \subsubsection*{Profil-Analyse}
@@ -90,7 +90,7 @@ Unsere Umsetzung setzt eigene Schwerpunkte, welche in den Anforderungen definier
 Dabei werden die drei genannten Analysegebiete gestreift, wenn auch unterschiedlich stark.
 \section{Anforderungen}
 
-\subsection{Anforderung 1}
+\subsection*{Anforderung 1}
 Als Twitter-Nutzer möchte ich die Hashtags sehen, die aktuell auf Twitter trenden,
 weil ich einen Überblick über das aktuelle Geschehen auf Twitter erhalten will.
 \\
@@ -99,10 +99,10 @@ Akzeptanzkriterien:
         \item Twitter-API Call
         \item Aufbereitung der Daten durch Backend
         \item Noch keine Persistenz
-        \item Anzeige auf Tabelle in Webseite
+        \item Anzeige als Tabelle in einer Webseite
 \end{itemize}
 
-\subsection{Anforderung 2}
+\subsection*{Anforderung 2}
 \label{2}
 Als Twitter-Nutzer möchte ich den zeitlichen Verlauf über ein ausgewähltes Hashtag sehen,
 weil mich die Relevanz eines bestimmten Ereignisses interessiert.
@@ -116,7 +116,7 @@ Akzeptanzkriterien:
         \item Anzeige in Diagramm
 \end{itemize}
 
-\subsection{Anforderung 3}
+\subsection*{Anforderung 3}
 Als Twitter-Nutzer möchte ich auch den zeitlichen Verlauf über mehrere ausgewählte Hashtags sehen,
 weil mich die Relevanz von mehreren Ereignissen interessiert.
 \\
@@ -126,7 +126,7 @@ Akzeptanzkriterien:
         \item Ablauf wie in \ref*{2}
 \end{itemize}
 
-\subsection{Anforderung 4}
+\subsection*{Anforderung 4}
 Als Twitter-Nutzer möchte ich auch nicht durch Hashtags explizit definierte Topics erkennen können,
 weil ich einen Überblick über alle diskutierten Themen haben möchte.
 \\
@@ -138,7 +138,7 @@ Akzeptanzkriterien:
         \item Anzeige der Topics auf Webseite
 \end{itemize}
 
-\subsection{Anforderung 5}
+\subsection*{Anforderung 5}
 Als Twitter-Nutzer möchte ich die aktuelle Stimmung zu einem Thema sehen,
 weil ich das Sentiment zu einem bestimmten Thema haben möchte.
 \\
@@ -150,7 +150,7 @@ Akzeptanzkriterien:
         \item Anzeige des Sentiments auf Webseite
 \end{itemize}
 
-\subsection{Anforderung 6}
+\subsection*{Anforderung 6}
 Als Twitter-Nutzer möchte ich einen Tweet angeben können um alle verwandten Informationen dazu sehen zu können.
 Als verwandte Informationen gelten:
 \begin{itemize}
@@ -166,7 +166,7 @@ Akzeptanzkriterien:
         \item Anzeige der verwandten Informationen
 \end{itemize}
 
-\subsection{Anforderung 7}
+\subsection*{Anforderung 7}
 Als Twitter-Nutzer möchte ich sehen,
 welche Hashtags besonders oft mit einem ausgewähltem Hashtag zusammen vorkommen,
 weil mich der Zusammenhang mit anderen Themen interessiert.
@@ -181,7 +181,7 @@ Akzeptanzkriterien:
         \item Anzeige der verwandten Informationen
 \end{itemize}
 
-\subsection{Anforderung 8}
+\subsection*{Anforderung 8}
 Als Twitter-Nutzer möchte ich Twitter-Benutzer abrufen können,
 um deren Metadaten angezeigt zu bekommen.
 \\
