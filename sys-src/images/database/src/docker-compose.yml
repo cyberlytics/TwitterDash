@@ -4,7 +4,6 @@ services:
   database:
     container_name: mongo
     image: mongo:latest
-    profiles: ["database"]
     volumes:
       - ./images/database/data/MongoDB:/data/db
     ports:
@@ -18,7 +17,6 @@ services:
   
   mongo-express:
     image: mongo-express
-    profiles: ["database"]
     restart: always
     ports:
       - 8081:8081
@@ -31,7 +29,6 @@ services:
 
   database-service:
     image: ${DOCKER_REGISTRY-}databaseservice
-    profiles: ["database"]
     build:
       context: .
       dockerfile: database-service/Dockerfile
