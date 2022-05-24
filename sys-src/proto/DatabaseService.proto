@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package twitterdash;
+
+import "base/objects.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service DatabaseReader {
+    rpc GetCurrentTrends(GetCurrentTrendsRequest) returns (TrendProviderReply) {}
+    rpc GetRecentTweets(GetRecentTweetsRequest) returns (GetRecentTweetsReply) {}
+    rpc GetAvailableCountries(Empty) returns (GetAvailableCountriesReply) {}
+}
+
+service DatabaseWriter{
+    rpc StoreTrends(TrendProviderReply) returns (Empty) {}
+}
+
+message GetCurrentTrendsRequest{
+    optional string country = 1; // country name
+    int32 limit = 2;
+}
+
+message GetAvailableCountriesReply{
+    repeated string countries = 1;// list of country names  
+}
+
+message GetRecentTweetsRequest {
+    string hashtag = 1;
+    optional google.protobuf.Timestamp start_date = 2;
+    optional google.protobuf.Timestamp end_date = 3;
+}
