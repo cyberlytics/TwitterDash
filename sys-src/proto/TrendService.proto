@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package twitterdash;
+
+import "base/objects.proto";
+import "google/protobuf/empty.proto";
+
+service TweetService {
+    rpc OnNewTrends(google.protobuf.Empty) returns (stream TrendReply) {}
+    rpc TopNTopics(TopNTopicsRequest) returns (TrendReply) {}
+}
+
+message TrendReply{
+    string datetime = 1;
+    repeated Trend trend = 2;
+}
+
+message TopNTopicsRequest{
+    string DateTime = 1;
+    int32 N = 2;
+}
