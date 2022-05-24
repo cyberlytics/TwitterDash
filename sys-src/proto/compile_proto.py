@@ -30,7 +30,8 @@ if __name__ == "__main__":
             shutil.rmtree(outdir)
         #Create the Directory
         os.makedirs(outdir)
-        
+        with open(os.path.join(outdir,"__init__.py"),"w") as init_file:
+            pass
         outdir = f'\"{outdir}\"'
         # Compile the Proto File
         try:

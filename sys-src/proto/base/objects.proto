@@ -1,14 +1,27 @@
 syntax = "proto3";
 
 package twitterdash;
+import "google/protobuf/timestamp.proto";
 
-
-message Trend{
-    string topic = 1;
-    string country = 2;
+enum TrendType{
+    Topic = 0;
+    Hashtag = 1;
 }
 
-message  Tweet{
+message Trend{
+    TrendType trendType = 1;
+    string name = 2;
+    int32 country = 3; // WOEID of the country
+    int32  placement = 4; // Place of the Tweet in the given Country
+    optional int32 tweetVolume24= 5; // Number of Tweets in the given Country
+}
+
+message TrendProviderReply{
+    google.protobuf.Timestamp timestamp = 1;
+    repeated Trend trends = 2;
+}
+
+message Tweet{
     string ID = 1;
     int64 TweetID = 2;
     string Text = 3;
