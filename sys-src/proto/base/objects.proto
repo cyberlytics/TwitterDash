@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package twitterdash;
+
+
+message Trend{
+    string topic = 1;
+    string country = 2;
+}
+
+message  Tweet{
+    string ID = 1;
+    int64 TweetID = 2;
+    string Text = 3;
+    string UserID = 4;
+    repeated string Hashtags = 5;
+}
