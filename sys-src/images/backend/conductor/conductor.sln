@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conductor", "conductor\conductor.csproj", "{484E1F92-C9E0-45BD-95E2-BEEACDF638D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "proto", "proto", "{066A529F-E002-4456-98B9-60B2B97A72DE}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\proto\TrendService.proto = ..\..\..\proto\TrendService.proto
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{484E1F92-C9E0-45BD-95E2-BEEACDF638D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484E1F92-C9E0-45BD-95E2-BEEACDF638D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484E1F92-C9E0-45BD-95E2-BEEACDF638D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484E1F92-C9E0-45BD-95E2-BEEACDF638D1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0EFB16EB-C926-49DF-A2AA-5BB4E4CAAE3F}
+	EndGlobalSection
+EndGlobal
