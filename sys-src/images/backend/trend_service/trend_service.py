@@ -42,6 +42,7 @@ class TrendService(TrendProviderServicer):
             reply = TrendProviderReply()
             trends = []
 
+            lastCallTime = time.time()
             # Get the trending hashtags
             for trend in self.caller.getTrending():
                 trends.append(
@@ -57,7 +58,8 @@ class TrendService(TrendProviderServicer):
             reply.timestamp.GetCurrentTime()
             reply.trends.extend(trends)
             yield reply
-            time.sleep(60)
+            # sleep until last call is 15 mins ago
+            time.sleep(max(0, 60 * 15 - (time.time() - lastCallTime)))
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ class Twitter_API_Caller:
         # v1.1
         auth_v1 = tweepy.OAuthHandler(consumer_key_v1, consumer_secret_v1)
         auth_v1.set_access_token(access_token_v1, access_token_secret_v1)
-        self.api_v1 = tweepy.API(auth_v1)
+        self.api_v1 = tweepy.API(auth_v1, wait_on_rate_limit=True)
 
         # v2
         self.client_v2 = tweepy.Client(
@@ -28,6 +28,7 @@ class Twitter_API_Caller:
             access_token=access_token_v2,
             access_token_secret=access_token_secret_v2,
             bearer_token=bearer_token_v2,
+            wait_on_rate_limit=True,
         )
 
         # Verfügbare Länder IDs
@@ -39,7 +40,6 @@ class Twitter_API_Caller:
 
     def getTrending(self):
         trends_for_countries = []
-
         # for id in list(self.dict_country_id.keys()):
         # WOEID für Deutschland
         for id in [23424829]:
@@ -50,7 +50,7 @@ class Twitter_API_Caller:
             for i, trend in enumerate(trends[0]["trends"]):
                 # filter topics that are no hashtags
                 if trend["name"].startswith("#"):
-                    name = trend["name"].encode("utf-8")
+                    name = trend["name"]
                     tweet_volume = trend["tweet_volume"]
 
                     if tweet_volume == None:
@@ -61,7 +61,6 @@ class Twitter_API_Caller:
                             "day",
                             (datetime.datetime.now() - datetime.timedelta(days=1)),
                         )
-                        print(tweet_volume)
                     trends_for_countries.append(
                         {
                             "hashtag": name,
@@ -71,6 +70,7 @@ class Twitter_API_Caller:
                             "country": id,
                         }
                     )
+
         return trends_for_countries
 
     # Get tweet count for one trend
@@ -83,6 +83,3 @@ class Twitter_API_Caller:
         )
 
         return tweetCount[3]["total_tweet_count"]
-
-    # save in Database
-    # TODO
