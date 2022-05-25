@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package twitterdash;
 
-import "base/objects.proto";
+import "objects.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
