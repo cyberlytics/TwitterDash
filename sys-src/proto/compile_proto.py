@@ -2,120 +2,106 @@
 # Compiles the Protobuff and GRPC Stubs for  all services
 ###
 
-import os
 import subprocess
 import shutil
 import json
+import pathlib
 
-SRCDIR = "sys-src"
-PROTODIR = "proto"
-
+PROTO = "proto"
+SERVICE_MAP = "ServiceMap.json"
 DEPENDENCIES = ["objects.proto"]
 
-# Pairs the Service to the Target Directory
-with open(os.path.join(os.getcwd(), SRCDIR, PROTODIR, "ServiceMap.json")) as json_file:
-    SERVICES = json.load(json_file)
-
-PYTHON_SERVICES = SERVICES["Python"]
-CSHARP_SERVICES = SERVICES["C#"]
-
-if __name__ == "__main__":
-    try:
-        subprocess.call(
-            " ".join(["python", "-m", "grpc_tools.protoc"]),
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-    except:
-        print(
-            "The python grpc_tools.protoc module is not installed. Please run 'pip install grpcio-tools' and try again!"
-        )
-
+def move_proto_files(proto_dir:pathlib.Path,service:str,target:str,root_dir:pathlib.Path):
     
-    protodir = f'"{os.path.join(os.getcwd(),SRCDIR,PROTODIR)}"'
+    source_file = proto_dir / service
+    target_dir = root_dir / target
+    target_file = target_dir / service
+    if not target_dir.is_dir():
+        target_dir.mkdir(parents=True, exist_ok=True)
+        
+    shutil.copy(str(source_file),str(target_file))
+    
+    for dep in DEPENDENCIES:
+        dep_source = proto_dir / dep
+        dep_target = target_dir / dep
+        if not dep_target.is_file():
+            shutil.copy(str(dep_source),str(dep_target))
 
-    for service in CSHARP_SERVICES:
-        for target_dir in CSHARP_SERVICES[service]:
-            outdir = os.path.join(os.getcwd(), SRCDIR, target_dir)
-            if not os.path.isdir(outdir):
-                os.makedirs(outdir)
+def call_grpc_tools(protodir:pathlib.Path,target_dir:pathlib.Path,service:str,grpc:bool=True):
+    
+    def escape_str(input:str)->str:
+        return f"\"{input}\""
+    args = [
+    "python",
+    "-m",
+    "grpc_tools.protoc",
+    "-I",
+    escape_str(str(protodir)),
+    f"--python_out={escape_str(str(target_dir))}"]
+    
+    if grpc:
+        args.append("--grpc_python_out=" + escape_str(str(target_dir)))
+        
+    args.append(escape_str(service))
+    subprocess.call(" ".join(args))
+    
+       
+def compile_proto_python(proto_dir:pathlib.Path,service:str,target_dir:pathlib.Path,root_dir:pathlib.Path):
+    
+    source_file = proto_dir / service
+    target_dir = root_dir / target
+    target_file = target_dir / service
+    if not target_dir.is_dir():
+        target_dir.mkdir(parents=True, exist_ok=True)
+    
+    #Create __init__.py
+    with open(str(target_dir / "__init__.py"), "w") as _:
+        pass
+      
+    
+    generated_dependencies = []
+    for dependency in DEPENDENCIES:
+        call_grpc_tools(proto_dir,target_dir,dependency,grpc=False)
+        generated_dependencies.append(f"{dependency.split('.')[0]}_pb2")
+        
+    call_grpc_tools(proto_dir,target_dir,service)
+    
+    #Rewrite the generated files to include the dependencies
+    for generated_dependency in generated_dependencies:
+        for file in [f"{service.split('.')[0]}_pb2.py",f"{service.split('.')[0]}_pb2_grpc.py"]:
+            file_to_rewrite = target_dir / file
+            lines = []
+            with open(file_to_rewrite,"r") as f:
+                lines = f.readlines()
+                
+            for i,line in enumerate(lines):
+                if f"import {generated_dependency} as" in line:
+                    lines[i] = f"from . import {generated_dependency} as {generated_dependency.replace('_','__')}\n"
+                    
+            with open(file_to_rewrite,"w") as f:
+                f.writelines(lines)
+                    
+                    
+if __name__ == "__main__":
+
+    src_dir = pathlib.Path(__file__).parent.parent.resolve()
+    proto_dir = src_dir / PROTO
+    
+    with open(proto_dir / SERVICE_MAP) as json_file:
+        services = json.load(json_file)
+    
+    for csharp_service in services["C#"]:
+        for target in services["C#"][csharp_service]:
+            move_proto_files(proto_dir,csharp_service,target,src_dir)
+            print("Generated C# Protobufs for " + csharp_service + " to " + target)
             
-            shutil.copy(os.path.join(os.path.join(os.getcwd(),SRCDIR,PROTODIR),service),os.path.join(outdir,service))
-        
-        
-    for service in PYTHON_SERVICES:
-        outdir = os.path.join(os.getcwd(), SRCDIR, PYTHON_SERVICES[service])
-        # Check if the Directory Exists
-        if os.path.isdir(outdir):
-            # Remove it
-            shutil.rmtree(outdir)
-        # Create the Directory
-        os.makedirs(outdir)
-        with open(os.path.join(outdir, "__init__.py"), "w") as init_file:
-            pass
-        outdir = f'"{outdir}"'
-        # Compile the Proto File
-        try:
-            service_name = service.split(".")[0]
-            grpc_file = os.path.join(PYTHON_SERVICES[service], f"{service_name}_pb2_grpc.py")
-            proto_file = os.path.join(PYTHON_SERVICES[service], f"{service_name}_pb2.py")
-
-            generated_dependencies = []
-            # Generate Dependencies
-            for dependency in DEPENDENCIES:
-                args = [
-                    "python",
-                    "-m",
-                    "grpc_tools.protoc",
-                    "-I",
-                    protodir,
-                    f"--python_out={outdir}",
-                    dependency,
-                ]
-                generated_dependencies.append(f"{dependency.split('.')[0]}_pb2")
-                subprocess.call(" ".join(args))
-
-            args = [
-                "python",
-                "-m",
-                "grpc_tools.protoc",
-                "-I",
-                protodir,
-                f"--python_out={outdir}",
-                f"--grpc_python_out={outdir}",
-                service,
-            ]
-            subprocess.call(" ".join(args))
-
-            # Adjust the imports to the current location
-            def replace_import(file, old_import, new_import):
-                lines = []
-                with open(file, "r") as f:
-                    lines = f.readlines()
-
-                for i, line in enumerate(lines):
-                    if old_import in line:
-                        lines[i] = line.replace(old_import, new_import)
-
-                with open(file, "w") as f:
-                    f.writelines(lines)
-
-            for generated_dependency in generated_dependencies:
-                cleaned_outdir = outdir.replace('"', "")
-                base_import_path = os.path.basename(os.path.normpath(outdir))
-                replace_import(
-                    os.path.join(cleaned_outdir, f"{service_name}_pb2_grpc.py"),
-                    f"import {generated_dependency} as",
-                    f"import {base_import_path[:-1]}.{generated_dependency} as",
-                )
-                replace_import(
-                    os.path.join(cleaned_outdir, f"{service_name}_pb2.py"),
-                    f"import {generated_dependency} as",
-                    f"import {base_import_path[:-1]}.{generated_dependency} as",
-                )
-
-            print(f"Created '{grpc_file}' and '{proto_file}'.")
-
-        except Exception as e:
-            print(f"Failed to create '{grpc_file}' and '{proto_file}'!")
-            print(e)
+    
+    for node_service in services["NodeJs"]:
+        for target in services["NodeJs"][node_service]:
+            move_proto_files(proto_dir,node_service,target,src_dir)
+            print("Generated NodeJs Protobufs for " + node_service + " to " + target)
+            
+    for python_service in services["Python"]:
+        for target in services["Python"][python_service]:
+            compile_proto_python(proto_dir,python_service,target,src_dir)
+            print("Generated Python Protobufs for " + python_service + " to " + target)

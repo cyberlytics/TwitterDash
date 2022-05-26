@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  conductor:
-    image: ${DOCKER_REGISTRY-}conductor
-    build:
-      context: .
-      dockerfile: conductor/Dockerfile
