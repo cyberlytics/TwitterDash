@@ -16,8 +16,10 @@ DEPENDENCIES = ["objects.proto"]
 with open(os.path.join(os.getcwd(), SRCDIR, PROTODIR, "ServiceMap.json")) as json_file:
     SERVICES = json.load(json_file)
 
-if __name__ == "__main__":
+PYTHON_SERVICES = SERVICES["Python"]
+CSHARP_SERVICES = SERVICES["C#"]
 
+if __name__ == "__main__":
     try:
         subprocess.call(
             " ".join(["python", "-m", "grpc_tools.protoc"]),
@@ -29,10 +31,20 @@ if __name__ == "__main__":
             "The python grpc_tools.protoc module is not installed. Please run 'pip install grpcio-tools' and try again!"
         )
 
+    
     protodir = f'"{os.path.join(os.getcwd(),SRCDIR,PROTODIR)}"'
 
-    for service in SERVICES:
-        outdir = os.path.join(os.getcwd(), SRCDIR, SERVICES[service])
+    for service in CSHARP_SERVICES:
+        for target_dir in CSHARP_SERVICES[service]:
+            outdir = os.path.join(os.getcwd(), SRCDIR, target_dir)
+            if not os.path.isdir(outdir):
+                os.makedirs(outdir)
+            
+            shutil.copy(os.path.join(os.path.join(os.getcwd(),SRCDIR,PROTODIR),service),os.path.join(outdir,service))
+        
+        
+    for service in PYTHON_SERVICES:
+        outdir = os.path.join(os.getcwd(), SRCDIR, PYTHON_SERVICES[service])
         # Check if the Directory Exists
         if os.path.isdir(outdir):
             # Remove it
@@ -45,8 +57,8 @@ if __name__ == "__main__":
         # Compile the Proto File
         try:
             service_name = service.split(".")[0]
-            grpc_file = os.path.join(SERVICES[service], f"{service_name}_pb2_grpc.py")
-            proto_file = os.path.join(SERVICES[service], f"{service_name}_pb2.py")
+            grpc_file = os.path.join(PYTHON_SERVICES[service], f"{service_name}_pb2_grpc.py")
+            proto_file = os.path.join(PYTHON_SERVICES[service], f"{service_name}_pb2.py")
 
             generated_dependencies = []
             # Generate Dependencies

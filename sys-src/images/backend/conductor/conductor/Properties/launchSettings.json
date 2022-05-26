@@ -28,6 +28,7 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "DockerfileRunArguments": "-p 50051:50051/tcp --env \"TRENDSERVICE_IP=host.docker.internal\" --env \"TRENDSERVICE_PORT=50051\"",
       "publishAllPorts": true,
       "useSSL": true
     }

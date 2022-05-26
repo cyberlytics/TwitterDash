@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package twitterdash;
+
+import "objects.proto";
+import "google/protobuf/empty.proto";
+
+service TrendProvider {
+    rpc OnNewTrends(google.protobuf.Empty) returns (stream TrendProviderReply) {}
+}
+

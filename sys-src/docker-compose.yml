@@ -4,7 +4,7 @@ services:
   database:
     container_name: mongo
     image: mongo:latest
-    profiles: ["database"]
+    profiles: ["database","database-service"]
     volumes:
       - ./images/database/data/MongoDB:/data/db
     ports:
@@ -18,7 +18,7 @@ services:
   
   mongo-express:
     image: mongo-express
-    profiles: ["database"]
+    profiles: ["database","database-service"]
     restart: always
     ports:
       - 8081:8081
@@ -30,20 +30,37 @@ services:
       - DBNetwork
 
   database-service:
-    image: ${DOCKER_REGISTRY-}databaseservice
-    profiles: ["database"]
+    container_name: databaseservice
+    image: databaseservice
+    profiles: ["database-service"]
     build:
-      context: .
+      context: images/database/src
       dockerfile: database-service/Dockerfile
 
+    environment:
+      MONGODB_PORT: 27017
+      MONGODB_IP:  mongo
+      MONGODB_USER: root
+      MONGODB_PASSWORD: example
 
     networks:
         - DBNetwork
         - network-backend
         - network-frontend
 
-    environment:
-      MONGODB_IP: mongoDB
+  conductor-service:
+    image: conductor
+    container_name: conductor
+    profiles: ["conductor","backend"]
+    build:
+      context: images/backend/conductor
+      dockerfile: conductor/Dockerfile
+    ports:
+      - 7032:7032
+    networks:
+        - network-backend
+        - network-frontend
+  
 
 networks:
   network-backend:

@@ -69,4 +69,5 @@ if __name__ == "__main__":
     )
     server.add_insecure_port("127.0.0.1:50051")
     server.start()
+    print("Started Trend Service")
     server.wait_for_termination()

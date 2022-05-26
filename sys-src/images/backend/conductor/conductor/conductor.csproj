@@ -9,9 +9,10 @@
   </PropertyGroup>
 
 
-	<ItemGroup>
-		<Protobuf Include="..\..\..\..\proto\objects.proto" />
-		<Protobuf Include="..\..\..\..\proto\TrendService.proto" GrpcServices="Client" />
+    <ItemGroup>
+		<Protobuf Include="objects.proto" ProtoRoot=".\proto\"/>
+		<Protobuf Include="TrendService.proto" ProtoRoot=".\proto\" GrpcServices="Client"/>
+		<Protobuf Include="DatabaseService.proto" ProtoRoot=".\proto\" GrpcServices="Client"/>
 	</ItemGroup>
 	
   <ItemGroup>
