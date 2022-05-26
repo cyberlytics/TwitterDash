@@ -1,5 +1,4 @@
 ﻿using conductor.activities;
-using Elsa.Activities.Console;
 using Elsa.Builders;
 
 namespace conductor.workflows

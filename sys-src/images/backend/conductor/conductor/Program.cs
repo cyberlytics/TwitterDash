@@ -11,6 +11,8 @@ using Twitterdash;
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 
+var trendServiceIP = Environment.GetEnvironmentVariable("TRENDSERVICE_IP") ?? "localhost";
+var trendServicePort = Environment.GetEnvironmentVariable("TRENDSERVICE_PORT") ?? "50051";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +29,8 @@ builder.Services.AddElsa(elsa => elsa
 builder.Services.AddElsaApiEndpoints();
 builder.Services.AddRazorPages();
 
-builder.Services.AddSingleton<TrendProvider.TrendProviderClient>((serviceProvider) => grpcClientFactory.BuildClient<TrendProvider.TrendProviderClient>("http://localhost:50051"));
+builder.Services.AddSingleton<TrendProvider.TrendProviderClient>((serviceProvider) =>
+grpcClientFactory.BuildClient<TrendProvider.TrendProviderClient>($"http://{trendServiceIP}:{trendServicePort}"));
 
 builder.Services.AddHostedService((sp) => sp.GetRequiredService<TrendProviderService>());
 builder.Services.AddSingleton<TrendProviderService>();
