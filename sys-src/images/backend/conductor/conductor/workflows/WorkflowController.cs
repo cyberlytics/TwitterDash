@@ -1,4 +1,5 @@
 ﻿using conductor.background_services;
+using conductor.Nameservice;
 using Elsa;
 using Elsa.Services;
 using Twitterdash;
@@ -48,7 +49,7 @@ namespace conductor.workflows
                 await instanceDeleter.DeleteAsync(run_to_delete.ToString());
             }
 
-            workflow.Variables.Set("Trends", trendProviderReply);
+            workflow.Variables.Set(VariableNames.Trends, trendProviderReply);
             await workflowStarter.RunWorkflowAsync(workflowBlueprint, workflow);
             GC.Collect();
         }

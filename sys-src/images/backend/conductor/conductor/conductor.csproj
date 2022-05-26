@@ -10,9 +10,9 @@
 
 
     <ItemGroup>
-		<Protobuf Include="objects.proto" ProtoRoot=".\proto\"/>
-		<Protobuf Include="TrendService.proto" ProtoRoot=".\proto\" GrpcServices="Client"/>
-		<Protobuf Include="DatabaseService.proto" ProtoRoot=".\proto\" GrpcServices="Client"/>
+		<Protobuf Include="objects.proto" ProtoRoot=".\proto\" />
+		<Protobuf Include="TrendService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
+		<Protobuf Include="DatabaseService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
 	</ItemGroup>
 	
   <ItemGroup>
