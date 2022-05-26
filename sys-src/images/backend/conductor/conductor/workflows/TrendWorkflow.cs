@@ -12,7 +12,8 @@ namespace conductor.workflows
         public void Build(IWorkflowBuilder builder)
         {
             builder
-                .StartWith<PersistTrendsActivity>();
+                .StartWith<ValidateTrends>()
+                .Then<PersistTrends>();
         }
     }
 }

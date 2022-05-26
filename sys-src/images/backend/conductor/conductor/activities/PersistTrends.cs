@@ -6,10 +6,10 @@ using Twitterdash;
 
 namespace conductor.activities
 {
-    public class PersistTrendsActivity : Activity
+    public class PersistTrends : Activity
     {
 
-        public PersistTrendsActivity()
+        public PersistTrends()
         {
             this.DisplayName = "Persist Trends in Database";
         }
@@ -26,7 +26,7 @@ namespace conductor.activities
                 success = false;
             }
 
-            return Outcome(success ? "Success" : "Failed");
+            return Outcome(success ? Nameservice.Outcomes.Success : Nameservice.Outcomes.Failure);
         }
     }
 }

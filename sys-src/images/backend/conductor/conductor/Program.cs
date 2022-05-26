@@ -2,10 +2,6 @@ using conductor.activities;
 using conductor.background_services;
 using conductor.factories;
 using conductor.workflows;
-using Elsa.Persistence.EntityFramework.Core.Extensions;
-using Elsa.Persistence.EntityFramework.Sqlite;
-using Elsa.Services;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Twitterdash;
 
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
@@ -19,11 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 var elsaConfig = builder.Configuration.GetSection("Elsa");
 
 builder.Services.AddElsa(elsa => elsa
-                    //.UseEntityFrameworkPersistence(ef => ef.UseSqlite())
                     .AddConsoleActivities()
                     .AddHttpActivities(elsaConfig.GetSection("Server").Bind)
-                    //.AddWorkflowsFrom<Startup>()
-                    .AddActivity<PersistTrendsActivity>()
+                    .AddActivity<ValidateTrends>()
+                    .AddActivity<PersistTrends>()
                     .AddWorkflow<TrendWorkflow>());
 
 builder.Services.AddElsaApiEndpoints();
