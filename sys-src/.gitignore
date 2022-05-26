@@ -170,7 +170,7 @@ cython_debug/
 *.suo
 *.user
 *.sln.docstates
-.vs
+.vs/
 .vscode
 # Build results
 
