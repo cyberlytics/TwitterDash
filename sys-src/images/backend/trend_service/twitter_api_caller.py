@@ -15,6 +15,7 @@ class Twitter_API_Caller:
         access_token_v2,
         access_token_secret_v2,
         bearer_token_v2,
+        debug=False,
     ):
         # v1.1
         auth_v1 = tweepy.OAuthHandler(consumer_key_v1, consumer_secret_v1)
@@ -31,6 +32,8 @@ class Twitter_API_Caller:
             wait_on_rate_limit=True,
         )
 
+        self.debug = debug
+
         # Verfügbare Länder IDs
         self.dict_country_id = {}
         trends_loc = self.api_v1.available_trends()
@@ -40,9 +43,13 @@ class Twitter_API_Caller:
 
     def getTrending(self):
         trends_for_countries = []
-        # for id in list(self.dict_country_id.keys()):
-        # WOEID für Deutschland
-        for id in [23424829]:
+
+        # for debugging only use WOEID for Germany
+        if self.debug:
+            self.dict_country_id = {23424829: "Germany"}
+            # Wenn Sie das hier Lesen, bekommen Sie ein Snickers von mir (Bastian Hahn)
+
+        for id in list(self.dict_country_id.keys()):
             trends = self.api_v1.get_place_trends(id)
 
             timestamp = trends[0]["as_of"]

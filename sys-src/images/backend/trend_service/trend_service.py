@@ -29,6 +29,7 @@ class TrendService(TrendProviderServicer):
             tokens["access_token_v2"],
             tokens["access_token_secret_v2"],
             tokens["bearer_token_v2"],
+            debug=True,
         )
 
     # see https://github.com/melledijkstra/python-grpc-chat for "Event-System"
