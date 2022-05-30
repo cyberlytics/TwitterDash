@@ -61,17 +61,20 @@ services:
         - network-backend
         - network-frontend
   
-    frontend:
-        build:
-            context: images/webserver
-            dockerfile: Dockerfile
-        volumes:
-            - ./images/webserver/src:/home/app/src
-        ports:
-        - 3000:3000
-        networks:
-            - frontend
-            - DBNetwork
+  frontend:
+    container_name: twitter-dash-frontend
+    build:
+      context: images/webserver
+      dockerfile: Dockerfile
+    volumes:
+      - ./images/webserver/src:/home/app/src
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 3000:3000
+    networks:
+      - network-frontend
+      - DBNetwork
 
 networks:
   network-backend:
