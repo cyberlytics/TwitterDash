@@ -43,6 +43,7 @@ services:
       MONGODB_IP:  mongo
       MONGODB_USER: root
       MONGODB_PASSWORD: example
+      GRPC_PORT: 50051
 
     networks:
         - DBNetwork
