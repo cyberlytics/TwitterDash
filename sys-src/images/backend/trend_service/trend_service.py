@@ -14,8 +14,13 @@ class TrendService(TrendProviderServicer):
         super().__init__()
         self.isActive = True
 
+        # with open(
+        #     "./sys-src/images/backend/trend_service/tokens.json", "r"
+        # ) as token_file:
+        #     tokens = json.load(token_file)
+
         with open(
-            "./sys-src/images/backend/trend_service/tokens.json", "r"
+            "./tokens.json", "r"
         ) as token_file:
             tokens = json.load(token_file)
 
@@ -68,7 +73,7 @@ if __name__ == "__main__":
     stub.TrendService_pb2_grpc.add_TrendProviderServicer_to_server(
         TrendService(), server
     )
-    server.add_insecure_port("127.0.0.1:50051")
+    server.add_insecure_port("0.0.0.0:50010")
     server.start()
     print("Started Trend Service")
     server.wait_for_termination()
