@@ -1,4 +1,5 @@
 ﻿using conductor.activities;
+using Elsa.Activities.ControlFlow;
 using Elsa.Builders;
 
 namespace conductor.workflows
@@ -9,10 +10,13 @@ namespace conductor.workflows
         {
 
         }
+
         public void Build(IWorkflowBuilder builder)
         {
             builder
-                .StartWith<ValidateTrends>()
+                .WithDisplayName("Trend Workflow")
+                .Then<ValidateTrends>()
+                //.Then<CollectTweets>()
                 .Then<PersistTrends>();
         }
     }

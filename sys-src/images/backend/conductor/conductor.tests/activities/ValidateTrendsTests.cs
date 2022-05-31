@@ -38,7 +38,7 @@ namespace conductor.tests.activities
             {
                 Assert.IsNotNull(result);
                 Assert.IsNotEmpty(result.Outcomes);
-                Assert.AreEqual(Nameservice.Outcomes.Success , result.Outcomes.First());
+                Assert.AreEqual(Nameservice.Outcomes.Done , result.Outcomes.First());
             });
         }
 

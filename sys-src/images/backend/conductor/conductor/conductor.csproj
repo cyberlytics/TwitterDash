@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>317dcf5f-b807-4a66-845b-664713f20401</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<RunSettingsFilePath>$(MSBuildProjectDirectory)\..\CompleteRunsettings.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
 

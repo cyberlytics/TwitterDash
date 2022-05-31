@@ -12,12 +12,11 @@ namespace conductor.activities
             this.DisplayName = "Validate the recieved Trends";
         }
 
-
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
             var trends = context.WorkflowInstance.Variables.Get("Trends") as TrendProviderReply;
 
-            return Outcome(trends != null ? Nameservice.Outcomes.Success : Nameservice.Outcomes.Failure);
+            return Outcome(trends != null ? Nameservice.Outcomes.Done : Nameservice.Outcomes.Failure);
         }
     }
 }

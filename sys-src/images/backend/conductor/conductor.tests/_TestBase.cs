@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,6 +49,7 @@ namespace conductor.tests
     public abstract class TestBase
     {
         protected List<LogEnrty> LogMessages = new();
+        protected string TestDataDirectory => Path.Combine(TestContext.CurrentContext.TestDirectory, "test-data");
 
         [SetUp]
         public virtual void Setup()
