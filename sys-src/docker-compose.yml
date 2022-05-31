@@ -17,6 +17,7 @@ services:
       - DBNetwork
   
   mongo-express:
+    container_name: mongo-express
     image: mongo-express
     profiles: ["database","database-service"]
     restart: always
@@ -63,6 +64,7 @@ services:
   
   frontend:
     container_name: twitter-dash-frontend
+    profiles: ["frontend"]
     build:
       context: images/webserver
       dockerfile: Dockerfile
