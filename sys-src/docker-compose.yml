@@ -78,6 +78,16 @@ services:
       - network-frontend
       - DBNetwork
 
+  trend-service:
+    container_name: trend-service
+    profiles: ["trend-service", "backend"]
+    build: ./images/backend/trend_service
+    restart: unless-stopped
+    ports:
+      - 50010:50010
+    networks:
+      - network-backend
+
 networks:
   network-backend:
     name: backend
@@ -87,6 +97,7 @@ networks:
     driver: bridge
   DBNetwork:
     driver: bridge
+
 
   # # Frontend (Node.js)
   # node-frontend:
