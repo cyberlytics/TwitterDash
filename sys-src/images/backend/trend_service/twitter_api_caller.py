@@ -18,12 +18,60 @@ class Twitter_API_Caller:
         debug=False,
     ):
         # v1.1
+        self.api_v1 = self.create_client_v1(
+            consumer_key_v1,
+            consumer_secret_v1,
+            access_token_v1,
+            access_token_secret_v1,
+        )
+        # v2
+        self.api_v2 = self.create_client_v2(
+            consumer_key_v2,
+            consumer_secret_v2,
+            access_token_v2,
+            access_token_secret_v2,
+            bearer_token_v2,
+        )
+
+        self.debug = debug
+
+        # Verfügbare Länder IDs
+        self.dict_country_id = self.getAvailableTrends()
+    
+    def create_client_v1(self, consumer_key_v1, consumer_secret_v1, access_token_v1, access_token_secret_v1):
+        """
+        Create a new client for Twitter API v1.1
+
+        Args:
+            consumer_key_v1 (string): Consumer Key
+            consumer_secret_v1 (string): Consumer Secret
+            access_token_v1 (string): Access Token
+            access_token_secret_v1 (string): Access Token Secret
+
+        Returns:
+            tweepy.API: Twitter API v1.1
+        """        
         auth_v1 = tweepy.OAuthHandler(consumer_key_v1, consumer_secret_v1)
         auth_v1.set_access_token(access_token_v1, access_token_secret_v1)
-        self.api_v1 = tweepy.API(auth_v1, wait_on_rate_limit=True)
+        return tweepy.API(auth_v1, wait_on_rate_limit=True)
 
-        # v2
-        self.client_v2 = tweepy.Client(
+    def create_client_v2(
+        self, consumer_key_v2, consumer_secret_v2, access_token_v2, access_token_secret_v2, bearer_token_v2
+    ):
+        """
+        Create a new client for Twitter API v2
+
+        Args:
+            consumer_key_v2 (string): Consumer Key
+            consumer_secret_v2 (string): Consumer Secret
+            access_token_v2 (string): Access Token
+            access_token_secret_v2 (string): Access Token Secret
+            bearer_token_v2 (string): Bearer Token
+
+        Returns:
+            tweepy.API: Twitter API v2
+        """        
+        auth_v2 = tweepy.Client(
             consumer_key=consumer_key_v2,
             consumer_secret=consumer_secret_v2,
             access_token=access_token_v2,
@@ -31,16 +79,24 @@ class Twitter_API_Caller:
             bearer_token=bearer_token_v2,
             wait_on_rate_limit=True,
         )
+        return auth_v2
 
-        self.debug = debug
 
-        # Verfügbare Länder IDs
-        self.dict_country_id = {}
+    def getAvailableTrends(self):
+        """
+        Get avaiable trend countries.
+        Uses Twitter API v1.1
+
+        Returns:
+            dict: dict of available trend countries
+        """        
+        dict_country_id = {}
         trends_loc = self.api_v1.available_trends()
         for eintrag in trends_loc:
             if eintrag["placeType"]["code"] == 12:
-                self.dict_country_id[eintrag["woeid"]] = eintrag["name"]
-
+                dict_country_id[eintrag["woeid"]] = eintrag["name"]
+        return dict_country_id
+       
     def getTrending(self):
         trends_for_countries = []
 
@@ -79,11 +135,22 @@ class Twitter_API_Caller:
                     )
 
         return trends_for_countries
-
-    # Get tweet count for one trend
+                
+                
     def getTweetCount(self, trend, granularity, start_time):
+        """
+        Gets tweet count for one trend, uses Twitter API v2
 
-        tweetCount = self.client_v2.get_recent_tweets_count(
+        Args:
+            trend (string): Trend bzw. Hashtag, der nachgezählt werden soll
+            granularity (string): Tag, Woche, Monat, Jahr
+            start_time (datetime): Zeitpunkt, von wann die Abfrage des Tweetcounts starten soll
+
+        Returns:
+            int: Tweetcount für einen Trend
+        """     
+           
+        tweetCount = self.api_v2.get_recent_tweets_count(
             query=trend,
             granularity=granularity,
             start_time=start_time,
