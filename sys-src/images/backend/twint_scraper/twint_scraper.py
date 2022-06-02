@@ -6,7 +6,7 @@ import re
 
 
 class Twint_Scraper():
-    def __init__(self):#
+    def __init__(self):
         self.df = None
         
         nest_asyncio.apply()
@@ -52,17 +52,18 @@ class Twint_Scraper():
         df["Wochentag"] = df["date"].apply(lambda x: x.weekday())
         df["Stunde"] = df["date"].apply(lambda x: x.hour)
         df["Originale_Tweetlaenge"] = df["tweet"].apply(lambda x: len(x))
-        df["reply_to"] = df["reply_to"].apply(lambda x: str(self.extract_reply_to(x)))
+        #df["reply_to"] = df["reply_to"].apply(lambda x: str(self.extract_reply_to(x)))
         
         return df
-        
+    
     # Data Analysis
     # TODO  
     
     
     # Sentiment Analysis
     # TODO  
-    
+    def sentiment_analysis(self, df):
+        pass
     
     # save in Database
     # TODO  
