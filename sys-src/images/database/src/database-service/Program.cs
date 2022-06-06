@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using System.Net;
 
 var mongodb_port = Environment.GetEnvironmentVariable("MONGODB_PORT") ?? "27017";
@@ -43,24 +44,44 @@ app.UseEndpoints(endpoints =>
 
 app.Run();
 
+// var client = new MongoClient($@"mongodb://{mongodb_user}:{mongodb_password}@{mongodb_ip}:{mongodb_port}/");
+// var database = client.GetDatabase("TwitterDash");
+// var collection = database.GetCollection<TwitterTrends>("Trends");
 
-//var database = client.GetDatabase("TwitterDash");
-//var collection = database.GetCollection<TwitterTrend>("Trends");
-
-//while (true)
-//{
-//    Console.WriteLine("Creating Entry");
-//    await collection.InsertOneAsync(new()
-//    {
-//        DateTime = DateTime.Now,
-//        Trends = new()
+// // if (await collection.CountDocumentsAsync(new BsonDocument()) == 0)
+// // {
+// Console.WriteLine("Creating Entry");
+// await collection.InsertOneAsync(new()
+// {
+//     DateTime = DateTime.Now,
+//     Trends = new()
 //        {
-//            { "#GRPC", 1 },
-//            { "#Donald Trump", 2 },
+//            new TwitterTrend
+//            {
+//                trendType = TrendType.Hashtag,
+//                name = "#GRPC",
+//                placement = 1,
+//            },
+//            new TwitterTrend
+//            {
+//                trendType = TrendType.Hashtag,
+//                name = "#Donald Trump",
+//                placement = 2,
+//            },
+//            new TwitterTrend
+//            {
+//                trendType = TrendType.Hashtag,
+//                name = DateTime.Now.ToString(),
+//                placement = 3,
+//            },
 //        }
-//    });
-//    Task.Delay(3000).Wait();
-//}
+// });
+// // }
 
-//var results = await collection.FindAsync(_ => true);
-//Console.WriteLine(results);
+// var filter = Builders<TwitterTrends>.Filter.Gte<DateTime>("DateTime", DateTime.Now.AddMinutes(-15));
+// var sort = Builders<TwitterTrends>.Sort.Descending("DateTime");
+// var results = await collection.Find<TwitterTrends>(filter).Sort(sort).FirstAsync();
+// foreach (var trend in results.Trends.ToList())
+// {
+//     Console.WriteLine(trend.name);
+// }
