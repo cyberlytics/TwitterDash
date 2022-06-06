@@ -2,15 +2,18 @@
 using Grpc.Core;
 using Twitterdash;
 using MongoDB.Driver;
+using places;
 
 internal class DatabaseWriterController : Twitterdash.DatabaseWriter.DatabaseWriterBase
 {
 
     private MongoClient client;
+    private woeid Woeid;
 
-    public DatabaseWriterController(MongoClient client)
+    public DatabaseWriterController(MongoClient client, woeid Woeid)
     {
         this.client = client;
+        this.Woeid = Woeid;
     }
 
     public override async Task<Empty> StoreTrends(TrendProviderReply request, ServerCallContext context)
@@ -30,13 +33,13 @@ internal class DatabaseWriterController : Twitterdash.DatabaseWriter.DatabaseWri
             twitterTrend.placement = trend.Placement;
             twitterTrend.tweetVolume24 = trend.TweetVolume24;
 
-
             Trends.Add(twitterTrend);
         }
 
         await collection.InsertOneAsync(new()
         {
             DateTime = timestamp,
+            Country = Trends[0].woeid,
             Trends = Trends
         });
 
