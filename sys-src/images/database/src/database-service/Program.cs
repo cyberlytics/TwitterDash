@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Net;
+using places;
 
 var mongodb_port = Environment.GetEnvironmentVariable("MONGODB_PORT") ?? "27017";
 var mongodb_ip = Environment.GetEnvironmentVariable("MONGODB_IP") ?? "localhost";
@@ -29,6 +30,7 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.Services.AddGrpc();
 
 builder.Services.AddTransient<MongoClient>((_) => new MongoClient($@"mongodb://{mongodb_user}:{mongodb_password}@{mongodb_ip}:{mongodb_port}/"));
+builder.Services.AddSingleton<woeid>((_) => new woeid());
 
 var app = builder.Build();
 
