@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package twitterdash;
+
+import "objects.proto";
+import "google/protobuf/empty.proto";
+
+service SentimentProvider {
+    rpc GetSentiment(GetSentimentRequest) returns (GetSentimentReply) {}
+}
+
+message GetSentimentRequest{
+    string text = 1;
+}
+
+message GetSentimentReply{
+    float sentiment = 1;
+}
