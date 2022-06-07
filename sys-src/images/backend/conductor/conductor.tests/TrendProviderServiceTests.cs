@@ -1,4 +1,5 @@
 ﻿using conductor.background_services;
+using conductor.tests.Mocks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Testing;
@@ -77,30 +78,8 @@ namespace conductor.tests
         [Test]
         public async Task TrendProviderService_Fires_Event_When_Trends_Are_Recieved()
         {
-            var grpc_mock = new Mock<TrendProvider.TrendProviderClient>();
-
-            var trendReply = new TrendProviderReply();
-            trendReply.Trends.Add(new Trend() {
-                Country = 0,
-                Name = "#UNITTESTING",
-                Placement = 1,
-                TweetVolume24 = int.MaxValue,
-                TrendType = TrendType.Hashtag
-            }) ;
-
-            var trendResponses = new List<TrendProviderReply>()
-            {
-                trendReply
-            };
-            var reader = new MockingAsyncStreamReader<TrendProviderReply>(trendResponses);
-            var mocked_server_stream = TestCalls.AsyncServerStreamingCall(
-                reader, // Pass the stream reader into the gRPC call
-                Task.FromResult(new Metadata()),
-                () => Status.DefaultSuccess,
-                () => new Metadata(),
-                () => { });
-            grpc_mock.Setup(g => g.OnNewTrends(It.IsAny<Empty>(), null, null, CancellationToken.None)).Returns(mocked_server_stream);
-            var service = new TrendProviderService(grpc_mock.Object, logger);
+            var mocks = new GrpcClientMocks();
+            var service = new TrendProviderService(mocks.MockTrendProviderClient(), logger);
 
             TrendsRecievedEventArgs eventArgs = null;
             service.OnTrendsRecieved += (_, args) =>
@@ -113,7 +92,6 @@ namespace conductor.tests
             Assert.Multiple(() =>
             {
                 Assert.IsNotNull(eventArgs);
-                Assert.AreEqual(trendReply, eventArgs.Reply);
             });
         }
     }
