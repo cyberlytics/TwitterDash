@@ -18,7 +18,7 @@ a {
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 100%;
+  width: 60%;
 }
 
 td, th {
@@ -29,4 +29,9 @@ td, th {
 
 tr:nth-child(even) {
   background-color: #dddddd;
+}
+
+#tweet_counts_chart {
+  text-align: center;
+  width: 60%;
 }
