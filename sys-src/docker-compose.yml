@@ -66,10 +66,7 @@ services:
     build:
       context: images/webserver
       dockerfile: Dockerfile
-    volumes:
-      - ./images/webserver/src:/home/app/src
     environment:
-      - CHOKIDAR_USEPOLLING=true
       - DB_SERVICE_HOSTNAME=database-service
       - DB_SERVICE_PORT=<TO_BE_DETERMINED>
     ports:
