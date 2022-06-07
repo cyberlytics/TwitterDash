@@ -1,49 +1,35 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Twitterdash;
-using MongoDB.Driver;
 using places;
-using MongoDB.Bson;
 
 internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseReaderBase
 {
-    
-    private MongoClient client;
-    private woeid Woeid;    
 
-    public DatabaseReaderController(MongoClient client, woeid Woeid)
+    private woeid Woeid;
+    private ITwitterTrendsRepository repository;
+
+    public DatabaseReaderController(ITwitterTrendsRepository repository, woeid Woeid)
     {
-        this.client = client;
+        this.repository = repository;
         this.Woeid = Woeid;
     }
 
     public override async Task<GetAvailableCountriesReply> GetAvailableCountries(Empty request, ServerCallContext context)
     {
-        var database = client.GetDatabase("TwitterDash");
-        var collection = database.GetCollection<TwitterTrends>("Trends");
-        
-        var filter = new BsonDocument();
-        var countries = await collection.DistinctAsync<int>("country", filter);
-
-
+        var countries = await repository.GetAvailableCountries();
         var getAvailableCountriesReply = new GetAvailableCountriesReply();
 
-        for (int i = 0; i < countries.ToList().Count; i++)
+        foreach (int woeid in countries)
         {
-            getAvailableCountriesReply.Countries.Add(this.Woeid.getCountry(countries.ToList()[i]));
+            getAvailableCountriesReply.Countries.Add(this.Woeid.getCountry(woeid));
         }
-
         return getAvailableCountriesReply;
     }
 
     public override async Task<TrendProviderReply> GetCurrentTrends(GetCurrentTrendsRequest request, ServerCallContext context)
     {
-              
-        var database = client.GetDatabase("TwitterDash");
-        var collection = database.GetCollection<TwitterTrends>("Trends");
-
-        //Todo: Last or first???
-        var db_reply = (await collection.FindAsync(t => t.Country == this.Woeid.getWOEID(request.Country))).ToList().Last();
+        var db_reply = await repository.GetCurrentTrends(this.Woeid.getWOEID(request.Country));
 
         var replyTrends = new List<Trend>();
 
@@ -65,16 +51,13 @@ internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseRea
 
         return trendproviderreply;
     }
-    
+
     public override async Task<GetRecentTrendsReply> GetRecentTrends(GetRecentTrendsRequest request, ServerCallContext context)
     {
-        //request.Hashtag;
-
-
-        var database = client.GetDatabase("TwitterDash");
-        var collection = database.GetCollection<TwitterTrends>("Trends");
-
-        var db_reply = (await collection.FindAsync(x => x.DateTime.Date < request.EndDate.ToDateTime() && x.DateTime.Date > request.StartDate.ToDateTime() && x.Trends.Any(y => y.name == request.Hashtag))).ToList();
+        var db_reply = await repository.GetRecentTrends(
+            request.EndDate.ToDateTime(),
+            request.StartDate.ToDateTime(),
+            request.Hashtag);
 
 
         var recentTrends = new List<RecentTrend>();
@@ -101,7 +84,7 @@ internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseRea
 
         var getRecentTrendsReply = new GetRecentTrendsReply();
         getRecentTrendsReply.RecendTrends.AddRange(recentTrends);
-        
+
         return getRecentTrendsReply;
     }
 }
