@@ -19,4 +19,4 @@ RUN npm install
 EXPOSE 3000
 
 CMD ["npm", "run", "dev"]
-#CMD ls -la
+#CMD ls -la src

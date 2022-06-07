@@ -15,7 +15,7 @@ export default function Home() {
             <main className={styles.main}>
 
                 <h1 className={styles.title}>
-                    Twitter Dash
+                    Twitter Dash...
                 </h1>
 
                 <Trends></Trends>
