@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>317dcf5f-b807-4a66-845b-664713f20401</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<RunSettingsFilePath>$(MSBuildProjectDirectory)\..\CompleteRunsettings.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
 
@@ -13,6 +14,8 @@
 		<Protobuf Include="objects.proto" ProtoRoot=".\proto\" />
 		<Protobuf Include="TrendService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
 		<Protobuf Include="DatabaseService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
+		<Protobuf Include="TweetService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
+		<Protobuf Include="SentimentService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
 	</ItemGroup>
 	
   <ItemGroup>

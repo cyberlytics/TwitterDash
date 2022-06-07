@@ -1,32 +1,38 @@
-﻿using conductor.workflows;
-using Elsa.ActivityResults;
+﻿using Elsa.ActivityResults;
 using Elsa.Services;
 using Elsa.Services.Models;
 using Twitterdash;
 
 namespace conductor.activities
 {
+
+    
     public class PersistTrends : Activity
     {
+        private readonly DatabaseWriter.DatabaseWriterClient client;
+        private readonly ILogger<PersistTrends> logger;
 
-        public PersistTrends()
+        public PersistTrends(DatabaseWriter.DatabaseWriterClient client, ILogger<PersistTrends> logger)
         {
-            this.DisplayName = "Persist Trends in Database";
+            this.client=client;
+            this.logger=logger;
         }
+
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-            var trends = (TrendProviderReply)context.WorkflowInstance.Variables.Get("Trends")!;
-            var success = true;
+            var trends = (TrendProviderReply)context.WorkflowInstance.Variables.Get(Nameservice.VariableNames.Trends)!;
             try
             {
-                await Task.Delay(5000);
-            }catch (Exception ex)
-            {
-                success = false;
+                await client.StoreTrendsAsync(trends);
+                logger.LogInformation($"Stored {trends.Trends.Count} Trends in Database!");
             }
-
-            return Outcome(success ? Nameservice.Outcomes.Success : Nameservice.Outcomes.Failure);
+            catch (Exception ex)
+            {
+                logger.LogInformation($"Failed to Persist Trends with Error:\n{ex.Message}!");
+                return Fault(ex);
+            }
+            return Outcome(Nameservice.Outcomes.Done);
         }
     }
 }

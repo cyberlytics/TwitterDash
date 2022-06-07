@@ -22,9 +22,13 @@ message TrendProviderReply{
 }
 
 message Tweet{
-    string ID = 1;
-    int64 TweetID = 2;
-    string Text = 3;
-    string UserID = 4;
-    repeated string Hashtags = 5;
+    int64 ID = 1;
+    int64 Conversation_ID = 2;
+    google.protobuf.Timestamp timestamp = 3;
+    string Text = 4;
+    int64 UserID = 5;
+    int32 likes = 6;
+    int32 replies = 7;
+    int32 retweets = 8;
+    repeated string Hashtags = 9;
 }

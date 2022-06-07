@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "conductor", "conductor\cond
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "conductor.tests", "conductor.tests\conductor.tests.csproj", "{03D70047-F1B9-4385-BD80-BD652F5A3240}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F110892D-0298-44A3-9968-02BFBFB00EE9}"
+	ProjectSection(SolutionItems) = preProject
+		CompleteRunsettings.runsettings = CompleteRunsettings.runsettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

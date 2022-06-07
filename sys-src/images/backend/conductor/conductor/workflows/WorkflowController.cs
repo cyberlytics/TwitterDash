@@ -1,7 +1,10 @@
 ﻿using conductor.background_services;
 using conductor.Nameservice;
 using Elsa;
+using Elsa.Builders;
+using Elsa.Models;
 using Elsa.Services;
+using Elsa.Services.Models;
 using Twitterdash;
 
 namespace conductor.workflows
@@ -11,8 +14,7 @@ namespace conductor.workflows
         private readonly TrendProviderService trendProviderService;
         private readonly IServiceProvider services;
 
-        public int Runs { get; private set; } = 0;
-        private Queue<string> RunsInMemory = new();
+        public Queue<string> RunsInMemory = new();
         public WorkflowController(TrendProviderService trendProviderService, IServiceProvider services)
         {
             this.trendProviderService=trendProviderService;
@@ -25,21 +27,15 @@ namespace conductor.workflows
             Task.Run(()=>StartTrendWorkflow(e.Reply));
         }
 
-        public async void StartTrendWorkflow(TrendProviderReply trendProviderReply){
-            using var scope = services.CreateScope();
-
-            Runs++;
-
+        public async Task<(IWorkflowBlueprint blueprint,WorkflowInstance workflow)> BuildWorkflow<TWorkflow>(IServiceScope scope) where TWorkflow : class,IWorkflow
+        {
             var workflowRegistry = scope.ServiceProvider.GetRequiredService<IWorkflowRegistry>();
-            var workflowStarter= scope.ServiceProvider.GetRequiredService<IWorkflowRunner>();
+            
             var workflowFactory = scope.ServiceProvider.GetRequiredService<IWorkflowFactory>();
 
-            
-            
-            var workflowBlueprint = (await workflowRegistry.GetWorkflowAsync<TrendWorkflow>())!;
+            var workflowBlueprint = (await workflowRegistry.GetWorkflowAsync<TWorkflow>())!;
 
-            var workflow = await workflowFactory.InstantiateAsync(workflowBlueprint,correlationId: Runs.ToString(),contextId: Runs.ToString());
-            
+            var workflow = await workflowFactory.InstantiateAsync(workflowBlueprint);
 
             RunsInMemory.Enqueue(workflow.Id);
             if (RunsInMemory.Count > 10)
@@ -48,6 +44,14 @@ namespace conductor.workflows
                 var run_to_delete = RunsInMemory.Dequeue();
                 await instanceDeleter.DeleteAsync(run_to_delete.ToString());
             }
+            return (workflowBlueprint,workflow);
+        }
+
+        public async Task StartTrendWorkflow(TrendProviderReply trendProviderReply){
+            using var scope = services.CreateScope();
+
+            var workflowStarter = scope.ServiceProvider.GetRequiredService<IWorkflowRunner>();
+            var (workflowBlueprint, workflow) = await BuildWorkflow<TrendWorkflow>(scope);
 
             workflow.Variables.Set(VariableNames.Trends, trendProviderReply);
             await workflowStarter.RunWorkflowAsync(workflowBlueprint, workflow);

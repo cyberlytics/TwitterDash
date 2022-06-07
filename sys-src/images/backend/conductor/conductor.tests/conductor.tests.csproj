@@ -3,15 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
+	<RunSettingsFilePath>$(MSBuildProjectDirectory)\..\CompleteRunsettings.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
-	<PropertyGroup Label="FineCodeCoverage">
-		<Enabled>
-			False
-		</Enabled>
-	</PropertyGroup>
 	
   <ItemGroup>
     <PackageReference Include="Grpc.Core" Version="2.46.3" />
@@ -25,6 +20,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\conductor\conductor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="test-data\trends-example.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

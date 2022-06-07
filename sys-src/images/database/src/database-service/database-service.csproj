@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,8 +11,8 @@
 
 
 	<ItemGroup>
-		<Protobuf Include="objects.proto" ProtoRoot=".\proto\"/>
-		<Protobuf Include="DatabaseService.proto" ProtoRoot=".\proto\" GrpcServices="Server"/>
+		<Protobuf Include="objects.proto" ProtoRoot=".\proto\" />
+		<Protobuf Include="DatabaseService.proto" ProtoRoot=".\proto\" GrpcServices="Server" />
 	</ItemGroup>
 	
   <ItemGroup>
@@ -20,6 +20,11 @@
     <PackageReference Include="MongoDB.Bson" Version="2.15.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
 	<PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
+	
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y $(ProjectDir)WOEID.json  $(ProjectDir)$(OutDir)" />
+  </Target>
 
 </Project>
