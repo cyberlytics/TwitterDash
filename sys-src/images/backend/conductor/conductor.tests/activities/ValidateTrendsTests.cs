@@ -2,9 +2,7 @@
 using conductor.Nameservice;
 using Elsa.ActivityResults;
 using NUnit.Framework;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Twitterdash;
 
 namespace conductor.tests.activities
@@ -23,7 +21,7 @@ namespace conductor.tests.activities
         [Test]
         public void ValidateTrends_Succeds_With_Valid_Trends()
         {
-            var context = BuildExecutionContext();
+
             context.WorkflowInstance.Variables.Set(VariableNames.Trends, new TrendProviderReply());
 
             var activity = new ValidateTrends();
@@ -38,14 +36,13 @@ namespace conductor.tests.activities
             {
                 Assert.IsNotNull(result);
                 Assert.IsNotEmpty(result.Outcomes);
-                Assert.AreEqual(Nameservice.Outcomes.Success , result.Outcomes.First());
+                Assert.AreEqual(Nameservice.Outcomes.Done , result.Outcomes.First());
             });
         }
 
         [Test]
         public void ValidateTrends_Fails_With_Invalid_Trends()
         {
-            var context = BuildExecutionContext();
             context.WorkflowInstance.Variables.Set(VariableNames.Trends, "notTrends");
 
             var activity = new ValidateTrends();

@@ -5,8 +5,6 @@ namespace conductor.factories
 {
     public static class grpcClientFactory
     {
-  
-
         public static GrpcChannel BuildChannel(string ip) {
             var httpHandler = new HttpClientHandler();
             // Return `true` to allow certificates that are untrusted/invalid
