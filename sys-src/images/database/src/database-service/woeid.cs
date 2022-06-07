@@ -4,23 +4,22 @@ namespace places
 {
     public class woeid
     {
-        WOEID_places woeid_places;
+        List<place> woeid_places;
         public woeid()
         {
-
             string fileName = "WOEID.json";
             string jsonString = File.ReadAllText(fileName);
-            this.woeid_places = JsonSerializer.Deserialize<WOEID_places>(jsonString)!;
+            this.woeid_places = JsonSerializer.Deserialize<List<place>>(jsonString)!;
         }
         
-        public int getWOEID(string coutry)
+        public int getWOEID(string country)
         {
-            return this.woeid_places.places.Find(x => x.country == coutry).woeid;
+            return this.woeid_places.Find(x => x.country == country).parentid;
         }
 
         public string getCountry(int woeid)
         {
-            return this.woeid_places.places.Find(x => x.woeid == woeid).country;
+            return this.woeid_places.Find(x => x.parentid == woeid).country;
         }
     }
 
@@ -37,10 +36,6 @@ namespace places
   //  "countryCode": "CA"
   //},
   
-    public class WOEID_places
-    {
-        public List<place> places { get; set; }
-    }
     public class place
     {
         public string name { get; set; }
