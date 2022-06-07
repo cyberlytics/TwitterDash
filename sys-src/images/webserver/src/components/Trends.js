@@ -19,7 +19,7 @@ export default function Trends(props) {
 
     let results = data.map((obj, index) => {
         return (
-            <Fragment>
+            <Fragment key={index + 1}>
                 <tr key={index + 1}>
                     <th key={0}>{index + 1}</th>
                     <th key={1}>{obj.name}</th>
