@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+	<RunSettingsFilePath>$(SolutionDir)CompleteRunsettings.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,9 +21,5 @@
   <ItemGroup>
     <ProjectReference Include="..\database-service\database-service.csproj" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y $(SolutionDir)database-service\WOEID.json  $(ProjectDir)$(OutDir)" />
-  </Target>
 
 </Project>
