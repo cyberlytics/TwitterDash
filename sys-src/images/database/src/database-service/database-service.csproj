@@ -10,15 +10,6 @@
 	<RunSettingsFilePath>$(SolutionDir)CompleteRunsettings.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="WOEIDjson.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="WOEIDjson.cs" />
-  </ItemGroup>
-
-
 	<ItemGroup>
 		<Protobuf Include="objects.proto" ProtoRoot=".\proto\" />
 		<Protobuf Include="DatabaseService.proto" ProtoRoot=".\proto\" GrpcServices="Server" />
