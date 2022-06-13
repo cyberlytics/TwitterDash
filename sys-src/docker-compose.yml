@@ -4,7 +4,7 @@ services:
   database:
     container_name: mongo
     image: mongo:latest
-    profiles: ["database","database-service","backend"]
+    profiles: ["database","database-service","backend","frontend","frontend-dev"]
     volumes:
       - ./images/database/data/MongoDB:/data/db
     ports:
@@ -19,7 +19,7 @@ services:
   mongo-express:
     container_name: mongo-express
     image: mongo-express
-    profiles: ["database","database-service","backend"]
+    profiles: ["database","database-service","backend","frontend-dev"]
     restart: always
     ports:
       - 8081:8081
@@ -33,7 +33,7 @@ services:
   database-service:
     container_name: databaseservice
     image: databaseservice
-    profiles: ["database-service","backend"]
+    profiles: ["database-service","backend","frontend","frontend-dev"]
     build:
       context: images/database/src
       dockerfile: database-service/Dockerfile
@@ -44,6 +44,9 @@ services:
       MONGODB_USER: root
       MONGODB_PASSWORD: example
       GRPC_PORT: 50051
+  
+    ports:
+        - 50051:50051
 
     networks:
         - DBNetwork
@@ -53,7 +56,7 @@ services:
   conductor-service:
     image: conductor
     container_name: conductor
-    profiles: ["conductor","backend"]
+    profiles: ["conductor","backend","frontend","frontend-dev"]
     build:
       context: images/backend/conductor
       dockerfile: conductor/Dockerfile
@@ -76,10 +79,9 @@ services:
     build:
       context: images/webserver
       dockerfile: Dockerfile
-    volumes:
-      - ./images/webserver/src:/home/app/src
     environment:
-      - CHOKIDAR_USEPOLLING=true
+      - DB_SERVICE_HOSTNAME=database-service
+      - DB_SERVICE_PORT=<TO_BE_DETERMINED>
     ports:
       - 3000:3000
     networks:
@@ -88,11 +90,31 @@ services:
 
   trend-service:
     container_name: trend-service
-    profiles: ["trend-service", "backend"]
+    profiles: ["trend-service", "backend","frontend","frontend-dev"]
     build: ./images/backend/trend_service
     restart: unless-stopped
     ports:
       - 50010:50010
+    networks:
+      - network-backend
+
+  twint-service:
+    container_name: twint-service
+    profiles: ["twint-service", "backend"]
+    build: ./images/backend/twint_scraper
+    restart: unless-stopped
+    ports:
+      - 60150:50150
+    networks:
+      - network-backend
+
+  sentiment-service:
+    container_name: sentiment-service
+    profiles: ["sentiment-service", "backend"]
+    build: ./images/backend/sentiment_service
+    restart: unless-stopped
+    ports:
+      - 60250:50250
     networks:
       - network-backend
 

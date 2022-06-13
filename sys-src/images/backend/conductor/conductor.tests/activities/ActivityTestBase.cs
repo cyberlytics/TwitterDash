@@ -12,12 +12,15 @@ namespace conductor.tests.activities
     public class ActivityTestBase : TestBase
     {
         protected IServiceProvider ServiceProvider;
+        protected ActivityExecutionContext context;
         public override void Setup()
         {
             var builder = WebApplication.CreateBuilder();
             builder.Services.AddElsa();
             var app = builder.Build();
             ServiceProvider =  app.Services;
+            context = BuildExecutionContext();
+            base.Setup();
         }
 
         protected ActivityExecutionContext BuildExecutionContext()

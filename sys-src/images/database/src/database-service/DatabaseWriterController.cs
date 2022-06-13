@@ -1,23 +1,22 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Twitterdash;
-using MongoDB.Driver;
+using places;
 
 internal class DatabaseWriterController : Twitterdash.DatabaseWriter.DatabaseWriterBase
 {
 
-    private MongoClient client;
+    private ITwitterTrendsRepository repository;
+    private woeid Woeid;
 
-    public DatabaseWriterController(MongoClient client)
+    public DatabaseWriterController(ITwitterTrendsRepository repository, woeid Woeid)
     {
-        this.client = client;
+        this.repository = repository;
+        this.Woeid = Woeid;
     }
 
     public override async Task<Empty> StoreTrends(TrendProviderReply request, ServerCallContext context)
-    {        
-        var database = client.GetDatabase("TwitterDash");
-        var collection = database.GetCollection<TwitterTrends>("Trends");
-
+    {
         var timestamp = request.Timestamp.ToDateTime();
 
         var Trends = new List<TwitterTrend>();
@@ -30,15 +29,16 @@ internal class DatabaseWriterController : Twitterdash.DatabaseWriter.DatabaseWri
             twitterTrend.placement = trend.Placement;
             twitterTrend.tweetVolume24 = trend.TweetVolume24;
 
-
             Trends.Add(twitterTrend);
         }
 
-        await collection.InsertOneAsync(new()
+        var trends = new TwitterTrends
         {
             DateTime = timestamp,
+            Country = Trends[0].woeid,
             Trends = Trends
-        });
+        };
+        await repository.StoreTrends(trends);
 
         return new Empty();
     }

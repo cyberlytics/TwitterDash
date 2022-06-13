@@ -1,16 +1,19 @@
 {
 	"Python": {
-		"TrendService.proto": ["images/backend/trend_service/stub"]
+		"TrendService.proto": ["images/backend/trend_service/stub"],
+		"TweetService.proto": ["images/backend/twint_scraper/stub"],
+		"SentimentService.proto": ["images/backend/sentiment_service/stub"]
 	},
 	"C#": {
 		"TrendService.proto": ["images/backend/conductor/conductor/proto"],
-
+		"TweetService.proto": ["images/backend/conductor/conductor/proto"],
+		"SentimentService.proto": ["images/backend/conductor/conductor/proto"],
 		"DatabaseService.proto": [
 			"images/backend/conductor/conductor/proto",
 			"images/database/src/database-service/proto"
 		]
 	},
 	"NodeJs": {
-		"DatabaseService.proto": []
+		"DatabaseService.proto": ["images/webserver/protos"]
 	}
 }

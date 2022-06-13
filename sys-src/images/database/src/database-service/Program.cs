@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System.Net;
+using places;
 
 var mongodb_port = Environment.GetEnvironmentVariable("MONGODB_PORT") ?? "27017";
 var mongodb_ip = Environment.GetEnvironmentVariable("MONGODB_IP") ?? "localhost";
@@ -27,7 +28,13 @@ builder.WebHost.ConfigureKestrel(options =>
 
 builder.Services.AddGrpc();
 
-builder.Services.AddTransient<MongoClient>((_) => new MongoClient($@"mongodb://{mongodb_user}:{mongodb_password}@{mongodb_ip}:{mongodb_port}/"));
+var client = new MongoClient($@"mongodb://{mongodb_user}:{mongodb_password}@{mongodb_ip}:{mongodb_port}/");
+builder.Services.AddTransient<ITwitterTrendsRepository>((_) =>
+    new TwitterTrendsRepository(
+        client
+        .GetDatabase("TwitterDash")
+        .GetCollection<TwitterTrends>("Trends")));
+builder.Services.AddSingleton<woeid>((_) => new woeid());
 
 var app = builder.Build();
 
@@ -42,25 +49,3 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
-
-
-//var database = client.GetDatabase("TwitterDash");
-//var collection = database.GetCollection<TwitterTrend>("Trends");
-
-//while (true)
-//{
-//    Console.WriteLine("Creating Entry");
-//    await collection.InsertOneAsync(new()
-//    {
-//        DateTime = DateTime.Now,
-//        Trends = new()
-//        {
-//            { "#GRPC", 1 },
-//            { "#Donald Trump", 2 },
-//        }
-//    });
-//    Task.Delay(3000).Wait();
-//}
-
-//var results = await collection.FindAsync(_ => true);
-//Console.WriteLine(results);
