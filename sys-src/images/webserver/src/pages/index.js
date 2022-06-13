@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Trends from '../components/Trends'
@@ -6,24 +7,7 @@ import TweetCountsChart from '../components/tweet_count_chart'
 import React, { useEffect, useState, Fragment } from "react";
 
 export default class Home extends React.Component {
-    constructor() {
-        super();
-        this.onSelectChange = this.onSelectChange.bind(this);
-        this.state = {
-            selected_hashtag: null
-        }
-    }
-
-    onSelectChange(e) {
-        this.setState({
-            selected_hashtag: e.target.value
-        });
-        console.log("state is gonna change")
-    }
-
     render() {
-        console.log("render")
-        console.log(this.state.selected_hashtag)
         return (
             <div className={styles.container}>
                 <Head>
@@ -33,19 +17,18 @@ export default class Home extends React.Component {
                 </Head>
 
                 <main className={styles.main}>
-
+                    <div className="topnav">
+                        <Link href="/"><a className="active">Twitter Dash</a></Link>
+                        <Link href="/trending"><a>Trending</a></Link>
+                        <Link href="/visualization"><a>Visualization</a></Link>
+                    </div>
                     <h1 className={styles.title}>
                         Twitter Dash
                     </h1>
-                    <select onChange={this.onSelectChange}>
-                        <option disabled selected value> select hashtag </option>
-                        <option value="BTS_Proof">#BTS_Proof</option>
-                        <option value="YetToCome">#YetToCome</option>
-                    </select>
-                    <div id="tweet_counts_chart">
-                        <TweetCountsChart hashtag={this.state.selected_hashtag}></TweetCountsChart>
-                    </div>
-                    <Trends></Trends>
+                    <p>Introduction to Twitter Dash ...</p>
+                    <p>Technical description of Twitter Dash ...</p>
+                    <p>Usage description of Twitter Dash ...</p>
+                    <p>Authors of Twitter Dash ...</p>
 
                 </main>
             </div>
