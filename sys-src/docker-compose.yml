@@ -19,7 +19,7 @@ services:
   mongo-express:
     container_name: mongo-express
     image: mongo-express
-    profiles: ["database","database-service","backend"]
+    profiles: ["database","database-service","backend","frontend-dev"]
     restart: always
     ports:
       - 8081:8081
@@ -44,6 +44,9 @@ services:
       MONGODB_USER: root
       MONGODB_PASSWORD: example
       GRPC_PORT: 50051
+  
+    ports:
+        - 50051:50051
 
     networks:
         - DBNetwork
