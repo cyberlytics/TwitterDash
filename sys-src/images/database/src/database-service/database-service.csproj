@@ -7,8 +7,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<RunSettingsFilePath>$(SolutionDir)CompleteRunsettings.runsettings</RunSettingsFilePath>
   </PropertyGroup>
-
 
 	<ItemGroup>
 		<Protobuf Include="objects.proto" ProtoRoot=".\proto\" />
@@ -22,9 +22,5 @@
 	<PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
-	
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y $(ProjectDir)WOEID.json  $(ProjectDir)$(OutDir)" />
-  </Target>
 
 </Project>
