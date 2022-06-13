@@ -56,7 +56,7 @@ if __name__ == "__main__":
     stub.TweetService_pb2_grpc.add_TweetProviderServicer_to_server(
         TweetService(), server
     )
-    server.add_insecure_port("0.0.0.0:50013")
+    server.add_insecure_port("0.0.0.0:50050")
     server.start()
     print("Started Tweet-Scraper Service")
     server.wait_for_termination()
