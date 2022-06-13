@@ -4,7 +4,7 @@ services:
   database:
     container_name: mongo
     image: mongo:latest
-    profiles: ["database","database-service","backend","frontend"]
+    profiles: ["database","database-service","backend","frontend","frontend-dev"]
     volumes:
       - ./images/database/data/MongoDB:/data/db
     ports:
@@ -33,7 +33,7 @@ services:
   database-service:
     container_name: databaseservice
     image: databaseservice
-    profiles: ["database-service","backend","frontend"]
+    profiles: ["database-service","backend","frontend","frontend-dev"]
     build:
       context: images/database/src
       dockerfile: database-service/Dockerfile
@@ -53,7 +53,7 @@ services:
   conductor-service:
     image: conductor
     container_name: conductor
-    profiles: ["conductor","backend","frontend"]
+    profiles: ["conductor","backend","frontend","frontend-dev"]
     build:
       context: images/backend/conductor
       dockerfile: conductor/Dockerfile
@@ -87,7 +87,7 @@ services:
 
   trend-service:
     container_name: trend-service
-    profiles: ["trend-service", "backend","frontend"]
+    profiles: ["trend-service", "backend","frontend","frontend-dev"]
     build: ./images/backend/trend_service
     restart: unless-stopped
     ports:
