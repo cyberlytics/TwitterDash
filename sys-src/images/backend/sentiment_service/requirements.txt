@@ -1,0 +1,9 @@
+numpy
+pandas
+grpcio-tools==1.46.3
+transformers
+torch
+torchvision
+torchaudio
+textblob-de
+nltk
