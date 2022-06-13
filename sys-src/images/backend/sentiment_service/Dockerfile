@@ -2,7 +2,7 @@
 
 FROM python:3.10
 
-EXPOSE 50050
+EXPOSE 50250
 
 WORKDIR /usr/src/app
 
