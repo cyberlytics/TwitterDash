@@ -1,11 +1,9 @@
-import twint
 import pandas as pd
 import re
 from textblob_de import TextBlobDE
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
-from typing import List
+#from typing import List
 import torch
-import tqdm
 import re
 # python3 -m textblob.download_corpora
 import nltk
