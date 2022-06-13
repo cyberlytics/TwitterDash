@@ -9,7 +9,6 @@ namespace places.test
         public void WoeidToCountry()
         {
             Assert.DoesNotThrow(() => { var WOEID = new woeid(); });
-            
         }
     }
     
