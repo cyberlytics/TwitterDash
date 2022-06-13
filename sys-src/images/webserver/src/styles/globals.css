@@ -18,7 +18,7 @@ a {
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 60%;
+  width: 100%;
 }
 
 td, th {
@@ -33,7 +33,7 @@ tr:nth-child(even) {
 
 #tweet_counts_chart {
   text-align: center;
-  width: 60%;
+  /*width: 60%;*/
 }
 
 /* Add a black background color to the top navigation */
@@ -65,4 +65,15 @@ tr:nth-child(even) {
 .topnav a.active {
   background-color: rgb(29,155,240);
   color: white;
+}
+
+.content {
+  margin-top: 2em;
+  width: 60%;
+}
+
+.selection {
+  width:100%;
+  text-align:center;
+  margin-bottom: 2em;
 }

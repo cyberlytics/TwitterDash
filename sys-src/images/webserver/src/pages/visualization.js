@@ -27,14 +27,18 @@ export default class Visualization extends React.Component {
                         <Link href="/trending"><a>Trending</a></Link>
                         <Link href="/visualization"><a className="active">Visualization</a></Link>
                     </div>
-
-                    <select onChange={this.onSelectChange}>
-                        <option disabled selected value> select hashtag </option>
-                        <option value="BTS_Proof">#BTS_Proof</option>
-                        <option value="YetToCome">#YetToCome</option>
-                    </select>
-                    <div id="tweet_counts_chart">
-                        <TweetCountsChart hashtag={this.state.selected_hashtag}></TweetCountsChart>
+                    <div className="content">
+                        <div className="selection">
+                            <span>hashtag: </span>
+                            <select onChange={this.onSelectChange}>
+                                <option disabled selected value> select hashtag </option>
+                                <option value="BTS_Proof">#BTS_Proof</option>
+                                <option value="YetToCome">#YetToCome</option>
+                            </select>
+                        </div>
+                        <div id="tweet_counts_chart">
+                            <TweetCountsChart hashtag={this.state.selected_hashtag}></TweetCountsChart>
+                        </div>
                     </div>
                 </main>
             </div>

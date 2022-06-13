@@ -4,8 +4,7 @@ export default class Trends extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: null,
-            num_results: "50"
+            data: null
         }
     }
 
@@ -43,7 +42,7 @@ export default class Trends extends React.Component {
             this.fetchData();
         }
     }
-    
+
     render() {
         if (!this.state.data) return <p>No data!</p>
         return (
