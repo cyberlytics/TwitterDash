@@ -34,10 +34,6 @@ else {
     let protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
     let twitterdash = protoDescriptor.twitterdash;
 
-    let defaultRequest = {
-        limit: 50
-    };
-
     let RecentTrendsRequest = {
         hashtag: "TonyAwards2022"
     };
@@ -58,12 +54,15 @@ else {
 
 
 export default function handler(req, res) {
+    let num_results = req.query.num_results;
+    console.log("api: num_results: " + num_results);
     if (USE_DUMMY_DATA) {
         let hashtag_trends = require('../../dummy_data/improved_hashtags.json');
-        res.status(200).json(hashtag_trends);
+        let dataSlice = hashtag_trends.slice(0, num_results)
+        res.status(200).json(dataSlice);
     }
     else {
-        client.GetCurrentTrends(defaultRequest, dataCallback);
+        client.GetCurrentTrends({limit: num_results}, dataCallback);
         //client.GetRecentTrends(RecentTrendsRequest, dataCallback);
         //client.GetAvailableCountries(null, dataCallback);
         //TODO: return data
