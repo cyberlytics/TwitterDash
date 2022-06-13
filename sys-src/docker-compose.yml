@@ -96,6 +96,26 @@ services:
     networks:
       - network-backend
 
+  twint-service:
+    container_name: twint-service
+    profiles: ["twint-service", "backend"]
+    build: ./images/backend/twint_scraper
+    restart: unless-stopped
+    ports:
+      - 60150:50150
+    networks:
+      - network-backend
+
+  sentiment-service:
+    container_name: sentiment-service
+    profiles: ["sentiment-service", "backend"]
+    build: ./images/backend/sentiment_service
+    restart: unless-stopped
+    ports:
+      - 60250:50250
+    networks:
+      - network-backend
+
 networks:
   network-backend:
     name: backend

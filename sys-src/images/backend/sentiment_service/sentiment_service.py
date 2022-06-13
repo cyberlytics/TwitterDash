@@ -36,7 +36,7 @@ class SentimentService(SentimentProviderServicer):
 if __name__ == "__main__":
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     stub.SentimentService_pb2_grpc.add_SentimentProviderServicer_to_server(SentimentService(), server)
-    server.add_insecure_port("0.0.0.0:50050")
+    server.add_insecure_port("0.0.0.0:50250")
     server.start()
     print("Started Sentiment Service")
     server.wait_for_termination()
