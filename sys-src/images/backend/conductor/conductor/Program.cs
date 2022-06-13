@@ -21,6 +21,11 @@ var elsaConfig = builder.Configuration.GetSection("Elsa");
 builder.Services.AddElsa(elsa => elsa
                     .AddConsoleActivities()
                     .AddHttpActivities(elsaConfig.GetSection("Server").Bind)
+                    .AddActivity<PersistTopicModels>()
+                    .AddActivity<PersistSentiment>()
+                    .AddActivity<PerformSentimentAnalysis>()
+                    .AddActivity<PerformTopicModeling>()
+                    .AddActivity<MakeTweetsUnique>()
                     .AddActivity<ValidateTrends>()
                     .AddActivity<PersistTrends>()
                     .AddActivity<CollectTweets>()

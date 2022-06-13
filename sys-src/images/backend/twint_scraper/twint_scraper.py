@@ -41,7 +41,7 @@ class Twint_Scraper():
         if createDataFrame:
             self.df = twint.storage.panda.Tweets_df
             self.df = self.dataframe_cleanup(self.df)
-            return self.df
+            return self.toTweet(self.df)
         
     def dataframe_cleanup(self, df):
         df = df.drop_duplicates(subset=["id"])
@@ -53,9 +53,28 @@ class Twint_Scraper():
         df["Stunde"] = df["date"].apply(lambda x: x.hour)
         df["Originale_Tweetlaenge"] = df["tweet"].apply(lambda x: len(x))
         #df["reply_to"] = df["reply_to"].apply(lambda x: str(self.extract_reply_to(x)))
+        df["date"] = df["date"].astype(str)
         
         return df
-    
+
+    def toTweet(self, df):
+        tweets = []
+        for index, row in df.iterrows():
+            tweets.append(
+                {
+                    "id": int(row["id"]),
+                    "conversation_id": int(row["conversation_id"]),
+                    "date": row["date"],
+                    "tweet": row["tweet"],
+                    "user_id": row["user_id"],
+                    "nlikes": row["nlikes"],
+                    "nreplies": row["nreplies"],
+                    "nretweets": row["nretweets"],
+                    "hashtags": row["hashtags"],
+                }
+            )
+        return tweets
+        
     # Data Analysis
     # TODO  
     
