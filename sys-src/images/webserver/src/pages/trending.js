@@ -8,7 +8,7 @@ export default class Trending extends React.Component {
         super();
         this.onSelectChange = this.onSelectChange.bind(this);
         this.state = {
-            num_results: "50"
+            num_results: "5"
         }
     }
 
@@ -27,16 +27,18 @@ export default class Trending extends React.Component {
                         <Link href="/trending"><a className="active">Trending</a></Link>
                         <Link href="/visualization"><a>Visualization</a></Link>
                     </div>
-                    <div>
-                        <span>top n results: </span>
-                        <select defaultValue="50" onChange={this.onSelectChange}>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
+                    <div className="content">
+                        <div className="selection">
+                            <span>top n results: </span>
+                            <select defaultValue="5" onChange={this.onSelectChange}>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <Trends num_results={this.state.num_results}></Trends>
                     </div>
-                    <Trends num_results={this.state.num_results}></Trends>
                 </main>
             </div>
         )
