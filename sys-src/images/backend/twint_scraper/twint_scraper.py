@@ -62,11 +62,12 @@ class Twint_Scraper():
         for index, row in df.iterrows():
             tweets.append(
                 {
-                    "id": row["id"],
-                    "conversation_id": row["conversation_id"],
+                    "id": int(row["id"]),
+                    "conversation_id": int(row["conversation_id"]),
                     "date": row["date"],
                     "tweet": row["tweet"],
                     "user_id": row["user_id"],
+                    "nlikes": row["nlikes"],
                     "nreplies": row["nreplies"],
                     "nretweets": row["nretweets"],
                     "hashtags": row["hashtags"],
