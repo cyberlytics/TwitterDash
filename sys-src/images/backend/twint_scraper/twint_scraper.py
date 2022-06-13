@@ -6,7 +6,7 @@ import re
 
 
 class Twint_Scraper():
-    def __init__(self):#
+    def __init__(self):
         self.df = None
         
         nest_asyncio.apply()
@@ -81,7 +81,8 @@ class Twint_Scraper():
     
     # Sentiment Analysis
     # TODO  
-    
+    def sentiment_analysis(self, df):
+        pass
     
     # save in Database
     # TODO  
