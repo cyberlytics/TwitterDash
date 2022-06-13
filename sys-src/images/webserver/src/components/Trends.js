@@ -1,35 +1,51 @@
 import React, { useEffect, useState, Fragment } from "react";
 
-export default function Trends(props) {
-    const [data, setData] = useState(null)
-    const [isLoading, setLoading] = useState(false)
+export default class Trends extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: null
+        }
+    }
 
-    useEffect(() => {
-        setLoading(true)
-        fetch('api/get_hashtag_trends')
-            .then((res) => res.json())
-            .then((data) => {
-                setData(data)
-                setLoading(false)
+    fetchData() {
+        let query = 'api/get_hashtag_trends?' + new URLSearchParams({
+            num_results: this.props.num_results
+        });
+        let fetch_promise = fetch(query);
+        let json_promise = fetch_promise.then((res) => res.json())
+        json_promise.then((data) => {
+            let results = data.map((obj, index) => {
+                return (
+                    <Fragment key={index + 1}>
+                        <tr key={index + 1}>
+                            <th key={0}>{index + 1}</th>
+                            <th key={1}>{obj.name}</th>
+                            <th key={2}>{obj.tweet_volume}</th>
+                        </tr>
+                    </Fragment>
+                )
             })
-    }, [])
+            this.setState({data: results})
+        });
+    }
 
-    if (isLoading) return <p>Loading...</p>
-    if (!data) return <p>No profile data</p>
+    componentDidMount() {
+        this.fetchData();
+    }
 
-    let results = data.map((obj, index) => {
+    componentDidUpdate(prevProps) {
+        if (this.props.num_results != prevProps.num_results) {
+            this.setState({
+                num_results: this.props.num_results
+            })
+            this.fetchData();
+        }
+    }
+
+    render() {
+        if (!this.state.data) return <p>No data!</p>
         return (
-            <Fragment>
-                <tr key={index + 1}>
-                    <th key={0}>{index + 1}</th>
-                    <th key={1}>{obj.name}</th>
-                    <th key={2}>{obj.tweet_volume}</th>
-                </tr>
-            </Fragment>
-        )
-    })
-    return (
-        <>
             <table>
                 <tbody>
                 <tr key={0}>
@@ -37,9 +53,9 @@ export default function Trends(props) {
                     <th key={1}>Hashtag</th>
                     <th key={2}>Tweet Volume</th>
                 </tr>
-                { results }
+                { this.state.data }
                 </tbody>
             </table>
-        </>
-    );
+        );
+    }
 }
