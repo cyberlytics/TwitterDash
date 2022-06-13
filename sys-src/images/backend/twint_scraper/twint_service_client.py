@@ -9,7 +9,7 @@ import datetime
 
 
 if __name__ == "__main__":
-    channel = grpc.insecure_channel('127.0.0.1:50013')
+    channel = grpc.insecure_channel('127.0.0.1:50050')
     client = TweetProviderStub(channel)
 
     timestamp_since = Timestamp()
