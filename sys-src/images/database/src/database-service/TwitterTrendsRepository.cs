@@ -12,7 +12,7 @@ public class TwitterTrendsRepository : ITwitterTrendsRepository
 
     public async Task<List<int>> GetAvailableCountries()
     {
-        var countries = await this.collection.DistinctAsync<int>("country", new BsonDocument());
+        var countries = await this.collection.DistinctAsync<int>("Country", new BsonDocument());
         return await countries.ToListAsync();
     }
 
@@ -22,13 +22,22 @@ public class TwitterTrendsRepository : ITwitterTrendsRepository
         return await collection.Find(t => t.Country == woeid).Sort(sort).FirstAsync();
     }
 
-    public async Task<List<TwitterTrends>> GetRecentTrends(DateTime startDate, DateTime endDate, string hashtag)
+    public async Task<List<TwitterTrends>> GetRecentTrends(DateTime? startDate, DateTime? endDate, string hashtag)
     {
-        return await collection.Find(x =>
-        x.DateTime.Date < endDate
-        && x.DateTime.Date > startDate
-        && x.Trends.Any(y => y.name == hashtag))
-        .ToListAsync();
+        if (startDate != null && endDate != null)
+        {
+            return await collection.Find(x =>
+            x.DateTime.Date < endDate
+            && x.DateTime.Date > startDate
+            && x.Trends.Any(y => y.name == hashtag))
+            .ToListAsync();
+        }
+        else
+        {
+            return await collection.Find(x =>
+             x.Trends.Any(y => y.name == hashtag))
+            .ToListAsync();
+        }
     }
 
     public async Task StoreTrends(TwitterTrends trends)
