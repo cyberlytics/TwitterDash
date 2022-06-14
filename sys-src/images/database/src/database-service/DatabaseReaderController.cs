@@ -29,16 +29,25 @@ internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseRea
 
     public override async Task<TrendProviderReply> GetCurrentTrends(GetCurrentTrendsRequest request, ServerCallContext context)
     {
-        var db_reply = await repository.GetCurrentTrends(this.Woeid.getWOEID(request.Country));
+        TwitterTrends? reply;
 
-        if (db_reply == null)
+        if (request.HasCountry)
+        {
+            reply = await repository.GetCurrentTrends(this.Woeid.getWOEID(request.Country));
+        }
+        else
+        {
+            reply = await repository.GetCurrentTrends(null);
+        }
+
+        if (reply == null)
         {
             return new TrendProviderReply();
         }
 
         var replyTrends = new List<Trend>();
 
-        foreach (var trend in db_reply.Trends)
+        foreach (var trend in reply.Trends)
         {
             var T = new Trend();
             T.TrendType = (Twitterdash.TrendType)trend.trendType;
@@ -53,7 +62,7 @@ internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseRea
         replyTrends = replyTrends.OrderBy(x => x.Placement).Take(request.Limit).ToList();
 
         var trendproviderreply = new TrendProviderReply();
-        trendproviderreply.Timestamp = db_reply.DateTime.ToUniversalTime().ToTimestamp();
+        trendproviderreply.Timestamp = reply.DateTime.ToUniversalTime().ToTimestamp();
         trendproviderreply.Trends.AddRange(replyTrends);
 
         return trendproviderreply;

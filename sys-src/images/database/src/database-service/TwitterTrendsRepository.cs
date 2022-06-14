@@ -16,10 +16,17 @@ public class TwitterTrendsRepository : ITwitterTrendsRepository
         return await countries.ToListAsync();
     }
 
-    public async Task<TwitterTrends> GetCurrentTrends(int woeid)
+    public async Task<TwitterTrends> GetCurrentTrends(int? woeid)
     {
         var sort = Builders<TwitterTrends>.Sort.Descending("DateTime");
-        return await collection.Find(t => t.Country == woeid).Sort(sort).FirstOrDefaultAsync();
+        if (woeid == null)
+        {
+            return await collection.Find(Builders<TwitterTrends>.Filter.Empty).Sort(sort).FirstOrDefaultAsync();
+        }
+        else
+        {
+            return await collection.Find(t => t.Country == woeid).Sort(sort).FirstOrDefaultAsync();
+        }
     }
 
     public async Task<List<TwitterTrends>> GetRecentTrends(DateTime? startDate, DateTime? endDate, string hashtag)
