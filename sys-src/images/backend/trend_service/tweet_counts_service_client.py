@@ -21,7 +21,6 @@ if __name__ == "__main__":
 
     timestamp_until = Timestamp()
     timestamp_until.FromDatetime(datetime.datetime.strptime("2022-06-12", "%Y-%m-%d"))
-    # timestamp_since.ToDatetime().strftime("%Y-%m-%d")
 
     request = GetRecentTweetCountsRequest(
         query="#corona",
