@@ -1,4 +1,4 @@
-using places;
+using DatabaseService.Models;
 
 namespace places.test
 {
@@ -11,7 +11,7 @@ namespace places.test
             Assert.DoesNotThrow(() => { var WOEID = new woeid(); });
         }
     }
-    
+
     public class woeidFunctionsTests
     {
         woeid Woeid;
