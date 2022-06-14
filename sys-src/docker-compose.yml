@@ -72,13 +72,6 @@ services:
       - TWINTSERVICE_PORT=50150
       - SENTIMENTSERVICE_IP=sentiment-service
       - SENTIMENTSERVICE_PORT=50250
-
-    depends_on:
-      - database-service
-      - trend-service
-      - twint-service
-      - sentiment-service
-
       
     networks:
         - network-backend
