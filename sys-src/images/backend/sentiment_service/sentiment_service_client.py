@@ -10,10 +10,10 @@ import datetime
 
 
 if __name__ == "__main__":
-    channel = grpc.insecure_channel('127.0.0.1:60250')
+    channel = grpc.insecure_channel('127.0.0.1:50012')
     client = SentimentProviderStub(channel)
     
-    request = GetSentimentRequest(text="Ich liebe mein neues Auto.")
+    request = GetSentimentRequest(text="Ich liebe mein neues Auto.", language="de")
     #request = GetSentimentRequest(text="Ich hasse mein neues Auto.")
 
     response = client.GetSentiment(request)

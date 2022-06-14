@@ -42,6 +42,7 @@ class TweetService(TweetProviderServicer):
                     replies = tweet["nreplies"],
                     retweets = tweet["nretweets"],
                     Hashtags = tweet["hashtags"],
+                    language = tweet["language"]
                 )
             
             tweets.append(tmpvar)
