@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System.Net;
-using places;
+using DatabaseService.Controller;
+using DatabaseService.Repositories;
+using DatabaseService.Models;
 
 var mongodb_port = Environment.GetEnvironmentVariable("MONGODB_PORT") ?? "27017";
 var mongodb_ip = Environment.GetEnvironmentVariable("MONGODB_IP") ?? "localhost";
