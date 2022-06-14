@@ -64,6 +64,8 @@ def compile_proto_python(proto_dir:pathlib.Path,service:str,target_dir:pathlib.P
         call_grpc_tools(proto_dir,target_dir,dependency,grpc=False)
         generated_dependencies.append(f"{dependency.split('.')[0]}_pb2")
         
+    generated_dependencies.append(f"{service.split('.')[0]}_pb2")
+       
     call_grpc_tools(proto_dir,target_dir,service)
     
     #Rewrite the generated files to include the dependencies

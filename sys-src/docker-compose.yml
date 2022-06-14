@@ -68,7 +68,18 @@ services:
       - TRENDSERVICE_PORT=50010
       - DBSERVICE_IP=database-service
       - DBSERVICE_PORT=50051
+      - TWINTSERVICE_IP=twint-service
+      - TWINTSERVICE_PORT=50150
+      - SENTIMENTSERVICE_IP=sentiment-service
+      - SENTIMENTSERVICE_PORT=50250
 
+    depends_on:
+      - database-service
+      - trend-service
+      - twint-service
+      - sentiment-service
+
+      
     networks:
         - network-backend
         - network-frontend
@@ -104,7 +115,7 @@ services:
     build: ./images/backend/twint_scraper
     restart: unless-stopped
     ports:
-      - 60150:50150
+      - 50011:50011
     networks:
       - network-backend
 
@@ -114,7 +125,7 @@ services:
     build: ./images/backend/sentiment_service
     restart: unless-stopped
     ports:
-      - 60250:50250
+      - 50012:50012
     networks:
       - network-backend
 

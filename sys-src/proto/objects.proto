@@ -31,4 +31,5 @@ message Tweet{
     int32 replies = 7;
     int32 retweets = 8;
     repeated string Hashtags = 9;
+    string language = 10;
 }
