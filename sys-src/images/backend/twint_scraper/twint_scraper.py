@@ -54,6 +54,7 @@ class Twint_Scraper():
         df["Originale_Tweetlaenge"] = df["tweet"].apply(lambda x: len(x))
         #df["reply_to"] = df["reply_to"].apply(lambda x: str(self.extract_reply_to(x)))
         df["date"] = df["date"].astype(str)
+        df["language"] = df["language"].astype(str)
         
         return df
 
@@ -71,6 +72,7 @@ class Twint_Scraper():
                     "nreplies": row["nreplies"],
                     "nretweets": row["nretweets"],
                     "hashtags": row["hashtags"],
+                    "language": row["language"]
                 }
             )
         return tweets

@@ -26,7 +26,7 @@ class SentimentService(SentimentProviderServicer):
         print(f"Connection from {context.peer()}")
         reply = GetSentimentReply()
         
-        sentiment = self.caller.get_sentiment(request.text)
+        sentiment = self.caller.get_sentiment(request.text, request.language)
 
 
         reply.sentiment = sentiment
