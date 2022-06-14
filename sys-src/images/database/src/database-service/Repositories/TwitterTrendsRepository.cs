@@ -34,7 +34,7 @@ namespace DatabaseService.Repositories
 
         public async Task<List<TwitterTrends>> GetRecentTrends(DateTime? startDate, DateTime? endDate, string hashtag)
         {
-            if (startDate != null && endDate != null)
+            if (startDate != null && endDate != null && startDate < endDate)
             {
                 return await collection.Find(x =>
                 x.DateTime.Date < endDate
