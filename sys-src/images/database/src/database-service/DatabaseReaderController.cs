@@ -31,6 +31,11 @@ internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseRea
     {
         var db_reply = await repository.GetCurrentTrends(this.Woeid.getWOEID(request.Country));
 
+        if (db_reply == null)
+        {
+            return new TrendProviderReply();
+        }
+
         var replyTrends = new List<Trend>();
 
         foreach (var trend in db_reply.Trends)

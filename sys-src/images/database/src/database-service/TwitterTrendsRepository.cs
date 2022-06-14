@@ -19,7 +19,7 @@ public class TwitterTrendsRepository : ITwitterTrendsRepository
     public async Task<TwitterTrends> GetCurrentTrends(int woeid)
     {
         var sort = Builders<TwitterTrends>.Sort.Descending("DateTime");
-        return await collection.Find(t => t.Country == woeid).Sort(sort).FirstAsync();
+        return await collection.Find(t => t.Country == woeid).Sort(sort).FirstOrDefaultAsync();
     }
 
     public async Task<List<TwitterTrends>> GetRecentTrends(DateTime? startDate, DateTime? endDate, string hashtag)
