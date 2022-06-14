@@ -37,8 +37,14 @@ class Twitter_API_Caller:
 
         # Verfügbare Länder IDs
         self.dict_country_id = self.getAvailableTrends()
-    
-    def create_client_v1(self, consumer_key_v1, consumer_secret_v1, access_token_v1, access_token_secret_v1):
+
+    def create_client_v1(
+        self,
+        consumer_key_v1,
+        consumer_secret_v1,
+        access_token_v1,
+        access_token_secret_v1,
+    ):
         """
         Create a new client for Twitter API v1.1
 
@@ -50,13 +56,18 @@ class Twitter_API_Caller:
 
         Returns:
             tweepy.API: Twitter API v1.1
-        """        
+        """
         auth_v1 = tweepy.OAuthHandler(consumer_key_v1, consumer_secret_v1)
         auth_v1.set_access_token(access_token_v1, access_token_secret_v1)
         return tweepy.API(auth_v1, wait_on_rate_limit=True)
 
     def create_client_v2(
-        self, consumer_key_v2, consumer_secret_v2, access_token_v2, access_token_secret_v2, bearer_token_v2
+        self,
+        consumer_key_v2,
+        consumer_secret_v2,
+        access_token_v2,
+        access_token_secret_v2,
+        bearer_token_v2,
     ):
         """
         Create a new client for Twitter API v2
@@ -70,7 +81,7 @@ class Twitter_API_Caller:
 
         Returns:
             tweepy.API: Twitter API v2
-        """        
+        """
         auth_v2 = tweepy.Client(
             consumer_key=consumer_key_v2,
             consumer_secret=consumer_secret_v2,
@@ -81,7 +92,6 @@ class Twitter_API_Caller:
         )
         return auth_v2
 
-
     def getAvailableTrends(self):
         """
         Get avaiable trend countries.
@@ -89,14 +99,14 @@ class Twitter_API_Caller:
 
         Returns:
             dict: dict of available trend countries
-        """        
+        """
         dict_country_id = {}
         trends_loc = self.api_v1.available_trends()
         for eintrag in trends_loc:
             if eintrag["placeType"]["code"] == 12:
                 dict_country_id[eintrag["woeid"]] = eintrag["name"]
         return dict_country_id
-       
+
     def getTrending(self):
         trends_for_countries = []
 
@@ -116,14 +126,16 @@ class Twitter_API_Caller:
                     name = trend["name"]
                     tweet_volume = trend["tweet_volume"]
 
-                    if tweet_volume == None:
-                        # tweet_volume = -1
-                        # get tweet count in last 24 hours
-                        tweet_volume = self.getTweetCount(
-                            trend["name"],
-                            "day",
-                            (datetime.datetime.now() - datetime.timedelta(days=1)),
-                        )
+                    # Tweet Volume wird aktuell nicht mit ausgegeben, daher fragen wir es nicht ab, um am Rate Limit zu sparen
+                    # if tweet_volume == None:
+                    #     # tweet_volume = -1
+                    #     # get tweet count in last 24 hours
+                    #     tweet_volume = self.getTweetCount(
+                    #         trend["name"],
+                    #         "day",
+                    #         (datetime.datetime.now() - datetime.timedelta(days=1)),
+                    #         accumulated=True
+                    #     )
                     trends_for_countries.append(
                         {
                             "hashtag": name,
@@ -135,9 +147,15 @@ class Twitter_API_Caller:
                     )
 
         return trends_for_countries
-                
-                
-    def getTweetCount(self, trend, granularity, start_time):
+
+    def getTweetCount(
+        self,
+        trend,
+        granularity,
+        start_time,
+        end_time=None,
+        accumulated=False,
+    ):
         """
         Gets tweet count for one trend, uses Twitter API v2
 
@@ -148,12 +166,16 @@ class Twitter_API_Caller:
 
         Returns:
             int: Tweetcount für einen Trend
-        """     
-           
+        """
+
         tweetCount = self.api_v2.get_recent_tweets_count(
             query=trend,
             granularity=granularity,
             start_time=start_time,
+            end_time=end_time,
         )
 
-        return tweetCount[3]["total_tweet_count"]
+        if accumulated:
+            return tweetCount[3]["total_tweet_count"]
+        else:
+            return tweetCount[0]
