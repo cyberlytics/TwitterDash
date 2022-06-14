@@ -17,7 +17,7 @@ class Sentiment_Service_Blob():
         self.clean_http_urls = re.compile(r'https*\\S+', re.MULTILINE)
         self.clean_at_mentions = re.compile(r'@\\S+', re.MULTILINE)
 
-    def get_sentiment(self, text):
+    def get_sentiment(self, text, language):
         blob = TextBlobDE(self.clean_text(text))
 
         if self.onlyThreeLabels:
@@ -74,7 +74,7 @@ class Sentiment_Service_Transformer():
         text = text.strip().lower()
         return text
 
-    def get_sentiment(self, text):
+    def get_sentiment(self, text, language):
         text = self.clean_text(text)
 
         encoded = self.tokenizer.batch_encode_plus([text], padding=True, add_special_tokens=True,truncation=True, return_tensors="pt")
