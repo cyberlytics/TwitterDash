@@ -19,9 +19,7 @@ class TrendService(TrendProviderServicer):
         # ) as token_file:
         #     tokens = json.load(token_file)
 
-        with open(
-            "./tokens.json", "r"
-        ) as token_file:
+        with open("./tokens.json", "r") as token_file:
             tokens = json.load(token_file)
 
         self.caller = Twitter_API_Caller(
