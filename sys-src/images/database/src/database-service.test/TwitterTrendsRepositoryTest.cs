@@ -1,5 +1,8 @@
 using MongoDB.Driver;
+using MongoDB.Bson;
 using Moq;
+using DatabaseService.Models;
+using DatabaseService.Repositories;
 
 [TestFixture]
 public class TwitterTrendsRepositoryTests

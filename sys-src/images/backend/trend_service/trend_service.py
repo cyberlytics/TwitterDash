@@ -35,6 +35,7 @@ class TrendService(TrendProviderServicer):
             debug=True,
         )
 
+
     # see https://github.com/melledijkstra/python-grpc-chat for "Event-System"
     def OnNewTrends(
         self,
@@ -42,7 +43,9 @@ class TrendService(TrendProviderServicer):
         context,
     ) -> TrendProviderReply:
         print(f"Connection from {context.peer()}")
-        while self.isActive:
+        
+
+        while self.isActive and context.is_active():
             reply = TrendProviderReply()
             trends = []
 
@@ -62,8 +65,16 @@ class TrendService(TrendProviderServicer):
             reply.timestamp.GetCurrentTime()
             reply.trends.extend(trends)
             yield reply
-            # sleep until last call is 15 mins ago
-            time.sleep(max(0, 60 * 15 - (time.time() - lastCallTime)))
+
+
+            # sleep until last call is 15 mins ago and chech, if client is still connected
+            remaining_time = int(60 * 15 - (time.time() - lastCallTime))
+
+            for i in range(remaining_time):
+                time.sleep(1)
+                if(context.is_active() == False):
+                    print("Connection aborted", context.peer())
+                    break
 
 
 if __name__ == "__main__":
@@ -75,3 +86,4 @@ if __name__ == "__main__":
     server.start()
     print("Started Trend Service")
     server.wait_for_termination()
+

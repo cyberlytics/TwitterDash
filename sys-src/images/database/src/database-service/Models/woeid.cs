@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace places
+namespace DatabaseService.Models
 {
     public class woeid
     {
@@ -13,7 +13,7 @@ namespace places
             //this.woeid_places = JsonSerializer.Deserialize<List<place>>(jsonString)!;
             this.woeid_places = JsonSerializer.Deserialize<List<place>>(WOEIDjson.jsonString)!;
         }
-        
+
         public int getWOEID(string country)
         {
             return this.woeid_places.Find(x => x.country == country).parentid;
@@ -25,19 +25,19 @@ namespace places
         }
     }
 
-  //   {
-  //  "name": "Winnipeg",
-  //  "placeType": {
-  //    "code": 7,
-  //    "name": "Town"
-  //  },
-  //  "url": "http://where.yahooapis.com/v1/place/2972",
-  //  "parentid": 23424775,
-  //  "country": "Canada",
-  //  "woeid": 2972,
-  //  "countryCode": "CA"
-  //},
-  
+    //   {
+    //  "name": "Winnipeg",
+    //  "placeType": {
+    //    "code": 7,
+    //    "name": "Town"
+    //  },
+    //  "url": "http://where.yahooapis.com/v1/place/2972",
+    //  "parentid": 23424775,
+    //  "country": "Canada",
+    //  "woeid": 2972,
+    //  "countryCode": "CA"
+    //},
+
     public class place
     {
         public string name { get; set; }
