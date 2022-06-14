@@ -45,6 +45,8 @@ internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseRea
             replyTrends.Add(T);
         }
 
+        replyTrends = replyTrends.OrderBy(x => x.Placement).Take(request.Limit).ToList();
+
         var trendproviderreply = new TrendProviderReply();
         trendproviderreply.Timestamp = db_reply.DateTime.ToUniversalTime().ToTimestamp();
         trendproviderreply.Trends.AddRange(replyTrends);
@@ -55,8 +57,8 @@ internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseRea
     public override async Task<GetRecentTrendsReply> GetRecentTrends(GetRecentTrendsRequest request, ServerCallContext context)
     {
         var db_reply = await repository.GetRecentTrends(
-            request.EndDate.ToDateTime(),
-            request.StartDate.ToDateTime(),
+            request.EndDate?.ToDateTime(),
+            request.StartDate?.ToDateTime(),
             request.Hashtag);
 
 
@@ -66,6 +68,7 @@ internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseRea
         {
             var recentTrend = new RecentTrend();
             recentTrend.Datetime = reply.DateTime.ToUniversalTime().ToTimestamp();
+            recentTrend.Trend = new();
 
             foreach (var trend in reply.Trends)
             {
