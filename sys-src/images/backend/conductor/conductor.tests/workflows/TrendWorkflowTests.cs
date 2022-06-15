@@ -35,7 +35,10 @@ namespace conductor.tests.workflows
         public async Task TrendWorkflow_Should_Run_With_Valid_Data()
         {
             builder.Services.AddSingleton(clientMocks.MockDatabaseWriterClient());
+            builder.Services.AddSingleton(clientMocks.MockTweetProviderClient(TestDataDirectory));
+            builder.Services.AddSingleton(clientMocks.MockSentimentProviderClient());
 
+            
             CreateServiceProvider();
             using var scope = ServiceProvider.CreateScope();
             var (workflowBlueprint, workflow) = await BuildWorkflow<TrendWorkflow>(scope);

@@ -12,6 +12,12 @@ var trendServicePort = Environment.GetEnvironmentVariable("TRENDSERVICE_PORT") ?
 var dbServiceIP = Environment.GetEnvironmentVariable("DBSERVICE_IP") ?? "localhost";
 var dbServicePort = Environment.GetEnvironmentVariable("DBSERVICE_PORT") ?? "50051";
 
+var twintServiceIP = Environment.GetEnvironmentVariable("TWINTSERVICE_IP") ?? "localhost";
+var twintServicePort = Environment.GetEnvironmentVariable("TWINTSERVICE_PORT") ?? "50150";
+
+var sentimentServiceIP = Environment.GetEnvironmentVariable("SENTIMENTSERVICE_IP") ?? "localhost";
+var sentimentServicePort = Environment.GetEnvironmentVariable("SENTIMENTSERVICE_PORT") ?? "50250";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseKestrel().UseUrls("http://0.0.0.0:7777");
@@ -39,6 +45,12 @@ grpcClientFactory.BuildClient<TrendProvider.TrendProviderClient>($"http://{trend
 
 builder.Services.AddSingleton<DatabaseWriter.DatabaseWriterClient>((serviceProvider) =>
 grpcClientFactory.BuildClient<DatabaseWriter.DatabaseWriterClient>($"http://{dbServiceIP}:{dbServicePort}"));
+
+builder.Services.AddSingleton<SentimentProvider.SentimentProviderClient>((serviceProvider) =>
+grpcClientFactory.BuildClient<SentimentProvider.SentimentProviderClient>($"http://{sentimentServiceIP}:{sentimentServicePort}"));
+
+builder.Services.AddSingleton<TweetProvider.TweetProviderClient>((serviceProvider) =>
+grpcClientFactory.BuildClient<TweetProvider.TweetProviderClient>($"http://{twintServiceIP}:{twintServicePort}"));
 
 builder.Services.AddHostedService((sp) => sp.GetRequiredService<TrendProviderService>());
 builder.Services.AddSingleton<TrendProviderService>();

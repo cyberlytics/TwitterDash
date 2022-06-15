@@ -2,6 +2,7 @@
 # Compiles the Protobuff and GRPC Stubs for  all services
 ###
 
+import os
 import subprocess
 import shutil
 import json
@@ -11,6 +12,11 @@ PROTO = "proto"
 SERVICE_MAP = "ServiceMap.json"
 DEPENDENCIES = ["objects.proto"]
 
+def overwrite(source_file:str,target_file:str):
+    if os.path.isfile(target_file):
+        os.remove(target_file)
+    shutil.copy(source_file,target_file)
+    
 def move_proto_files(proto_dir:pathlib.Path,service:str,target:str,root_dir:pathlib.Path):
     
     source_file = proto_dir / service
@@ -19,13 +25,13 @@ def move_proto_files(proto_dir:pathlib.Path,service:str,target:str,root_dir:path
     if not target_dir.is_dir():
         target_dir.mkdir(parents=True, exist_ok=True)
         
-    shutil.copy(str(source_file),str(target_file))
+    
+    overwrite(str(source_file),str(target_file))
     
     for dep in DEPENDENCIES:
         dep_source = proto_dir / dep
         dep_target = target_dir / dep
-        if not dep_target.is_file():
-            shutil.copy(str(dep_source),str(dep_target))
+        overwrite(str(dep_source),str(dep_target))
 
 def call_grpc_tools(protodir:pathlib.Path,target_dir:pathlib.Path,service:str,grpc:bool=True):
     
