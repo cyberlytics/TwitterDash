@@ -69,9 +69,9 @@ services:
       - DBSERVICE_IP=database-service
       - DBSERVICE_PORT=50051
       - TWINTSERVICE_IP=twint-service
-      - TWINTSERVICE_PORT=50150
+      - TWINTSERVICE_PORT=50011
       - SENTIMENTSERVICE_IP=sentiment-service
-      - SENTIMENTSERVICE_PORT=50250
+      - SENTIMENTSERVICE_PORT=50012
       
     networks:
         - network-backend
