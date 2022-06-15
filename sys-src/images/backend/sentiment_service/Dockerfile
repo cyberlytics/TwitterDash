@@ -11,6 +11,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 WORKDIR /usr/src/app/
 
+RUN python -m nltk.downloader punkt
+
 COPY . .
+
+RUN [ "python", "./sentiment.py" ]
 
 CMD [ "python", "./sentiment_service.py" ]
