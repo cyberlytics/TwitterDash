@@ -21,7 +21,7 @@ export default class Trends extends React.Component {
                         <tr key={index + 1}>
                             <th key={0}>{index + 1}</th>
                             <th key={1}>{obj.name}</th>
-                            <th key={2}>{obj.tweet_volume}</th>
+                            <th key={2}>{obj.tweetVolume24}</th>
                         </tr>
                     </Fragment>
                 )

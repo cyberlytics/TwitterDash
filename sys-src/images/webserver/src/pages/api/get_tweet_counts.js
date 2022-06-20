@@ -1,17 +1,20 @@
-const fs = require('fs');
+import {TREND_SERVICE_CLIENT} from "../../util/TrendServiceClient"
 
-export default function handler(req, res) {
-    let hashtag = req.query.hashtag
-    let tweet_counts = null
-    if (hashtag == "YetToCome") {
-        let tweet_counts = require('../../dummy_data/YetToCome.json');
-        res.status(200).json(tweet_counts)
-    }
-    else if (hashtag == "BTS_Proof") {
-        let tweet_counts = require('../../dummy_data/BTS_Proof.json');
-        res.status(200).json(tweet_counts)
-    }
-    else {
-        res.status(404).json(tweet_counts)
-    }
+export default async function handler(req, res) {
+    return new Promise((resolve, reject) => {
+        let dataCallBack = (error, data) => {
+            if (error) {
+                console.log("Error occured!");
+                console.log(error);
+                res.status(404).json({});
+                reject(error);
+            }
+            else {
+                res.status(200).json(data.tweetCounts);
+                resolve();
+            }
+        }
+        let hashtag = req.query.hashtag;
+        TREND_SERVICE_CLIENT.GetRecentTweetCounts({query: hashtag}, dataCallBack);
+    });
 }

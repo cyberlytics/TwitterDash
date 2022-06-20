@@ -85,7 +85,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - DB_SERVICE_HOSTNAME=database-service
-      - DB_SERVICE_PORT=<TO_BE_DETERMINED>
+      - DB_SERVICE_PORT=50051
+      - TREND_SERVICE_HOSTNAME=trend-service
+      - TREND_SERVICE_PORT=50010
     ports:
       - 3000:3000
     networks:
@@ -101,6 +103,7 @@ services:
       - 50010:50010
     networks:
       - network-backend
+      - network-frontend
 
   twint-service:
     container_name: twint-service
