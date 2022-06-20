@@ -63,6 +63,7 @@ namespace conductor.tests.Mocks
             Dictionary<string, List<Tweet>> map = new();
             var trends = LoadTrends(directory);
             var tweets = LoadTweets(directory);
+            var test = new HashSet<long>(tweets.Select(t => t.ID));
             var slice_size = tweets.Count/trends.Trends.Count;
             int i = 0;
             foreach (var trend in trends.Trends)
@@ -71,8 +72,32 @@ namespace conductor.tests.Mocks
                     continue;
 
                 map.Add(trend.Name, tweets.Skip(i*slice_size).Take(slice_size).ToList());
+                i++;
             }
             return map;
+        }
+
+        public static Dictionary<long, float> BuildSentiment(Dictionary<string, List<Tweet>> tweetmap)
+        {
+            Random random = new Random(42);
+
+            var allTweets = new List<Tweet>();
+            foreach (var sublist in tweetmap.Values.ToList())
+                allTweets.AddRange(sublist);
+
+            var IDs = allTweets.Select(t => t.ID);
+
+            var sentiments = new Dictionary<long, float>();
+
+            foreach(var id in IDs)
+            {
+                if (sentiments.ContainsKey(id))
+                    continue;
+
+                sentiments.Add(id, ((float)random.NextDouble()));
+            }
+            return sentiments;
+
         }
     }
 }

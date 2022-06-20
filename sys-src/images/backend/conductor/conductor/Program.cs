@@ -46,6 +46,9 @@ grpcClientFactory.BuildClient<TrendProvider.TrendProviderClient>($"http://{trend
 builder.Services.AddSingleton<DatabaseWriter.DatabaseWriterClient>((serviceProvider) =>
 grpcClientFactory.BuildClient<DatabaseWriter.DatabaseWriterClient>($"http://{dbServiceIP}:{dbServicePort}"));
 
+builder.Services.AddSingleton<DatabaseReader.DatabaseReaderClient>((serviceProvider) =>
+grpcClientFactory.BuildClient<DatabaseReader.DatabaseReaderClient>($"http://{dbServiceIP}:{dbServicePort}"));
+
 builder.Services.AddSingleton<SentimentProvider.SentimentProviderClient>((serviceProvider) =>
 grpcClientFactory.BuildClient<SentimentProvider.SentimentProviderClient>($"http://{sentimentServiceIP}:{sentimentServicePort}"));
 

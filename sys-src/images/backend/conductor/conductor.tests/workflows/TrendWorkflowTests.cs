@@ -37,8 +37,8 @@ namespace conductor.tests.workflows
             builder.Services.AddSingleton(clientMocks.MockDatabaseWriterClient());
             builder.Services.AddSingleton(clientMocks.MockTweetProviderClient(TestDataDirectory));
             builder.Services.AddSingleton(clientMocks.MockSentimentProviderClient());
+            builder.Services.AddSingleton(clientMocks.MockDatabaseReaderClient(TestDataDirectory));
 
-            
             CreateServiceProvider();
             using var scope = ServiceProvider.CreateScope();
             var (workflowBlueprint, workflow) = await BuildWorkflow<TrendWorkflow>(scope);
