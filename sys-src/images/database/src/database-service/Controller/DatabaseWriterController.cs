@@ -6,7 +6,7 @@ using DatabaseService.Models;
 
 namespace DatabaseService.Controller
 {
-    internal class DatabaseWriterController : Twitterdash.DatabaseWriter.DatabaseWriterBase
+    public class DatabaseWriterController : Twitterdash.DatabaseWriter.DatabaseWriterBase
     {
 
         private ITwitterTrendsRepository repository;

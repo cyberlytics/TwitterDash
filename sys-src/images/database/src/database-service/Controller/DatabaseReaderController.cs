@@ -6,7 +6,7 @@ using DatabaseService.Models;
 
 namespace DatabaseService.Controller
 {
-    internal class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseReaderBase
+    public class DatabaseReaderController : Twitterdash.DatabaseReader.DatabaseReaderBase
     {
 
         private woeid Woeid;
@@ -83,7 +83,6 @@ namespace DatabaseService.Controller
                 request.EndDate?.ToDateTime(),
                 request.StartDate?.ToDateTime(),
                 request.Hashtag);
-
 
             var recentTrends = new List<RecentTrend>();
 

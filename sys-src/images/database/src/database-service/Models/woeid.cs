@@ -8,9 +8,6 @@ namespace DatabaseService.Models
 
         public woeid()
         {
-            //string fileName = "WOEID.json";
-            //string jsonString = File.ReadAllText(fileName);
-            //this.woeid_places = JsonSerializer.Deserialize<List<place>>(jsonString)!;
             this.woeid_places = JsonSerializer.Deserialize<List<place>>(WOEIDjson.jsonString)!;
         }
 
@@ -25,6 +22,8 @@ namespace DatabaseService.Models
         }
     }
 
+
+    // Example woeid:
     //   {
     //  "name": "Winnipeg",
     //  "placeType": {
