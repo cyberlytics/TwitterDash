@@ -55,17 +55,16 @@ namespace conductor.tests.activities
             var activity = new PersistTrends(clientMocks.MockDatabaseWriterClient(true), logger);
             context.WorkflowInstance.Variables.Set(Nameservice.VariableNames.Trends, DataMocks.LoadTrends(TestDataDirectory));
 
-            FaultResult result = null;
+            OutcomeResult result = null;
             Assert.DoesNotThrowAsync(async () =>
             {
-                result = (FaultResult)await activity.ExecuteAsync(context);
+                result = (OutcomeResult)await activity.ExecuteAsync(context);
             });
 
             Assert.Multiple(() =>
             {
                 Assert.IsNotNull(result);
                 Assert.IsNotEmpty(LogMessages);
-                Assert.AreEqual(typeof(RpcException), result.Exception.GetType());
                 StringAssert.Contains("Failed to Persist Trends with Error:", LogMessages[0].Message);
                 Assert.IsEmpty(clientMocks.DatabaseWriterClient_StoreTrendsAsync_Calls);
             });

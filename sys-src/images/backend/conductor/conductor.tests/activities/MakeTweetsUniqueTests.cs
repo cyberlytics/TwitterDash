@@ -26,7 +26,32 @@ namespace conductor.tests.activities
         [Test]
         public async Task MakeTweetsUnique_Should_Filter_GatheredTweets()
         {
-            var activity = new MakeTweetsUnique();
+            var activity = new MakeTweetsUnique(clientMocks.MockDatabaseReaderClient(TestDataDirectory), logger);
+            context.WorkflowInstance.Variables.Set(Nameservice.VariableNames.GatheredTweets, trendTweetMap);
+
+            OutcomeResult result = null;
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                result = (OutcomeResult)await activity.ExecuteAsync(context);
+            });
+
+
+            var cleanedTweets = context.WorkflowInstance.Variables.Get<Dictionary<string, List<Tweet>>>(Nameservice.VariableNames.CleanedTweets);
+            Assert.Multiple(() =>
+            {
+                Assert.IsNotNull(result);
+                Assert.AreEqual(Nameservice.Outcomes.Done, result.Outcomes.First());
+
+                Assert.IsNotNull(cleanedTweets);
+                Assert.IsNotEmpty(cleanedTweets);
+
+            });
+        }
+
+        [Test]
+        public async Task MakeTweetsUnique_Should_Not_Throw()
+        {
+            var activity = new MakeTweetsUnique(clientMocks.MockDatabaseReaderClient(TestDataDirectory,true), logger);
             context.WorkflowInstance.Variables.Set(Nameservice.VariableNames.GatheredTweets, trendTweetMap);
 
             OutcomeResult result = null;

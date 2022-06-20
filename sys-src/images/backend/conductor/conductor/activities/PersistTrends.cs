@@ -18,7 +18,6 @@ namespace conductor.activities
             this.logger=logger;
         }
 
-
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
             var trends = (TrendProviderReply)context.WorkflowInstance.Variables.Get(Nameservice.VariableNames.Trends)!;
@@ -29,8 +28,7 @@ namespace conductor.activities
             }
             catch (Exception ex)
             {
-                logger.LogInformation($"Failed to Persist Trends with Error:\n{ex.Message}!");
-                return Fault(ex);
+                logger.LogError($"Failed to Persist Trends with Error:\n{ex.Message}!");
             }
             return Outcome(Nameservice.Outcomes.Done);
         }

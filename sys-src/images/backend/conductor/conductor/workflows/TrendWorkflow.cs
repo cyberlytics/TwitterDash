@@ -45,13 +45,25 @@ namespace conductor.workflows
                         analysisfork
                         .When("Sentiment")
                             .Then<PerformSentimentAnalysis>()
+                            .WithDescription("Collect Sentiment of Tweets via Sentiment-Service")
+                            .WithId(nameof(PerformSentimentAnalysis))
+                            .WithDisplayName("Get Sentiment")
                             .Then<PersistSentiment>()
+                            .WithDescription("Store the collected Sentiments in the Database")
+                            .WithId(nameof(PersistSentiment))
+                            .WithDisplayName("Store Sentiment")
                             .ThenNamed("JoinAnalysisTasks");
 
                         analysisfork
                         .When("TopicModeling")
                             .Then<PerformTopicModeling>()
+                            .WithDescription("Perform topic-modeling via the TopicModel-Service")
+                            .WithId(nameof(PerformTopicModeling))
+                            .WithDisplayName("Build Topic Models")
                             .Then<PersistTopicModels>()
+                            .WithDescription("Save the generated Topic Models in the Database")
+                            .WithId(nameof(PersistTopicModels))
+                            .WithDisplayName("Save Topic Models")
                             .ThenNamed("JoinAnalysisTasks");
 
                     });

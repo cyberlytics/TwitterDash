@@ -68,7 +68,7 @@ namespace DatabaseService.Controller
 
             var trendproviderreply = new TrendProviderReply();
             trendproviderreply.Timestamp = reply.DateTime.ToUniversalTime().ToTimestamp();
-            trendproviderreply.Trends.AddRange(replyTrends);
+            trendproviderreply.Trends.Add(replyTrends);
 
             return trendproviderreply;
         }
@@ -105,7 +105,7 @@ namespace DatabaseService.Controller
             }
 
             var getRecentTrendsReply = new GetRecentTrendsReply();
-            getRecentTrendsReply.RecendTrends.AddRange(recentTrends);
+            getRecentTrendsReply.RecentTrends.Add(recentTrends);
 
             return getRecentTrendsReply;
         }

@@ -13,10 +13,30 @@ service DatabaseReader {
     rpc GetAvailableSentimentTrends(google.protobuf.Empty) returns (GetAvailableSentimentTrendsReply) {}
     rpc GetCurrentSentiment(GetCurrentSentimentRequest) returns (GetCurrentSentimentReply) {}
     rpc GetRecentSentiment(GetRecentSentimentRequest) returns (GetRecentSentimentReply) {}
+
+    //Takes a list of Tweet IDs and returns a list of IDs that aren't already in the Database
+    rpc GetUniqueTweets(GetUniqueTweetsPayload) returns (GetUniqueTweetsPayload) {}
 }
 
 service DatabaseWriter{
+    //stores the griven Trends
     rpc StoreTrends(TrendProviderReply) returns (google.protobuf.Empty) {}
+    //Stores the sentiment of the given Tweet-Batch
+    rpc StoreSentiment(StoreSentimentRequest) returns (google.protobuf.Empty) {}
+}
+
+message SentimentPayload{
+    Tweet tweet = 1;
+    float sentiment = 2;
+    string topic = 3;
+}
+
+message StoreSentimentRequest{
+    repeated SentimentPayload sentiments = 1;
+}
+
+message GetUniqueTweetsPayload{
+    repeated int64 tweet_ids = 1;
 }
 
 //GetCurrentTrends

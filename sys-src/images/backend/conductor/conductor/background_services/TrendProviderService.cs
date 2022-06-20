@@ -42,7 +42,7 @@ namespace conductor.background_services
                 catch(Exception ex)
                 {
                     logger.LogError($"Encountered Error while Reading from GRPC-TrendService Stream!\n{ex.Message}");
-                    await Task.Delay(2000);
+                    await Task.Delay(10_000);
                 }
             }
         }

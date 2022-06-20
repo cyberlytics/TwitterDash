@@ -9,20 +9,22 @@ namespace conductor.activities
     {
         private readonly SentimentProvider.SentimentProviderClient client;
         private readonly ILogger<PerformSentimentAnalysis> logger;
+        private readonly int max_retries;
 
-        public PerformSentimentAnalysis(SentimentProvider.SentimentProviderClient client, ILogger<PerformSentimentAnalysis> logger)
+        public PerformSentimentAnalysis(SentimentProvider.SentimentProviderClient client, ILogger<PerformSentimentAnalysis> logger,int max_retries=10)
         {
             this.client=client;
             this.logger=logger;
+            this.max_retries=max_retries;
         }
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-            var filteredTweets = context.WorkflowInstance.Variables.Get<Dictionary<string, List<Tweet>>>(Nameservice.VariableNames.CleanedTweets);
+            var filteredTweets = context.WorkflowInstance.Variables.Get<Dictionary<string, List<Tweet>>>(Nameservice.VariableNames.CleanedTweets)!;
             var sentiments = new Dictionary<long, float>();
             bool server_is_online = false;
-
-            while (!server_is_online)
+            int retry_count = 0;
+            while (!server_is_online && retry_count<max_retries)
             {
                 try
                 {
@@ -34,8 +36,9 @@ namespace conductor.activities
                 }
                 catch
                 {
-                    logger?.LogInformation($"Sentiment Server is still Starting");
-                    await Task.Delay(500);
+                    logger?.LogInformation($"Sentiment Server is still Starting...");
+                    retry_count++;
+                    await Task.Delay(5000);
                 }
             }
             foreach (var (topic, tweets) in filteredTweets)
