@@ -2,6 +2,7 @@ import pandas as pd
 import re
 from textblob_de import TextBlobDE
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from numpy import interp
 
 # from typing import List
 import torch
@@ -17,8 +18,8 @@ class Sentiment_Service_Blob:
     def __init__(self, onlyThree=False):
         self.onlyThreeLabels = onlyThree
         self.clean_chars = re.compile(r"[^A-Za-züöäÖÜÄß ]", re.MULTILINE)
-        self.clean_http_urls = re.compile(r"https*\\S+", re.MULTILINE)
-        self.clean_at_mentions = re.compile(r"@\\S+", re.MULTILINE)
+        self.clean_http_urls = re.compile(r"http\S+", re.MULTILINE)
+        self.clean_at_mentions = re.compile(r"@\S+", re.MULTILINE)
 
     def get_sentiment(self, text, language):
         blob = TextBlobDE(self.clean_text(text))
@@ -46,13 +47,19 @@ class Sentiment_Service_Blob:
 
 
 class Sentiment_Service_Transformer:
-    def __init__(self):
-        self.model_name = "oliverguhr/german-sentiment-bert"
+    def __init__(self, internationalModel=True):
+        self.internationalModel = internationalModel
+
+        if self.internationalModel:
+            self.model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
+        else:
+            self.model_name = "oliverguhr/german-sentiment-bert"
+
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
         self.clean_chars = re.compile(r"[^A-Za-züöäÖÜÄß ]", re.MULTILINE)
-        self.clean_http_urls = re.compile(r"https*\\S+", re.MULTILINE)
-        self.clean_at_mentions = re.compile(r"@\\S+", re.MULTILINE)
+        self.clean_http_urls = re.compile(r"http\S+", re.MULTILINE)
+        self.clean_at_mentions = re.compile(r"@\S+", re.MULTILINE)
 
     def init_model(self):
         self.model = AutoModelForSequenceClassification.from_pretrained(
@@ -71,9 +78,7 @@ class Sentiment_Service_Transformer:
 
         dummy_input = [encoded["input_ids"], encoded["attention_mask"]]
 
-        traced_model = torch.jit.trace(
-            self.model, [encoded["input_ids"], encoded["attention_mask"]]
-        )
+        traced_model = torch.jit.trace(self.model, dummy_input)
         torch.jit.save(traced_model, "model.pt")
 
     def load_model(self):
@@ -105,13 +110,16 @@ class Sentiment_Service_Transformer:
 
         output = self.model(*input_features)[0].argmax(1)
 
-        # Klassenrange
-        if output == 0:
-            return 1.0
-        elif output == 1:
-            return -1.0
+        if self.internationalModel == False:
+            if output == 0:
+                return 1.0
+            elif output == 1:
+                return -1.0
+            else:
+                return 0.0
         else:
-            return 0.0
+            # map range 0 to 4 to range -1 to 1
+            return interp(output.item(), [0, 4], [-1, 1])
 
 
 if __name__ == "__main__":
