@@ -4,6 +4,7 @@ using DatabaseService.Models;
 using DatabaseService.Repositories;
 using Mongo2Go;
 
+
 namespace DatabaseService.Tests
 {
     [TestFixture]
@@ -13,6 +14,7 @@ namespace DatabaseService.Tests
         private IMongoCollection<TwitterTrends> collection;
         private TwitterTrendsRepository repository;
         private TextWriter consoleOut;
+        
 
         [SetUp]
         public void Setup()
@@ -163,14 +165,62 @@ namespace DatabaseService.Tests
             };
 
             var resName = "#testing";
+            
+            foreach (var trend in trends)
+            {
+                await repository.StoreTrends(trend);
+            }
 
             var result = await repository.GetRecentTrends(null, null, resName);
-            var entry = result.FirstOrDefault();
 
             Assert.Multiple(() =>
             {
                 Assert.That(result, Has.Exactly(1).Items);
-                Assert.That(entry.Trends, Has.Member(new TwitterTrend() { name = resName }));
+                Assert.That(result.First().Trends.First().name, Is.EqualTo(resName));
+            });
+        }
+
+        [Test]
+        public async Task GetRecentTrends_within_Timeframe_Should_Return_Trends_Of_Given_String()
+        {
+            var startTime = new DateTime(2022, 11, 2, 0, 0, 0);
+            var endTime = new DateTime(2022, 12, 22, 0, 0, 0);
+            
+            var trends = new List<TwitterTrends>() {
+                new TwitterTrends() {
+                    DateTime = new DateTime(2022, 10, 20, 0, 0, 0),
+                    Trends = new() {
+                        new() { name = "#testing" },
+                    }
+                },
+                new TwitterTrends()
+                {
+                    DateTime = new DateTime(2022, 11, 20, 0, 0, 0),
+                    Trends = new() {
+                            new() { name = "#testing" },
+                        }
+                },
+                new TwitterTrends()
+                {
+                    DateTime = new DateTime(2022, 12, 20, 0, 0, 0),
+                    Trends = new() {
+                            new() { name = "#testing" },
+                        }
+                }                
+            };
+
+            var resName = "#testing";
+
+            foreach (var trend in trends)
+            {
+                await repository.StoreTrends(trend);
+            }
+
+            var result = await repository.GetRecentTrends(startTime, endTime, resName);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Has.Exactly(2).Items);
             });
         }
     }

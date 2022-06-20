@@ -34,20 +34,26 @@ namespace DatabaseService.Repositories
 
         public async Task<List<TwitterTrends>> GetRecentTrends(DateTime? startDate, DateTime? endDate, string hashtag)
         {
+            List<TwitterTrends> result = new List<TwitterTrends>();
             if (startDate != null && endDate != null && startDate < endDate)
             {
-                return await collection.Find(x =>
-                x.DateTime.Date < endDate
-                && x.DateTime.Date > startDate
+                result =  await collection.Find(x =>
+                x.DateTime < endDate
+                && x.DateTime > startDate
                 && x.Trends.Any(y => y.name == hashtag))
                 .ToListAsync();
             }
             else
             {
-                return await collection.Find(x =>
+                result =  await collection.Find(x =>
                  x.Trends.Any(y => y.name == hashtag))
                 .ToListAsync();
             }
+            for (int i = 0; i < result.Count; i++)
+            {
+                result[i].Trends = result[i].Trends.Where(x => x.name == hashtag).ToList();
+            }
+            return result;
         }
 
         public async Task StoreTrends(TwitterTrends trends)
