@@ -32,7 +32,7 @@ export const options = {
         },
         title: {
             display: true,
-            text: 'Line chart with dummy data',
+            text: 'tweet counts',
         },
     },
     scales: {
@@ -59,8 +59,6 @@ export const options = {
 
 export default class TweetCountsChart extends React.Component {
     constructor(props) {
-        console.log("props TweetCountsChart")
-        console.log(props)
         super(props);
         this.state = {
             hashtag: props.hashtag,
@@ -89,21 +87,19 @@ export default class TweetCountsChart extends React.Component {
     }
 
     render() {
-        if (!this.state.hashtag) return <p>No hashtag selected</p>
-        if (!this.state.data) return <p>No data!</p>
+        if (!this.state.hashtag) return <p>Please enter your search term ...</p>
+        if (!this.state.data) return <p>Hang on ...</p>
 
-        let dataSlice = this.state.data.slice(0, Math.floor(this.state.data.length/15))
-
-        let displayData = dataSlice
+        let displayData = this.state.data;
 
         let labels = displayData.map((obj, index) => {
             return (
-                obj.end
+                new Date(obj.datetime.seconds * 1000)
             );
         });
         let tweetCounts = displayData.map((obj, index) => {
             return (
-                obj.tweet_count
+                obj.count
             );
         });
 
@@ -118,8 +114,6 @@ export default class TweetCountsChart extends React.Component {
                 }
             ]
         }
-
-        //console.log(data)
 
         return (<Line options={options} data={chartData} />);
     }
