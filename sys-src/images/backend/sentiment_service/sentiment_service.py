@@ -12,15 +12,18 @@ import datetime
 
 
 class SentimentService(SentimentProviderServicer):
-    def __init__(self) -> None:
+    def __init__(self, TransformerModel=True) -> None:
         super().__init__()
 
+        
         # BERT-Modell
-        self.caller = Sentiment_Service_Transformer()
-        self.caller.init_model()
-        self.caller.load_model()
-        # # Blob Modell
-        # self.caller = Sentiment_Service_Blob()
+        if(TransformerModel):
+            self.caller = Sentiment_Service_Transformer()
+            self.caller.init_model()
+            self.caller.load_model()
+        else:
+        # Blob Modell
+            self.caller = Sentiment_Service_Blob()
 
     def GetSentiment(self, request: GetSentimentRequest, context) -> GetSentimentReply:
         print(f"Connection from {context.peer()}")
