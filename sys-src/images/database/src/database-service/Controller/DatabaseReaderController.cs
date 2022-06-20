@@ -64,7 +64,11 @@ namespace DatabaseService.Controller
                 replyTrends.Add(T);
             }
 
-            replyTrends = replyTrends.OrderBy(x => x.Placement).Take(request.Limit).ToList();
+            replyTrends = replyTrends.OrderBy(x => x.Placement).ToList();
+            if(request.Limit > 0)
+            {
+                replyTrends = replyTrends.Take(request.Limit).ToList();
+            }
 
             var trendproviderreply = new TrendProviderReply();
             trendproviderreply.Timestamp = reply.DateTime.ToUniversalTime().ToTimestamp();
