@@ -1,6 +1,11 @@
 import pandas as pd
 import re
 from textblob_de import TextBlobDE
+from textblob_fr import PatternTagger as PatternTaggerFR
+from textblob_fr import PatternAnalyzer as PatternAnalyzerFR
+from textblob_nl import PatternTagger as PatternTaggerNL
+from textblob_nl import PatternAnalyzer as PatternAnalyzerNL
+from textblob import TextBlob
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from numpy import interp
 
@@ -22,17 +27,44 @@ class Sentiment_Service_Blob:
         self.clean_at_mentions = re.compile(r"@\S+", re.MULTILINE)
 
     def get_sentiment(self, text, language):
-        blob = TextBlobDE(self.clean_text(text))
+        sentiment_value = 0.0
+
+        if language == "de":
+            blob = TextBlobDE(self.clean_text(text))
+            sentiment_value = blob.sentiment.polarity
+
+        elif language == "en":
+            blob = TextBlob(self.clean_text(text))
+            sentiment_value = blob.sentiment.polarity
+
+        elif language == "fr":
+            blob = TextBlob(
+                self.clean_text(text),
+                pos_tagger=PatternTaggerFR(),
+                analyzer=PatternAnalyzerFR(),
+            )
+            sentiment_value = blob.sentiment[0]
+
+        elif language == "nl":
+            blob = TextBlob(
+                self.clean_text(text),
+                pos_tagger=PatternTaggerNL(),
+                analyzer=PatternAnalyzerNL(),
+            )
+            sentiment_value = blob.sentiment[0]
+
+        else:
+            raise ValueError("Language not supported")
 
         if self.onlyThreeLabels:
-            if blob.sentiment.polarity > 0:
+            if sentiment_value > 0:
                 return 1
-            elif blob.sentiment.polarity == 0:
+            elif sentiment_value == 0:
                 return 0
             else:
                 return -1
         else:
-            return blob.sentiment.polarity
+            return sentiment_value
 
     def clean_text(self, text):
         text = text.replace("\n", " ")
