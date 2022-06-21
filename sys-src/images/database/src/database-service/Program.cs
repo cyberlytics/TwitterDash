@@ -7,6 +7,7 @@ using System.Net;
 using DatabaseService.Controller;
 using DatabaseService.Repositories;
 using DatabaseService.Models;
+using database_service.Repositories;
 
 var mongodb_port = Environment.GetEnvironmentVariable("MONGODB_PORT") ?? "27017";
 var mongodb_ip = Environment.GetEnvironmentVariable("MONGODB_IP") ?? "localhost";
@@ -36,6 +37,14 @@ builder.Services.AddTransient<ITwitterTrendsRepository>((_) =>
         client
         .GetDatabase("TwitterDash")
         .GetCollection<TwitterTrends>("Trends")));
+
+builder.Services.AddTransient<ISentimentRepository>((_) =>
+    new SentimentRepository(
+        client
+        .GetDatabase("TwitterDash")
+        .GetCollection<Sentiment>("Sentiment")));
+
+
 builder.Services.AddSingleton<woeid>((_) => new woeid());
 
 var app = builder.Build();

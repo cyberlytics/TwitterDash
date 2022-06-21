@@ -3,18 +3,21 @@ using Grpc.Core;
 using Twitterdash;
 using DatabaseService.Repositories;
 using DatabaseService.Models;
+using database_service.Repositories;
 
 namespace DatabaseService.Controller
 {
     public class DatabaseWriterController : Twitterdash.DatabaseWriter.DatabaseWriterBase
     {
 
-        private ITwitterTrendsRepository repository;
+        private ITwitterTrendsRepository trendRepository;
+        private ISentimentRepository sentimentRepository;
         private woeid Woeid;
 
-        public DatabaseWriterController(ITwitterTrendsRepository repository, woeid Woeid)
+        public DatabaseWriterController(ITwitterTrendsRepository trendsRepository, ISentimentRepository sentimentRepository, woeid Woeid)
         {
-            this.repository = repository;
+            this.trendRepository = trendsRepository;
+            this.sentimentRepository = sentimentRepository;
             this.Woeid = Woeid;
         }
 
@@ -41,8 +44,24 @@ namespace DatabaseService.Controller
                 Country = Trends[0].woeid,
                 Trends = Trends
             };
-            await repository.StoreTrends(trends);
+            await trendRepository.StoreTrends(trends);
 
+            return new Empty();
+        }
+
+        public override async Task<Empty> StoreSentiment(StoreSentimentRequest request, ServerCallContext context)
+        {
+            var sentiments = new List<Sentiment>();
+            foreach(var payload in request.Sentiments)
+            {
+                var sentiment = new Sentiment();
+                sentiment.Trend = payload.Topic;
+                sentiment.Value = payload.Sentiment;
+                sentiment.Tweet_ID = payload.Tweet.ID;
+                sentiment.Timestamp = payload.Tweet.Timestamp.ToDateTime();
+                sentiments.Add(sentiment);
+            }
+            await sentimentRepository.StoreSentiment(sentiments);
             return new Empty();
         }
     }

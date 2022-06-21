@@ -1,8 +1,9 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using database_service.Repositories;
+using DatabaseService.Models;
+using DatabaseService.Repositories;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Twitterdash;
-using DatabaseService.Repositories;
-using DatabaseService.Models;
 
 namespace DatabaseService.Controller
 {
@@ -10,17 +11,19 @@ namespace DatabaseService.Controller
     {
 
         private woeid Woeid;
-        private ITwitterTrendsRepository repository;
+        private ITwitterTrendsRepository trendRepository;
+        private readonly ISentimentRepository sentimentRepository;
 
-        public DatabaseReaderController(ITwitterTrendsRepository repository, woeid Woeid)
+        public DatabaseReaderController(ITwitterTrendsRepository trendRepository, ISentimentRepository sentimentRepository, woeid Woeid)
         {
-            this.repository = repository;
+            this.trendRepository = trendRepository;
+            this.sentimentRepository=sentimentRepository;
             this.Woeid = Woeid;
         }
 
         public override async Task<GetAvailableCountriesReply> GetAvailableCountries(Empty request, ServerCallContext context)
         {
-            var countries = await repository.GetAvailableCountries();
+            var countries = await trendRepository.GetAvailableCountries();
             var getAvailableCountriesReply = new GetAvailableCountriesReply();
 
             foreach (int woeid in countries)
@@ -32,11 +35,11 @@ namespace DatabaseService.Controller
 
         public override async Task<TrendProviderReply> GetCurrentTrends(GetCurrentTrendsRequest request, ServerCallContext context)
         {
-  
+
             Console.WriteLine(request);
 
-            TwitterTrends?  reply = await repository.GetCurrentTrends(this.Woeid.getWOEID(request.Country));
-           
+            TwitterTrends? reply = await trendRepository.GetCurrentTrends(this.Woeid.getWOEID(request.Country));
+
             if (reply == null)
             {
                 return new TrendProviderReply();
@@ -57,7 +60,7 @@ namespace DatabaseService.Controller
             }
 
             replyTrends = replyTrends.OrderBy(x => x.Placement).ToList();
-            if(request.Limit > 0)
+            if (request.Limit > 0)
             {
                 replyTrends = replyTrends.Take(request.Limit).ToList();
             }
@@ -71,7 +74,7 @@ namespace DatabaseService.Controller
 
         public override async Task<GetRecentTrendsReply> GetRecentTrends(GetRecentTrendsRequest request, ServerCallContext context)
         {
-            var db_reply = await repository.GetRecentTrends(
+            var db_reply = await trendRepository.GetRecentTrends(
                 request.EndDate?.ToDateTime(),
                 request.StartDate?.ToDateTime(),
                 request.Hashtag);
@@ -103,6 +106,15 @@ namespace DatabaseService.Controller
             getRecentTrendsReply.RecentTrends.Add(recentTrends);
 
             return getRecentTrendsReply;
+        }
+
+        public override async Task<GetUniqueTweetsPayload> GetUniqueTweets(GetUniqueTweetsPayload request, ServerCallContext context)
+        {
+            var tweetIDs = request.TweetIds.ToList();
+            var cleanTweetIDs = await sentimentRepository.MakeIDsUnique(tweetIDs);
+            var response = new GetUniqueTweetsPayload();
+            response.TweetIds.Add(cleanTweetIDs);
+            return response;
         }
     }
 }

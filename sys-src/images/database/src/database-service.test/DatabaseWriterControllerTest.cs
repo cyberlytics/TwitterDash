@@ -7,46 +7,18 @@ using DatabaseService.Controller;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Helpers;
+using database_service.Repositories;
+using Twitterdash;
 
 namespace DatabaseService.Tests
 {
     [TestFixture]
-    class DatabaseWriterControllerTest
+    class DatabaseWriterControllerTest : ControllerTestBase
     {
-        private MongoDbRunner runner;
-        private IMongoCollection<TwitterTrends> collection;
-        private TwitterTrendsRepository repository;
-        private TextWriter consoleOut;
-        private woeid WOEID;
-        
-        [SetUp]
-        public void Setup()
-        {
-            var sw = new StringWriter();
-            consoleOut = Console.Out;
-            Console.SetOut(sw);
-
-            runner = MongoDbRunner.Start();
-            MongoClient client = new MongoClient(runner.ConnectionString);
-            IMongoDatabase database = client.GetDatabase("TwitterDashTest");
-            collection = database.GetCollection<TwitterTrends>("TrendsTest");
-
-            repository = new TwitterTrendsRepository(collection);
-            
-            WOEID = new woeid();          
-        }
-
-        [TearDown]
-        public void Teardown()
-        {
-            runner.Dispose();
-            Console.SetOut(consoleOut);
-        }
-
         [Test]
         public async Task StoreTrends_Should_Write_Trends_To_Database()
         {
-            var service = new DatabaseWriterController(repository, WOEID);
+            var service = new DatabaseWriterController(trendRepository, sentimentRepository, WOEID);
 
             var request = new Twitterdash.TrendProviderReply(){
                 Timestamp = Timestamp.FromDateTime(DateTime.Now.ToUniversalTime()),
@@ -62,9 +34,49 @@ namespace DatabaseService.Tests
             var response = await service.StoreTrends(
                 request, TestServerCallContext.Create());
 
-            var db = collection.Find(new BsonDocument()).ToList();
+            var db = trendCollection.Find(new BsonDocument()).ToList();
             Assert.That(db.Count, Is.EqualTo(1));
             Assert.That(db[0].Trends[0].name, Is.EqualTo("TestTrend"));
+        }
+
+        [Test]
+        public async Task StoreSentiment_Should_Write_Sentiment_To_Database()
+        {
+            var service = new DatabaseWriterController(trendRepository, sentimentRepository, WOEID);
+
+            List<SentimentPayload> sentiments = new();
+            for(int i = 0; i<5; i++)
+            {
+                SentimentPayload sentiment = new();
+                sentiment.Sentiment = 0.5f;
+                sentiment.Topic = "foobar";
+                sentiment.Tweet = new()
+                {
+                    ID = i,
+                    Timestamp = DateTime.Now.ToUniversalTime().ToTimestamp(),
+                };
+                sentiments.Add(sentiment);
+            }
+
+
+            var request = new Twitterdash.StoreSentimentRequest();
+            request.Sentiments.Add(sentiments);
+
+
+            var response = await service.StoreSentiment(
+                request, TestServerCallContext.Create());
+
+            var db = sentimentCollection.Find(new BsonDocument()).ToList();
+            Assert.Multiple(() =>
+            {
+                Assert.That(db.Count, Is.EqualTo(5));
+                for (int i = 0; i<5; i++)
+                {
+                    Assert.That(db[i].Tweet_ID, Is.EqualTo(i));
+                }
+            });
+            
+            
         }
     }
 }
