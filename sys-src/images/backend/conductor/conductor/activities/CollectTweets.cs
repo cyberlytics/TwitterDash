@@ -10,7 +10,7 @@ namespace conductor.activities
     {
         private readonly TweetProvider.TweetProviderClient client;
         private readonly ILogger<CollectTweets> logger;
-
+        const int limit = 300;
         public CollectTweets(Twitterdash.TweetProvider.TweetProviderClient client, ILogger<CollectTweets> logger)
         {
             this.client=client;
@@ -29,7 +29,7 @@ namespace conductor.activities
                     var request = new GetTweetsRequest();
                     request.Since = time.AddDays(-1).ToTimestamp();
                     request.Until = time.ToTimestamp();
-                    request.Limit = 1000;
+                    request.Limit = limit;
                     request.Trend = trend.Name;
                     request.Languages.Add("de");
                     request.Languages.Add("en");
