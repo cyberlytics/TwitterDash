@@ -32,19 +32,11 @@ namespace DatabaseService.Controller
 
         public override async Task<TrendProviderReply> GetCurrentTrends(GetCurrentTrendsRequest request, ServerCallContext context)
         {
-            TwitterTrends? reply;
-
+  
             Console.WriteLine(request);
 
-            if (request.HasCountry)
-            {
-                reply = await repository.GetCurrentTrends(this.Woeid.getWOEID(request.Country));
-            }
-            else
-            {
-                reply = await repository.GetCurrentTrends(null);
-            }
-
+            TwitterTrends?  reply = await repository.GetCurrentTrends(this.Woeid.getWOEID(request.Country));
+           
             if (reply == null)
             {
                 return new TrendProviderReply();

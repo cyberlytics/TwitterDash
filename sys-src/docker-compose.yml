@@ -107,7 +107,7 @@ services:
 
   twint-service:
     container_name: twint-service
-    profiles: ["twint-service", "backend", "frontend-dev"]
+    profiles: ["twint-service", "backend", "frontend", "frontend-dev"]
     build: ./images/backend/twint_scraper
     restart: unless-stopped
     ports:
@@ -117,7 +117,7 @@ services:
 
   sentiment-service:
     container_name: sentiment-service
-    profiles: ["sentiment-service", "backend", "frontend-dev"]
+    profiles: ["sentiment-service", "backend", "frontend", "frontend-dev"]
     build: ./images/backend/sentiment_service
     restart: unless-stopped
     ports:

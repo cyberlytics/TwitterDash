@@ -10,7 +10,7 @@ namespace conductor.activities
         private readonly SentimentProvider.SentimentProviderClient client;
         private readonly ILogger<PerformSentimentAnalysis> logger;
         private readonly int max_retries;
-
+        readonly HashSet<string> valid_languages = new() { "de","en","fr","es","it","nl" };
         public PerformSentimentAnalysis(SentimentProvider.SentimentProviderClient client, ILogger<PerformSentimentAnalysis> logger,int max_retries=10)
         {
             this.client=client;
@@ -49,7 +49,7 @@ namespace conductor.activities
                 {
                     try
                     {
-                        if (tweet.Language != "de")
+                        if (!valid_languages.Contains(tweet.Language))
                             continue;
 
                         if (sentiments.ContainsKey(tweet.ID))
