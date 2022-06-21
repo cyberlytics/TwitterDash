@@ -75,8 +75,8 @@ namespace DatabaseService.Controller
         public override async Task<GetRecentTrendsReply> GetRecentTrends(GetRecentTrendsRequest request, ServerCallContext context)
         {
             var db_reply = await trendRepository.GetRecentTrends(
-                request.EndDate?.ToDateTime(),
                 request.StartDate?.ToDateTime(),
+                request.EndDate?.ToDateTime(),
                 request.Hashtag);
 
             var recentTrends = new List<RecentTrend>();
