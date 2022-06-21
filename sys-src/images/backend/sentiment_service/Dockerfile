@@ -13,6 +13,8 @@ WORKDIR /usr/src/app/
 
 RUN python -m nltk.downloader punkt
 
+RUN python -m textblob.download_corpora
+
 COPY . .
 
 RUN [ "python", "./sentiment.py" ]
