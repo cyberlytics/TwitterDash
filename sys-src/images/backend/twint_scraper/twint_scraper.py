@@ -68,7 +68,7 @@ class Twint_Scraper:
             ],
             inplace=True,
         )
-        df = df[df["language"] == "de"]
+        # df = df[df["language"] == "de"]
         df["date"] = df["date"].astype("datetime64")
         df["Wochentag"] = df["date"].apply(lambda x: x.weekday())
         df["Stunde"] = df["date"].apply(lambda x: x.hour)
