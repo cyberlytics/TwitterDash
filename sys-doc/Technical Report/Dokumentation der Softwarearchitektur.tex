@@ -17,61 +17,62 @@
 
 % Authoren	
 \author{
-        \IEEEauthorblockN{Hahn, Bastian}
-        \IEEEauthorblockA{
-                \textit{b.hahn@oth-aw.de}\\
-        }
-        \and
+    \IEEEauthorblockN{Hahn, Bastian}
+    \IEEEauthorblockA{
+        \textit{b.hahn@oth-aw.de}\\
+    }
+    \and
 
-        \IEEEauthorblockN{Kleber, Martin}
-        \IEEEauthorblockA{
-                \textit{m.kleber2@oth-aw.de}\\
-        }
-        \and
+    \IEEEauthorblockN{Kleber, Martin}
+    \IEEEauthorblockA{
+        \textit{m.kleber2@oth-aw.de}\\
+    }
+    \and
 
-        \IEEEauthorblockN{Klier, Andreas}
-        \IEEEauthorblockA{
-                \textit{a.klier@oth-aw.de}\\
-        }
-        \and
+    \IEEEauthorblockN{Klier, Andreas}
+    \IEEEauthorblockA{
+        \textit{a.klier@oth-aw.de}\\
+    }
+    \and
 
-        \IEEEauthorblockN{Kreussel, Lukas}
-        \IEEEauthorblockA{
-                \textit{l.kreussel@oth-aw.de}\\
-        }
-        \and
+    \IEEEauthorblockN{Kreussel, Lukas}
+    \IEEEauthorblockA{
+        \textit{l.kreussel@oth-aw.de}\\
+    }
+    \and
 
-        \IEEEauthorblockN{Paris, Felix}
-        \IEEEauthorblockA{
-                \textit{f.paris1@oth-aw.de}\\
-        }
-        \and
+    \IEEEauthorblockN{Paris, Felix}
+    \IEEEauthorblockA{
+        \textit{f.paris1@oth-aw.de}\\
+    }
+    \and
 
-        \IEEEauthorblockN{Ziegler, Andreas}
-        \IEEEauthorblockA{
-                \textit{a.ziegler1@oth-aw.de}\\
-        }
+    \IEEEauthorblockN{Ziegler, Andreas}
+    \IEEEauthorblockA{
+        \textit{a.ziegler1@oth-aw.de}\\
+    }
 }
 
 \maketitle
 
 \begin{abstract}
-In diesem technischem Report wird die Softwarearchitektur des Projekts 
-Twitter-Dash vorgestellt. Das Projekt wurde im Rahmen der Vorlesung 
-Big Data and Cloud Computing (bdcc) implementiert. Ziel der Implementierung ist es, 
-ein Daschboard zu erstellen, dass aktuelle und historische Informationen zu Twitter Trends
-anzeigen und analysieren kann.
+    In diesem technischem Report wird die Softwarearchitektur des Projekts
+    Twitter-Dash vorgestellt. Das Projekt wurde im Rahmen der Vorlesung
+    Big Data and Cloud Computing (bdcc) implementiert. Ziel der Implementierung ist es,
+    ein Dashboard zu erstellen, dass aktuelle und historische Informationen zu Twitter Trends
+    anzeigen und analysieren kann.
 \end{abstract}
 
 \begin{IEEEkeywords}
- Twitter, Big Data, Database, Web UI, Data Analysis
+    Twitter, Big Data, Database, Web UI, Data Analysis
 \end{IEEEkeywords}
 
 \section{Introduction}
 Bei der Applikation Twitter-Dash werden von der Twitter API alle 15 Min die aktuellen Trends
-abgegriffen und in einer lokalen Datenbank gespeichert. Die Kommunikation zwischen den 
-einzelnen Services ist über eine grpc Schnittstelle realisiert. Die Interaktion des Anwenders mit der Applikation erfolgt dabei über eine Web-UI basierend auf dem 
-React Webframework.
+abgegriffen und in einer lokalen Datenbank gespeichert. Die Kommunikation zwischen den
+einzelnen Services ist über eine gRPC Schnittstelle realisiert.
+Die Interaktion des Anwenders mit der Applikation erfolgt dabei über eine Web-UI basierend auf dem
+React Web-Framework.
 
 \section{Architektur Allgemein}
 \begin{figure*}
@@ -82,42 +83,109 @@ React Webframework.
 
 Als Architektur wird ein Ansatz verfolgt, der sich stark an Microservices orientiert.
 Dadurch wird eine abgeschlossene Logik von Front- und Backendkomponenten erreicht, die jeweils
-von einem Subteam entwickelt wird. Diese gekapselten Einheiten können jeweils als isolierte Applikation der Containervisualisierung Docker betrieben werden. 
-Durch eine zentrale Konfigurationsdatei des Containers können diese einfach zwischen den Teammitgliedern
+von einem Subteam entwickelt wird. Diese gekapselten Einheiten können jeweils als isolierte Applikation der Containervisualisierung Docker betrieben werden.
+Durch eine zentrale Konfigurationsdatei des Containers können diese zwischen den Teammitgliedern
 ausgetauscht und ausgeführt werden. Damit wird eine hohe Portabilität gewährleistet.
-Die Kommunikation der Teilsysteme wird durch eine sprachunabhängige gRPC-Schnittstelle angeboten. 
-Dadurch wird es möglich einzelne Komponenten des Gesamtsystems auszutauschen, ohne größere Veränderungen an den anderen Microservices vornehmen zu müssen.\cite{microservices}
+Die Kommunikation der Teilsysteme wird durch eine sprachunabhängige gRPC-Schnittstelle angeboten.
+Dadurch wird es möglich einzelne Komponenten des Gesamtsystems auszutauschen,
+ohne größere Veränderungen an den anderen Microservices vornehmen zu müssen \cite{microservices}.
 
 %TODO Frontend
 
 \section{Datenakquise}
+Um Daten für das Dashboard zu erhalten, werden zwei unterschiedliche Vorgehensweisen verwendet.
+Der verbreiteste Ansatz ist die Abfrage über die offizielle Twitter API \cite{twitterapi}.
+Über diese werden die aktuellen Hashtags periodisch abgerufen.
+Außerdem wurde Twint, ein fortgeschrittenes Scraping-Tool verwendet.
+Dieses Tool liefert vollständige Tweets, inklusive zugehöriger Meta-Daten,
+ohne direkten Zugriff auf die Twitter API zu benötigen \cite{twint}.
+
+\subsection*{Trend-Service}
+Für den Zugriff auf die Twitter-API wurde die Python-Bibliothek Tweepy \cite{tweepy} verwendet.
+Diese Bibliothek bietet einen Client zur Verbindung zur Twitter-API.
+Über diesen Client werden alle 15 Minuten die aktuellen Trends pro Land abgefragt und nach Hashtags gefiltert.
+Diese werden über den Conductor zur Speicherung an die Datenbank gesendet.
+
+Der Trend-Service bietet folgende Funktionen:
+\begin{itemize}
+
+    \item getAvailableTrends:\newline Liefert alle Länder zurück, für die die Twitter API aktuell Trends zur Verfügung stellt.
+    \item getTrending:\newline Liefert die aktuellen Hashtags in einer Liste zurück. Die Listenelemente umfassen:
+          \begin{itemize}
+              \item Hashtag
+              \item Platzierung nach Aktualität im Land
+              \item Anzahl der Tweets zu diesem Hashtag
+              \item Zeitstempel der Abfrage
+              \item Land
+          \end{itemize}
+    \item getTweetCount:\newline Liefert die Anzahl der Tweets in einem vorgegebenen Zeitraum zu einem Hashtag zurück.
+
+\end{itemize}
+
+\subsection*{Twint-Service}
+Da die Nutzung der Twitter-API eingeschränkt ist, wurde Twint verwendet, um viele Tweets zu laden.
+Der Twint-Service wird nur auf Anfrage des Conductors ausgeführt.
+Dieser gibt einen Hashtag, einen Start- und Endzeitpunktsangabe und eine Sprache vor.
+Zu dieser Anfrage werden Tweets mit Twint gesammelt und nach Bereinigung von unwichtigen Metadaten zurück an den Conductor gegeben.
+
+Die zurückgegebenen Elemente enthalten die folgenden Informationen:
+\begin{itemize}
+    \item Tweet-ID
+    \item Conversation-ID
+    \item Zeitstempel
+    \item Textinhalt des Tweets
+    \item Anzahl der Likes
+    \item Anzahl der Retweets
+    \item Hashtags in dem Tweet
+    \item Sprache
+\end{itemize}
 
 \section{Datenverarbeitung}
+Aus den gesammelten Daten können weitergehende Informationen extrahiert werden.
+Hier wurde ein Service implementiert, der das Sentiment eines Tweets analysiert.
+
+\subsection*{Sentiment-Analyse}
+Bei der Sentimentanalyse werden die in einem Text ausgedrückten Meinungen mithilfe von NLP analysiert,
+um festzustellen, wie die Einstellung des Verfassers zu einem bestimmten Thema ist.
+Zur Analyse der Stimmungen wurden zwei verschiedene Modelle eingebunden,
+ein bereits vortrainiertes neuronales Sprachmodell (BERT \cite{bert})
+und ein ein stochastisches Modell (TextBlob \cite{textblob}).
+Aufgrund des hohen Ressourcenverbrauchs des Tranformermodells (BERT) wurde das TextBlob-Modell für die Ausführung gewählt.
+
+Die Ausführung der Sentiment-Analyse erfolgt über einen Service, der auf Anfrage des Conductors basiert.
+Bei dieser Anfrage wird ein Text übergeben, der analysiert werden soll,
+sowie eine Sprache, die zur Wahl des richtigen TextBlob-Modells benötigt wird.
+Bevor der Text analysiert werden kann muss er bereinigt werden.
+Dabei werden zum Beispiel unerwünschte Zeichen entfernt und die Zeichenkette in Kleinbuchstaben umgewandelt.
+Als Ausgabe liefert der Service eine Zahlenwert zwischen -1 und 1.
+Dabei wird der Wert -1 für negative und 1 für positive Stimmungen angenommen.
 
 \section{Datenbank}
-Alle Datenbank Anfragen werden durch einen database service abstrahiert, der die Funktionen als gRPC Schnittstelle anbietet. Dabei laufen die Datenbank und der database service in jeweils einem eigenen Container. 
-Durch die gRPC Schnittstelle können die Daten typsicher und Platform sowie Programmiersprache unabhängig an den database service übergeben werden und von diesem zurückgeliefert werden.
+Alle Datenbankanfragen werden durch einen database service abstrahiert, der die Funktionen als gRPC
+Schnittstelle anbietet. Dabei laufen die Datenbank und der database service in jeweils einem eigenen Container.
+Durch die gRPC Schnittstelle können die Daten typsicher und Platform- sowie Programmiersprachen-unabhängig
+an den database service übergeben und von diesem zurückgeliefert werden.
 \\
 Vom database service werden folgende Funktionen angeboten:
 \\
-Zum speichern in die Datenbank:
+Zum Speichern in die Datenbank:
 \\
 \smallskip
 \textbf{Trends speichern (StoreTrends)}
 \begin{itemize}
     \item Beschreibung: Speichert Trends in die Datenbank
     \item Parameter:
-        \begin{itemize}
-            \item Zeitstempel
-            \item Liste von Trends mit folgenden Attributen:
-                \begin{itemize}
-                    \item trendtype
-                    \item name
-                    \item country
-                    \item placement
-                    \item tweetVolume24
-                \end{itemize}
-        \end{itemize}
+          \begin{itemize}
+              \item Zeitstempel
+              \item Liste von Trends mit folgenden Attributen:
+                    \begin{itemize}
+                        \item trendtype
+                        \item name
+                        \item country
+                        \item placement
+                        \item tweetVolume24
+                    \end{itemize}
+          \end{itemize}
     \item Rückgabe: Keine
 \end{itemize}
 
@@ -126,14 +194,14 @@ Zum speichern in die Datenbank:
 \begin{itemize}
     \item Beschreibung: Speichert Sentiment in die Datenbank
     \item Parameter:
-        \begin{itemize}
-            \item Liste von Sentiments mit folgenden Attributen:
-                \begin{itemize}
-                    \item tweet
-                    \item Sentiment
-                    \item topic
-                \end{itemize}
-        \end{itemize}
+          \begin{itemize}
+              \item Liste von Sentiments mit folgenden Attributen:
+                    \begin{itemize}
+                        \item tweet
+                        \item Sentiment
+                        \item topic
+                    \end{itemize}
+          \end{itemize}
     \item Rückgabe: Keine
 \end{itemize}
 
@@ -144,50 +212,50 @@ zum Laden aus der Datenbank:
 \begin{itemize}
     \item Beschreibung: Lädt aktuelle Trends aus der Datenbank
     \item Parameter:
-        \begin{itemize}
-            \item country
-            \item limit
-        \end{itemize}
-    \item Rückgabe: 
-        \begin{itemize}
-            \item Zeitstempel
-            \item Liste von Trends mit folgenden Attributen:
-                \begin{itemize}
-                    \item trendtype
-                    \item name
-                    \item country
-                    \item placement
-                    \item tweetVolume24
-                \end{itemize}
-        \end{itemize}
+          \begin{itemize}
+              \item country
+              \item limit
+          \end{itemize}
+    \item Rückgabe:
+          \begin{itemize}
+              \item Zeitstempel
+              \item Liste von Trends mit folgenden Attributen:
+                    \begin{itemize}
+                        \item trendtype
+                        \item name
+                        \item country
+                        \item placement
+                        \item tweetVolume24
+                    \end{itemize}
+          \end{itemize}
 \end{itemize}
-\
-smallskip
+
+\smallskip
 \textbf{vergangene Trends abrufen (GetRecentTrends)}
 \begin{itemize}
     \item Beschreibung: Lädt vergangene Trends aus der Datenbank
     \item Parameter:
-        \begin{itemize}
-            \item hastag
-            \item country
-            \item startdate (optional)
-            \item enddate (optional)
-        \end{itemize}
-    \item Rückgabe: 
-        \begin{itemize}
-            \item Liste an Trends mit folgenden Attributen:
-                \begin{itemize}
-                    \item Zeitstempel
-                    \item Liste von Trends mit folgenden Attributen:
-                        \begin{itemize}
-                            \item trendtype
-                            \item name
-                            \item country
-                            \item placement
-                            \item tweetVolume24
-                        \end{itemize}
-                \end{itemize}
-        \end{itemize}
+          \begin{itemize}
+              \item hastag
+              \item country
+              \item startdate (optional)
+              \item enddate (optional)
+          \end{itemize}
+    \item Rückgabe:
+          \begin{itemize}
+              \item Liste an Trends mit folgenden Attributen:
+                    \begin{itemize}
+                        \item Zeitstempel
+                        \item Liste von Trends mit folgenden Attributen:
+                              \begin{itemize}
+                                  \item trendtype
+                                  \item name
+                                  \item country
+                                  \item placement
+                                  \item tweetVolume24
+                              \end{itemize}
+                    \end{itemize}
+          \end{itemize}
 \end{itemize}
 
 \smallskip
@@ -202,12 +270,12 @@ smallskip
 \textbf{Trends speichern (GetAvailableSentimentTrends)}
 \begin{itemize}
     \item Beschreibung: Lädt vorhandene Trends aus der Datenbank
-    \item Parameter: 
-        \begin{itemize}
-            \item query
-            \item limit
-            \item country
-        \end{itemize}
+    \item Parameter:
+          \begin{itemize}
+              \item query
+              \item limit
+              \item country
+          \end{itemize}
     \item Rückgabe: Liste an vorhandenen Sentiments
 \end{itemize}
 
@@ -216,10 +284,10 @@ smallskip
 \begin{itemize}
     \item Beschreibung: Lädt aktuellen Sentiment aus der Datenbank
     \item Parameter:
-        \begin{itemize}
-            \item Trendname
-            \item Country
-        \end{itemize}
+          \begin{itemize}
+              \item Trendname
+              \item Country
+          \end{itemize}
     \item Rückgabe: Sentiment
 \end{itemize}
 
@@ -228,12 +296,12 @@ smallskip
 \begin{itemize}
     \item Beschreibung: Lädt vergangene Sentiment aus der Datenbank
     \item Parameter:
-        \begin{itemize}
-            \item Trendname
-            \item Country
-            \item startdate (optional)
-            \item enddate (optional)
-        \end{itemize}
+          \begin{itemize}
+              \item Trendname
+              \item Country
+              \item startdate (optional)
+              \item enddate (optional)
+          \end{itemize}
     \item Rückgabe: Liste an Sentiments
 \end{itemize}
 
@@ -248,12 +316,12 @@ smallskip
 
 \smallskip
 
-Vom Backenend erzeugte Daten werden in einer MongoDB Datenbank gespeichert. 
+Vom Backenend erzeugte Daten werden in einer MongoDB Datenbank gespeichert.
 Dabei werden Trends zu bestimmten Zeitpunkten gespeichert. Diese enthalten Trendtype, Trendname, Placement, Country, TweetVolume24. Für Sentiments werden die Tweets, die zu einem Trend gehören, und das jeweilige Topic gespeichert.
 \\
 \\
 Um die Funktionalität zu gewährleisten wurden Unit Tests entworfen. Dadurch kann die interne Integrität, sowie die Anbindung an externe Systeme,
-sichergestellt werden. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern entworfen. Dieses soll eine 
+sichergestellt werden. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern entworfen. Dieses soll eine
 übersichtliche Struktur und Einheitlichkeit garantieren.
 
 
@@ -263,6 +331,12 @@ sichergestellt werden. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern
 
 \begin{thebibliography}{0}
     \bibitem{microservices}Microservice-Frontend-Architekturen [Online] \url{https://www.sigs-datacom.de/uploads/tx_dmjournals/attermeyer_OTS_Microservices_Docker_16.pdf} (visited on Jun. 21, 2022)
+    \bibitem{twitterapi}Twitter API [Online] \url{https://developer.twitter.com/en/docs/twitter-api} (visited on Jun. 23, 2022)
+    \bibitem{twint}TWINT - Twitter Intelligence Tool [Online] \url{https://github.com/twintproject/twint} (visited on Jun. 23, 2022)
+    \bibitem{tweepy}Tweepy: Twitter for Python! (2020) [Online] \url{https://github.com/tweepy/tweepy} (visited on Jun. 23, 2022)
+    \bibitem{bert}bert-base-multilingual-uncased-sentiment [Online] \url{https://huggingface.co/nlptown/bert-base-multilingual-uncased-sentiment} (visited on Jun. 23, 2022)
+    \bibitem{textblob}TextBlob: Simplified Text Processing [Online] \url{https://textblob.readthedocs.io/en/dev/} (visited on Jun. 23, 2022)
+
 \end{thebibliography}
 
 \end{document}
