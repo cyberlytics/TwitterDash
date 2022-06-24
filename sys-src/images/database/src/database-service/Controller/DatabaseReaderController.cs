@@ -125,14 +125,30 @@ namespace DatabaseService.Controller
             return reply;
         }
 
-        public override Task<GetCurrentSentimentReply> GetCurrentSentiment(GetCurrentSentimentRequest request, ServerCallContext context)
+        public override async Task<GetCurrentSentimentReply> GetCurrentSentiment(GetCurrentSentimentRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var sentiment = await sentimentRepository.GetCurrentSentiment(request.TrendName);
+            var reply = new GetCurrentSentimentReply();
+            reply.Sentiment = sentiment.Value;
+            return reply;
         }
 
-        public override Task<GetRecentSentimentReply> GetRecentSentiment(GetRecentSentimentRequest request, ServerCallContext context)
+        public override async Task<GetRecentSentimentReply> GetRecentSentiment(GetRecentSentimentRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var sentiments = await sentimentRepository.GetRecentSentiment(
+                request.TrendName,
+                request.StartDate?.ToDateTime(),
+                request.EndDate?.ToDateTime()
+            );
+            var reply = new GetRecentSentimentReply();
+            reply.RecentSentiments.Add(sentiments.Select(x =>
+            {
+                var recentSentiment = new RecentSentiment();
+                recentSentiment.Datetime = x.Timestamp.ToTimestamp();
+                recentSentiment.Sentiment = x.Value;
+                return recentSentiment;
+            }));
+            return reply;
         }
     }
 }
