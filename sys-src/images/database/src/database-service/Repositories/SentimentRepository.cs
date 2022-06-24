@@ -1,19 +1,8 @@
 ﻿using DatabaseService.Models;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace database_service.Repositories
+namespace DatabaseService.Repositories
 {
-    public interface ISentimentRepository
-    {
-        Task StoreSentiment(IEnumerable<Sentiment> sentiments);
-        Task<IEnumerable<long>> MakeIDsUnique(IEnumerable<long> tweetIDs);
-    }
-
     public class SentimentRepository : ISentimentRepository
     {
         private IMongoCollection<Sentiment> collection;
@@ -23,11 +12,32 @@ namespace database_service.Repositories
             this.collection = collection;
         }
 
-        public async Task<IEnumerable<long>> MakeIDsUnique(IEnumerable<long> tweetIDs)
+        public async Task<IEnumerable<long>> FilterStoredIds(IEnumerable<long> tweetIDs)
         {
-            HashSet<long> querryTweets = new(tweetIDs);
-            var existingTweets = await this.collection.FindAsync(x=> querryTweets.Contains(x.Tweet_ID));
-            return tweetIDs.Except(existingTweets.ToList().Select(x=>x.Tweet_ID));
+            HashSet<long> queryTweets = new(tweetIDs);
+            var existingTweets = await this.collection.FindAsync(x => queryTweets.Contains(x.Tweet_ID));
+            return tweetIDs.Except(existingTweets.ToList().Select(x => x.Tweet_ID));
+            // return await collection.Find(x => !queryTweets.Contains(x.Tweet_ID)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Sentiment>> GetAvailableSentimentTrends(string query, int limit)
+        {
+            var dbQuery = collection.Find(x => x.Trend == query);
+            if (limit > 0)
+            {
+                dbQuery = dbQuery.Limit(limit);
+            }
+            return await dbQuery.ToListAsync();
+        }
+
+        public Task<Sentiment> GetCurrentSentiment(string trendName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Sentiment> GetRecentSentiment(string trendName, DateTime? start, DateTime? end)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task StoreSentiment(IEnumerable<Sentiment> sentiments)
@@ -35,6 +45,4 @@ namespace database_service.Repositories
             await collection.InsertManyAsync(sentiments);
         }
     }
-
- 
 }

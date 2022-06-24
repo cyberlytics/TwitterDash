@@ -1,5 +1,4 @@
-﻿using database_service.Repositories;
-using DatabaseService.Models;
+﻿using DatabaseService.Models;
 using DatabaseService.Repositories;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
@@ -17,7 +16,7 @@ namespace DatabaseService.Controller
         public DatabaseReaderController(ITwitterTrendsRepository trendRepository, ISentimentRepository sentimentRepository, woeid Woeid)
         {
             this.trendRepository = trendRepository;
-            this.sentimentRepository=sentimentRepository;
+            this.sentimentRepository = sentimentRepository;
             this.Woeid = Woeid;
         }
 
@@ -111,10 +110,29 @@ namespace DatabaseService.Controller
         public override async Task<GetUniqueTweetsPayload> GetUniqueTweets(GetUniqueTweetsPayload request, ServerCallContext context)
         {
             var tweetIDs = request.TweetIds.ToList();
-            var cleanTweetIDs = await sentimentRepository.MakeIDsUnique(tweetIDs);
+            var cleanTweetIDs = await sentimentRepository.FilterStoredIds(tweetIDs);
             var response = new GetUniqueTweetsPayload();
             response.TweetIds.Add(cleanTweetIDs);
             return response;
+        }
+
+        public override async Task<GetAvailableSentimentTrendsReply> GetAvailableSentimentTrends(GetAvailableSentimentTrendsRequest request, ServerCallContext context)
+        {
+            var sentiments = await sentimentRepository.GetAvailableSentimentTrends(request.Query, request.Limit);
+            var trends = sentiments.Select(x => x.Trend);
+            var reply = new GetAvailableSentimentTrendsReply();
+            reply.AvailableTrendsWithSentiment.Add(trends);
+            return reply;
+        }
+
+        public override Task<GetCurrentSentimentReply> GetCurrentSentiment(GetCurrentSentimentRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<GetRecentSentimentReply> GetRecentSentiment(GetRecentSentimentRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
         }
     }
 }
