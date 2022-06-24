@@ -7,7 +7,6 @@ using DatabaseService.Controller;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Helpers;
-using database_service.Repositories;
 using Twitterdash;
 
 namespace DatabaseService.Tests
