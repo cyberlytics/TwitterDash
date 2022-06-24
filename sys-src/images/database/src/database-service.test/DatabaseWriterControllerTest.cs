@@ -7,7 +7,6 @@ using DatabaseService.Controller;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Helpers;
-using database_service.Repositories;
 using Twitterdash;
 
 namespace DatabaseService.Tests
@@ -20,7 +19,8 @@ namespace DatabaseService.Tests
         {
             var service = new DatabaseWriterController(trendRepository, sentimentRepository, WOEID);
 
-            var request = new Twitterdash.TrendProviderReply(){
+            var request = new Twitterdash.TrendProviderReply()
+            {
                 Timestamp = Timestamp.FromDateTime(DateTime.Now.ToUniversalTime()),
                 Trends = { new Twitterdash.Trend{
                     TrendType = Twitterdash.TrendType.Hashtag,
@@ -45,7 +45,7 @@ namespace DatabaseService.Tests
             var service = new DatabaseWriterController(trendRepository, sentimentRepository, WOEID);
 
             List<SentimentPayload> sentiments = new();
-            for(int i = 0; i<5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 SentimentPayload sentiment = new();
                 sentiment.Sentiment = 0.5f;
@@ -70,13 +70,11 @@ namespace DatabaseService.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(db.Count, Is.EqualTo(5));
-                for (int i = 0; i<5; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     Assert.That(db[i].Tweet_ID, Is.EqualTo(i));
                 }
             });
-            
-            
         }
     }
 }
