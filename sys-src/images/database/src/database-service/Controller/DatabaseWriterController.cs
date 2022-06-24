@@ -3,7 +3,6 @@ using Grpc.Core;
 using Twitterdash;
 using DatabaseService.Repositories;
 using DatabaseService.Models;
-using database_service.Repositories;
 
 namespace DatabaseService.Controller
 {
@@ -52,7 +51,7 @@ namespace DatabaseService.Controller
         public override async Task<Empty> StoreSentiment(StoreSentimentRequest request, ServerCallContext context)
         {
             var sentiments = new List<Sentiment>();
-            foreach(var payload in request.Sentiments)
+            foreach (var payload in request.Sentiments)
             {
                 var sentiment = new Sentiment();
                 sentiment.Trend = payload.Topic;
