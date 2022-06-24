@@ -30,14 +30,31 @@ namespace DatabaseService.Repositories
             return await dbQuery.ToListAsync();
         }
 
-        public Task<Sentiment> GetCurrentSentiment(string trendName)
+        public async Task<Sentiment> GetCurrentSentiment(string trendName)
         {
-            throw new NotImplementedException();
+            return await collection
+                .Find(x => x.Trend == trendName)
+                .SortByDescending(x => x.Timestamp)
+                .FirstOrDefaultAsync();
         }
 
-        public Task<Sentiment> GetRecentSentiment(string trendName, DateTime? start, DateTime? end)
+        public async Task<IEnumerable<Sentiment>> GetRecentSentiment(string trendName, DateTime? start, DateTime? end)
         {
-            throw new NotImplementedException();
+            FilterDefinition<Sentiment> filter;
+            var nameFilter = Builders<Sentiment>.Filter.Eq(x => x.Trend, trendName);
+            if (start is not null && end is not null)
+            {
+                var dateFilter = Builders<Sentiment>.Filter.And(
+                    Builders<Sentiment>.Filter.Gte(x => x.Timestamp, start),
+                    Builders<Sentiment>.Filter.Lte(x => x.Timestamp, end)
+                );
+                filter = Builders<Sentiment>.Filter.And(nameFilter, dateFilter);
+            }
+            else
+            {
+                filter = nameFilter;
+            }
+            return await collection.Find(filter).SortByDescending(x => x.Timestamp).ToListAsync();
         }
 
         public async Task StoreSentiment(IEnumerable<Sentiment> sentiments)
