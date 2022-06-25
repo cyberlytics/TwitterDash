@@ -75,11 +75,6 @@ Die Interaktion des Anwenders mit der Applikation erfolgt dabei über eine Web-U
 React Web-Framework.
 
 \section{Architektur Allgemein}
-\begin{figure*}
-    \centering
-    \includegraphics[width=\textwidth]{Architecture.png}
-    \caption{Übersicht Gesamtsystem}
-\end{figure*}
 
 Als Architektur wird ein Ansatz verfolgt, der sich stark an Microservices orientiert.
 Dadurch wird eine abgeschlossene Logik von Front- und Backendkomponenten erreicht, die jeweils
@@ -90,7 +85,19 @@ Die Kommunikation der Teilsysteme wird durch eine sprachunabhängige gRPC-Schnit
 Dadurch wird es möglich einzelne Komponenten des Gesamtsystems auszutauschen,
 ohne größere Veränderungen an den anderen Microservices vornehmen zu müssen \cite{microservices}.
 
+\begin{figure}
+    \includegraphics[width=0.5\textwidth]{Architecture.png}
+    \caption{Übersicht Gesamtsystem}
+\end{figure}
+
+
+\section{Kommunikation}
+Um Konflikten zwischen den Schnittstellen-Definitionen der einzelnen Dienste zu vermeiden,
+wurden alle gRPC Schnittstellen in einem globalem Ordner definiert und vor  dem ausführen der Container über ein Script in die jeweiligen Source-Verzeichnisse der Dienste kopiert, bzw. wenn nötig mit dem gRPC-Tool kompiliert.
+Dadurch werden Schnittstellen Änderungen gleichzeitig für alle Dienste vorgenommen.
+
 %TODO Frontend
+
 
 \section{Datenakquise}
 Um Daten für das Dashboard zu erhalten, werden zwei unterschiedliche Vorgehensweisen verwendet.
@@ -159,6 +166,21 @@ Bevor der Text analysiert werden kann muss er bereinigt werden.
 Dabei werden zum Beispiel unerwünschte Zeichen entfernt und die Zeichenkette in Kleinbuchstaben umgewandelt.
 Als Ausgabe liefert der Service eine Zahlenwert zwischen -1 und 1.
 Dabei wird der Wert -1 für negative und 1 für positive Stimmungen angenommen.
+
+
+\section{Workflow}
+Um die Zusammenarbeit zwischen den verschiedenen Datenakquise Diensten zu ermöglichen wurde ein Conductor-Service erstellt.
+Der Dienst wurde in .Net 6 mit Hilfe der ELSA \cite{elsa} Open Source Workflow Library entwickelt.
+Der Conductor Dienst enthält Client Implementierung für alle benötigen Dienste.
+Für die Datenakquise wurden ein standard Workflow implementiert welcher die benötigen Daten von den anderen Diensten abruft und für weitere Verarbeitungsschritte aufbereitet.
+Dieser Workflow wird durch das Erhalten von Trends des Trend-Services initialisiert und gestartet.
+Über die ELSA-Bibliothek wird ein Web-Interface bereitgestellt, welches den aktuellen Status eines laufenden Workflows visualisiert, sowie Informationen und Ergebnisse von bereits ausgeführten Durchläufen enthält.
+
+\begin{figure}[h]
+    \includegraphics[width=0.5\textwidth]{Workflow.png}
+    \caption{Standard Workflow}
+\end{figure}
+
 
 \section{Datenbank}
 Alle Datenbankanfragen werden durch einen database service abstrahiert, der die Funktionen als gRPC
@@ -327,7 +349,12 @@ sichergestellt werden. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern
 
 
 \section{Frontend}
+%TODO
 
+\section{Testing}
+Um die Funktionalität des Backends zu garantieren wurden alle Backend-Dienste mit einem zur verwendeten Programmiersprache passenden Unit-Test Framework getestet.
+Die Code-Converage liegt dabei bei jeden Dienst über 90\%. 
+%TODO
 
 \begin{thebibliography}{0}
     \bibitem{microservices}Microservice-Frontend-Architekturen [Online] \url{https://www.sigs-datacom.de/uploads/tx_dmjournals/attermeyer_OTS_Microservices_Docker_16.pdf} (visited on Jun. 21, 2022)
@@ -336,7 +363,7 @@ sichergestellt werden. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern
     \bibitem{tweepy}Tweepy: Twitter for Python! (2020) [Online] \url{https://github.com/tweepy/tweepy} (visited on Jun. 23, 2022)
     \bibitem{bert}bert-base-multilingual-uncased-sentiment [Online] \url{https://huggingface.co/nlptown/bert-base-multilingual-uncased-sentiment} (visited on Jun. 23, 2022)
     \bibitem{textblob}TextBlob: Simplified Text Processing [Online] \url{https://textblob.readthedocs.io/en/dev/} (visited on Jun. 23, 2022)
-
+    \bibitem{elsa}ELSA - An open source .NET Standard workflow library [Online] \url{https://elsa-workflows.github.io/elsa-core/} (visited on Jun. 25, 2022)
 \end{thebibliography}
 
 \end{document}
