@@ -153,26 +153,31 @@ async function GetRecentTrends(call, callback) {
   callback(null, await GetRecentTrendsInternal(call.request));
 }
 
-async function GetAvailableSentimentTrendsInternal() {
+async function GetAvailableSentimentTrendsInternal(GetAvailableSentimentTrendsRequest) {
+  let query = GetAvailableSentimentTrendsRequest.query;
+  let limit = GetAvailableSentimentTrendsRequest.limit;
+  let country = GetAvailableSentimentTrendsRequest.country;
   let num_available = Math.floor(Math.random() * 100) + 1
-  let availableSentimentTrends = []
+  let availableTrendsWithSentiment = []
   for (let i = 0; i < num_available; ++i) {
-    let trend = generateRandomTrend(1, "Germany" )
-    availableSentimentTrends.push(trend.name);
+    let randomString = genRandomString(Math.floor(Math.random() * 10) + 1)
+    availableTrendsWithSentiment.push(query + randomString);
   }
+  availableTrendsWithSentiment = availableTrendsWithSentiment.slice(0, limit);
   let GetAvailableSentimentTrendsReply = {
-    availableSentimentTrends: availableSentimentTrends
+    availableTrendsWithSentiment: availableTrendsWithSentiment
   }
 
   return GetAvailableSentimentTrendsReply
 }
 
 async function GetAvailableSentimentTrends(call, callback) {
-  callback(null, await GetAvailableSentimentTrendsInternal());
+  callback(null, await GetAvailableSentimentTrendsInternal(call.request));
 }
 
 async function GetCurrentSentimentInternal(GetCurrentSentimentRequest) {
   let trendName = GetCurrentSentimentRequest.trendName;
+  let country = GetCurrentSentimentRequest.country;
   let GetCurrentSentimentReply = {
     sentiment: Math.random() * 2 - 1
   }
@@ -185,6 +190,7 @@ async function GetCurrentSentiment(call, callback) {
 
 async function GetRecentSentimentInternal(GetRecentSentimentRequest) {
   let trendName = GetRecentSentimentRequest.trendName;
+  let country = GetRecentSentimentRequest.country;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
   if (GetRecentSentimentRequest.hasOwnProperty("end_date")) {
     end_date = GetRecentSentimentRequest.end_date;
