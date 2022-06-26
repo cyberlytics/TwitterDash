@@ -22,7 +22,10 @@ class Twint_Scraper:
         hide_out=True,
     ):
         c = twint.Config()
-        c.Search = "{} lang:{}".format(keyword, language)
+        if language is not None:
+            c.Search = "{} lang:{}".format(keyword, language)
+        else:
+            c.Search = "{}".format(keyword)
         c.Filter_retweets = False
         if language is not None:
             c.Lang = language
@@ -38,8 +41,15 @@ class Twint_Scraper:
         twint.run.Search(c)
         if createDataFrame:
             self.df = twint.storage.panda.Tweets_df
-            self.df = self.dataframe_cleanup(self.df)
-            return self.toTweet(self.df)
+            # If no tweet
+            if self.df.empty:
+                print("EMPTY")
+                print("Language:" + language)
+                print(self.df)
+                return []
+            else:
+                self.df = self.dataframe_cleanup(self.df)
+                return self.toTweet(self.df)
 
     def dataframe_cleanup(self, df):
         df = df.drop_duplicates(subset=["id"])
