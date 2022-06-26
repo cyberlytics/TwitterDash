@@ -14,6 +14,7 @@
 		]
 	},
 	"NodeJs": {
-		"DatabaseService.proto": ["images/webserver/protos"]
+		"DatabaseService.proto": ["images/webserver/protos"],
+    "TrendService.proto": ["images/webserver/protos"]
 	}
 }

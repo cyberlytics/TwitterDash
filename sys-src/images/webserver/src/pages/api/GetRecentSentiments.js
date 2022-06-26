@@ -11,12 +11,12 @@ export default async function handler(req, res) {
                 reject(error);
             }
             else {
-                res.status(200).json(data.availableTrendsWithSentiment);
+                res.status(200).json(data.recentSentiments);
                 resolve();
             }
         }
-        let GetAvailableSentimentTrendsRequest = buildProtoRequest(req, ["query", "limit", "country"]);
+        let GetRecentSentimentRequest = buildProtoRequest(req, ["trendName", "start_date", "end_date", "granularity"]);
 
-        DATABASE_READER_CLIENT.GetAvailableSentimentTrends(GetAvailableSentimentTrendsRequest, dataCallBack);
+        DATABASE_READER_CLIENT.GetRecentSentiments(GetRecentSentimentRequest, dataCallBack);
     });
 }

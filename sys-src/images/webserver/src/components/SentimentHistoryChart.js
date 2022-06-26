@@ -69,9 +69,9 @@ export default class SentimentHistoryChart extends React.Component {
     }
 
     fetchData() {
-        let query = 'api/GetRecentSentiment?' + new URLSearchParams({
+        let query = 'api/GetRecentSentiments?' + new URLSearchParams({
             trendName: this.props.trendName,
-            country: this.props.country
+            granularity: "hour"
         });
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
@@ -82,7 +82,7 @@ export default class SentimentHistoryChart extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (!_.isEqual(this.props, prevProps)) {
-            if (this.props.trendName != null && this.props.country != null) {
+            if (this.props.trendName != null) {
                 this.fetchData();
             }
         }
