@@ -153,10 +153,9 @@ async function GetRecentTrends(call, callback) {
   callback(null, await GetRecentTrendsInternal(call.request));
 }
 
-async function GetAvailableSentimentTrendsInternal(GetAvailableSentimentTrendsRequest) {
-  let query = GetAvailableSentimentTrendsRequest.query;
-  let limit = GetAvailableSentimentTrendsRequest.limit;
-  let country = GetAvailableSentimentTrendsRequest.country;
+async function GetTrendsWithAvailableSentimentInternal(GetTrendsWithAvailableSentimentRequest) {
+  let query = GetTrendsWithAvailableSentimentRequest.query;
+  let limit = GetTrendsWithAvailableSentimentRequest.limit;
   let num_available = Math.floor(Math.random() * 100) + 1
   let availableTrendsWithSentiment = []
   for (let i = 0; i < num_available; ++i) {
@@ -164,20 +163,19 @@ async function GetAvailableSentimentTrendsInternal(GetAvailableSentimentTrendsRe
     availableTrendsWithSentiment.push(query + randomString);
   }
   availableTrendsWithSentiment = availableTrendsWithSentiment.slice(0, limit);
-  let GetAvailableSentimentTrendsReply = {
-    availableTrendsWithSentiment: availableTrendsWithSentiment
+  let GetTrendsWithAvailableSentimentReply = {
+    availableTrendsWithSentiment
   }
 
-  return GetAvailableSentimentTrendsReply
+  return GetTrendsWithAvailableSentimentReply
 }
 
-async function GetAvailableSentimentTrends(call, callback) {
-  callback(null, await GetAvailableSentimentTrendsInternal(call.request));
+async function GetTrendsWithAvailableSentiment(call, callback) {
+  callback(null, await GetTrendsWithAvailableSentimentInternal(call.request));
 }
 
 async function GetCurrentSentimentInternal(GetCurrentSentimentRequest) {
   let trendName = GetCurrentSentimentRequest.trendName;
-  let country = GetCurrentSentimentRequest.country;
   let GetCurrentSentimentReply = {
     sentiment: Math.random() * 2 - 1
   }
@@ -188,39 +186,55 @@ async function GetCurrentSentiment(call, callback) {
   callback(null, await GetCurrentSentimentInternal(call.request));
 }
 
-async function GetRecentSentimentInternal(GetRecentSentimentRequest) {
-  let trendName = GetRecentSentimentRequest.trendName;
-  let country = GetRecentSentimentRequest.country;
+async function GetRecentSentimentsInternal(GetRecentSentimentsRequest) {
+  let trendName = GetRecentSentimentsRequest.trendName;
+  let granularity = GetRecentSentimentsRequest.granularity;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
-  if (GetRecentSentimentRequest.hasOwnProperty("end_date")) {
-    end_date = GetRecentSentimentRequest.end_date;
+  if (GetRecentSentimentsRequest.hasOwnProperty("end_date")) {
+    end_date = GetRecentSentimentsRequest.end_date;
   }
 
   let start_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: end_date.seconds - 7 * 24 * 60 * 60});
-  if (GetRecentSentimentRequest.hasOwnProperty("start_date")) {
-    start_date = GetRecentSentimentRequest.start_date;
+  if (GetRecentSentimentsRequest.hasOwnProperty("start_date")) {
+    start_date = GetRecentSentimentsRequest.start_date;
+  }
+
+  let granularity_seconds = null;
+  switch (granularity) {
+    case "day":
+      granularity_seconds = 60 * 60 * 24;
+      break;
+    case "hour":
+      granularity_seconds = 60 * 60;
+      break;
+    case "minute":
+      granularity_seconds = 60;
+      break;
   }
 
   let recentSentiments = [];
-  for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += 15 * 60) {
-    let sentiment = Math.random() * 2 - 1;
-    let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
-    let RecentSentiment = {
-      datetime: timestamp,
-      sentiment: sentiment
+  for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += granularity_seconds) {
+    let no_data_prob = 0.2;
+    if (Math.random() > no_data_prob) {
+      let sentiment = Math.random() * 2 - 1;
+      let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
+      let RecentSentiment = {
+        datetime: timestamp,
+        sentiment: sentiment
+      }
+      recentSentiments.push(RecentSentiment)
     }
-    recentSentiments.push(RecentSentiment)
   }
 
-  let GetRecentSentimentReply = {
-    recentSentiments: recentSentiments
+  let GetRecentSentimentsReply = {
+    recentSentiments
   }
 
-  return GetRecentSentimentReply;
+  return GetRecentSentimentsReply;
 }
 
-async function GetRecentSentiment(call, callback) {
-  callback(null, await GetRecentSentimentInternal(call.request));
+async function GetRecentSentiments(call, callback) {
+  callback(null, await GetRecentSentimentsInternal(call.request));
 }
 
 function getServer() {
@@ -229,9 +243,9 @@ function getServer() {
     GetCurrentTrends: GetCurrentTrends,
     GetAvailableCountries: GetAvailableCountries,
     GetRecentTrends: GetRecentTrends,
-    GetAvailableSentimentTrends: GetAvailableSentimentTrends,
+    GetTrendsWithAvailableSentiment: GetTrendsWithAvailableSentiment,
     GetCurrentSentiment: GetCurrentSentiment,
-    GetRecentSentiment: GetRecentSentiment
+    GetRecentSentiments: GetRecentSentiments
   });
   return server;
 }

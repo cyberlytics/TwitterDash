@@ -6,18 +6,13 @@ import CountrySelection from "../components/CountrySelection";
 import Navigation from "../components/Navigation";
 
 export default class TweetCounts extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.onKeyDownInput = this.onKeyDownInput.bind(this);
-        this.onCountrySelectChange = this.onSelectChange.bind(this, "country");
         this.state = {
             country: "Germany",
             selected_hashtag: null
         }
-    }
-
-    onSelectChange(key, e) {
-        this.setState({[key]: e.target.value});
     }
 
     onKeyDownInput(e) {
@@ -34,7 +29,6 @@ export default class TweetCounts extends React.Component {
                 <main className={styles.main}>
                     <Navigation active={"Tweet Counts"}></Navigation>
                     <div className="content">
-                        <CountrySelection onChange={this.onCountrySelectChange}></CountrySelection>
                         <div className="selection">
                             <span>hashtag: </span>
                             <input type="text" onKeyDown={this.onKeyDownInput}></input>
