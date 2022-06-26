@@ -86,16 +86,17 @@ namespace DatabaseService.Controller
                 recentTrend.Datetime = reply.DateTime.ToUniversalTime().ToTimestamp();
                 recentTrend.Trend = new();
 
+                var found = false;
                 foreach (var trend in reply.Trends)
                 {
-                    if (trend.name == request.Hashtag)
+                    if (trend.name == request.Hashtag && found == false)
                     {
                         recentTrend.Trend.TrendType = (Twitterdash.TrendType)trend.trendType;
                         recentTrend.Trend.Country = trend.woeid;
                         recentTrend.Trend.Name = trend.name;
                         recentTrend.Trend.Placement = trend.placement;
                         recentTrend.Trend.TweetVolume24 = trend.tweetVolume24;
-                        break;
+                        found = true;
                     }
                 }
                 recentTrends.Add(recentTrend);
