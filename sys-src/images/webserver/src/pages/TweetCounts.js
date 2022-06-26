@@ -5,7 +5,7 @@ import TweetCountsChart from "../components/tweet_count_chart";
 import CountrySelection from "../components/CountrySelection";
 import Navigation from "../components/Navigation";
 
-export default class Visualization extends React.Component {
+export default class TweetCounts extends React.Component {
     constructor() {
         super();
         this.onKeyDownInput = this.onKeyDownInput.bind(this);
@@ -32,7 +32,7 @@ export default class Visualization extends React.Component {
         return (
             <div className={styles.container}>
                 <main className={styles.main}>
-                    <Navigation active={"Visualization"}></Navigation>
+                    <Navigation active={"Tweet Counts"}></Navigation>
                     <div className="content">
                         <CountrySelection onChange={this.onCountrySelectChange}></CountrySelection>
                         <div className="selection">
