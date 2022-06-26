@@ -23,12 +23,11 @@ class Twint_Scraper:
     ):
         c = twint.Config()
         if language is not None:
-            c.Search = "{} lang:{}".format(keyword, language)
+            stringLanguage = self.convertToString(language)
+            c.Search = "{}{}".format(keyword, stringLanguage)
         else:
             c.Search = "{}".format(keyword)
         c.Filter_retweets = False
-        if language is not None:
-            c.Lang = language
         if since is not None:
             c.Since = since
         if until is not None:
@@ -50,6 +49,22 @@ class Twint_Scraper:
             else:
                 self.df = self.dataframe_cleanup(self.df)
                 return self.toTweet(self.df)
+
+    def convertToString(self, tmpliste):
+        tmpString = ""
+
+        lentmp = len(tmpliste)
+
+        if lentmp == 1:
+            return f" lang:{tmpliste[0]}"
+        else:
+            for i, eintrag in enumerate(tmpliste):
+                if i < lentmp - 1:
+                    tmpString += f" lang:{eintrag} OR"
+                else:
+                    tmpString += f" lang:{eintrag}"
+
+        return tmpString
 
     def dataframe_cleanup(self, df):
         df = df.drop_duplicates(subset=["id"])
@@ -78,7 +93,6 @@ class Twint_Scraper:
             ],
             inplace=True,
         )
-        # df = df[df["language"] == "de"]
         df["date"] = df["date"].astype("datetime64")
         df["Wochentag"] = df["date"].apply(lambda x: x.weekday())
         df["Stunde"] = df["date"].apply(lambda x: x.hour)
