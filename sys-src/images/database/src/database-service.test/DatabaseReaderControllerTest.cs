@@ -211,34 +211,145 @@ namespace DatabaseService.Tests
                 Assert.AreEqual(4, response.TweetIds[1]);
             });
         }
-    }
-}
+
+        [TestCase("test", 0, 2)]
+        [TestCase("test", 1, 1)]
+        [TestCase("bdcc", 0, 1)]
+        public async Task GetAvailableSentimentTrends_Should_Return_Correct_Sentiments(string query, int limit, int expectedCount)
+        {
+            var sentiments = new List<Sentiment>() {
+                new Sentiment { Trend = "test" },
+                new Sentiment { Trend = "bdcc" },
+                new Sentiment { Trend = "test" },
+            };
+            sentimentCollection.InsertMany(sentiments);
 
 
+            var service = new DatabaseReaderController(trendRepository, sentimentRepository, WOEID);
+
+            var request = new Twitterdash.GetAvailableSentimentTrendsRequest
+            {
+                Query = query,
+                Limit = limit,
+            };
+
+            var response = await service.GetAvailableSentimentTrends(
+                request, TestServerCallContext.Create());
 
 
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.AvailableTrendsWithSentiment, Has.Exactly(expectedCount).Items);
+                Assert.That(response.AvailableTrendsWithSentiment.ToList()[0], Is.EqualTo(query));
+            });
+        }
 
+        [TestCase("test", 0.7f)]
+        [TestCase("bdcc", 1.0f)]
+        public async Task GetCurrentSentiment_Should_Return_Current_Sentiment(string trendName, float value)
+        {
+            var sentiments = new List<Sentiment>() {
+                new Sentiment
+                {
+                    Trend = "test",
+                    Timestamp = new DateTime(2022, 1, 1, 0, 0, 0).ToUniversalTime(),
+                    Value = 0.5f,
+                },
+                new Sentiment
+                {
+                    Trend = "bdcc",
+                    Timestamp = new DateTime(2022, 1, 2, 0, 0, 0).ToUniversalTime(),
+                    Value = 1.0f,
+                },
+                new Sentiment
+                {
+                    Trend = "test",
+                    Timestamp = new DateTime(2022, 1, 3, 0, 0, 0).ToUniversalTime(),
+                    Value = 0.7f,
+                },
+            };
+            sentimentCollection.InsertMany(sentiments);
 
+            var service = new DatabaseReaderController(trendRepository, sentimentRepository, WOEID);
 
+            var request = new Twitterdash.GetCurrentSentimentRequest
+            {
+                TrendName = trendName,
+            };
 
+            var response = await service.GetCurrentSentiment(
+                request, TestServerCallContext.Create());
 
+            Assert.That(response.Sentiment, Is.EqualTo(value));
+        }
 
+        [TestCase("test", 2)]
+        [TestCase("bdcc", 1)]
+        public async Task GetRecentSentiment_Should_Return_Recent_Sentiment(string query, int expectedCount)
+        {
+            var sentiments = new List<Sentiment>() {
+                new Sentiment { Trend = "test" },
+                new Sentiment { Trend = "bdcc" },
+                new Sentiment { Trend = "test" },
+            };
+            sentimentCollection.InsertMany(sentiments);
 
+            var service = new DatabaseReaderController(trendRepository, sentimentRepository, WOEID);
 
+            var request = new Twitterdash.GetRecentSentimentRequest
+            {
+                TrendName = query
+            };
 
+            var response = await service.GetRecentSentiment(
+                request, TestServerCallContext.Create());
 
+            Assert.That(response.RecentSentiments.Count, Is.EqualTo(expectedCount));
+        }
 
+        [Test]
+        public async Task GetRecentSentiment_Within_Timeframe_Should_Return_Sentiments_Of_That_Timeframe()
+        {
+            var start = new DateTime(2022, 1, 1, 0, 0, 0).ToUniversalTime();
+            var end = new DateTime(2022, 1, 6, 0, 0, 0).ToUniversalTime();
 
+            var sentiments = new List<Sentiment>() {
+                new Sentiment
+                {
+                    Trend = "test",
+                    Timestamp = new DateTime(2022, 1, 1, 0, 0, 0).ToUniversalTime(),
+                },
+                new Sentiment
+                {
+                    Trend = "bdcc",
+                    Timestamp = new DateTime(2022, 1, 2, 0, 0, 0).ToUniversalTime(),
+                },
+                new Sentiment
+                {
+                    Trend = "test",
+                    Timestamp = new DateTime(2022, 1, 5, 0, 0, 0).ToUniversalTime(),
+                },
+                new Sentiment
+                {
+                    Trend = "test",
+                    Timestamp = new DateTime(2022, 1, 7, 0, 0, 0).ToUniversalTime(),
+                },
+            };
+            sentimentCollection.InsertMany(sentiments);
 
-namespace DatabaseService.Tests
-{
-    [TestFixture]
-    class DatabaseReaderControllerTest
-    {
+            var service = new DatabaseReaderController(trendRepository, sentimentRepository, WOEID);
 
+            var request = new Twitterdash.GetRecentSentimentRequest
+            {
+                TrendName = "test",
+                StartDate = Timestamp.FromDateTime(start),
+                EndDate = Timestamp.FromDateTime(end),
+            };
 
-        
+            var response = await service.GetRecentSentiment(
+                request, TestServerCallContext.Create());
 
-        
+            Assert.That(response.RecentSentiments.Count, Is.EqualTo(2));
+        }
     }
 }
