@@ -22,10 +22,12 @@ class Twint_Scraper:
         hide_out=True,
     ):
         c = twint.Config()
-        c.Search = "{} lang:{}".format(keyword, language)
-        c.Filter_retweets = False
         if language is not None:
-            c.Lang = language
+            stringLanguage = self.convertToString(language)
+            c.Search = "{}{}".format(keyword, stringLanguage)
+        else:
+            c.Search = "{}".format(keyword)
+        c.Filter_retweets = False
         if since is not None:
             c.Since = since
         if until is not None:
@@ -38,8 +40,31 @@ class Twint_Scraper:
         twint.run.Search(c)
         if createDataFrame:
             self.df = twint.storage.panda.Tweets_df
-            self.df = self.dataframe_cleanup(self.df)
-            return self.toTweet(self.df)
+            # If no tweet
+            if self.df.empty:
+                print("EMPTY")
+                print("Language:" + language)
+                print(self.df)
+                return []
+            else:
+                self.df = self.dataframe_cleanup(self.df)
+                return self.toTweet(self.df)
+
+    def convertToString(self, tmpliste):
+        tmpString = ""
+
+        lentmp = len(tmpliste)
+
+        if lentmp == 1:
+            return f" lang:{tmpliste[0]}"
+        else:
+            for i, eintrag in enumerate(tmpliste):
+                if i < lentmp - 1:
+                    tmpString += f" lang:{eintrag} OR"
+                else:
+                    tmpString += f" lang:{eintrag}"
+
+        return tmpString
 
     def dataframe_cleanup(self, df):
         df = df.drop_duplicates(subset=["id"])
@@ -68,7 +93,6 @@ class Twint_Scraper:
             ],
             inplace=True,
         )
-        # df = df[df["language"] == "de"]
         df["date"] = df["date"].astype("datetime64")
         df["Wochentag"] = df["date"].apply(lambda x: x.weekday())
         df["Stunde"] = df["date"].apply(lambda x: x.hour)

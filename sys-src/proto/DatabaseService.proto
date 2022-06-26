@@ -8,20 +8,19 @@ import "google/protobuf/timestamp.proto";
 
 service DatabaseReader {
     rpc GetCurrentTrends(GetCurrentTrendsRequest) returns (TrendProviderReply) {}
-
-
+    
     rpc GetRecentTrends(GetRecentTrendsRequest) returns (GetRecentTrendsReply) {}
 
-    //Gets the list of available coutnries in the Database 
+    //Gets the list of available countries in the Database 
     rpc GetAvailableCountries(google.protobuf.Empty) returns (GetAvailableCountriesReply) {}
 
-    // Gets n available Sentiments for a given input string 
-    rpc GetAvailableSentimentTrends(GetAvailableSentimentTrendsRequest) returns (GetAvailableSentimentTrendsReply) {}
+    // Gets n trendnames for a given query where sentiments exist
+    rpc GetTrendsWithAvailableSentiment(GetTrendsWithAvailableSentimentRequest) returns (GetTrendsWithAvailableSentimentReply) {}
     
-    // Gets the last available Sentiment for a given country and trend
+    // Gets the last available Sentiment (1h average) for a given trend
     rpc GetCurrentSentiment(GetCurrentSentimentRequest) returns (GetCurrentSentimentReply) {}
-    // Gets the Sentiment for a given country and trend in a defined timeframe
-    rpc GetRecentSentiment(GetRecentSentimentRequest) returns (GetRecentSentimentReply) {}
+    // Gets the Sentiment for a given trend in a defined timeframe and granularity
+    rpc GetRecentSentiments(GetRecentSentimentsRequest) returns (GetRecentSentimentsReply) {}
 
     //Takes a list of Tweet IDs and returns a list of IDs that aren't already in the Database
     rpc GetUniqueTweets(GetUniqueTweetsPayload) returns (GetUniqueTweetsPayload) {}
@@ -79,21 +78,19 @@ message GetAvailableCountriesReply{
 }
 
 
-message GetAvailableSentimentTrendsRequest{
+message GetTrendsWithAvailableSentimentRequest{
     string query = 1; // String to querry 
     int32 limit = 2;
-    string country = 3;
 }
 
 //GetAvailableSentimentTrends
-message GetAvailableSentimentTrendsReply{
+message GetTrendsWithAvailableSentimentReply{
     repeated string availableTrendsWithSentiment = 1; //List of trends with available sentiment
 }
 
 //GetCurrentSentiment
 message GetCurrentSentimentRequest{
     string trendName = 1;
-    string country = 2;
 }
 
 //GetCurrentSentiment
@@ -102,9 +99,9 @@ message GetCurrentSentimentReply{
 }
 
 //GetRecentSentiment
-message GetRecentSentimentRequest{
+message GetRecentSentimentsRequest{
     string trendName = 1;
-    string country = 2;
+    Granularity granularity = 2;
     optional google.protobuf.Timestamp start_date = 3;
     optional google.protobuf.Timestamp end_date = 4;
 }
@@ -116,6 +113,6 @@ message RecentSentiment{
 }
 
 //GetRecentSentiment
-message GetRecentSentimentReply{
+message GetRecentSentimentsReply{
     repeated RecentSentiment recentSentiments = 1;
 }

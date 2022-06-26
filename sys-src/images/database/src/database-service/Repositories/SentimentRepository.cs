@@ -22,7 +22,7 @@ namespace DatabaseService.Repositories
 
         public async Task<IEnumerable<Sentiment>> GetAvailableSentimentTrends(string query, int limit)
         {
-            var dbQuery = collection.Find(x => x.Trend == query);
+            var dbQuery = collection.Find(x => x.Trend.Contains(query));
             if (limit > 0)
             {
                 dbQuery = dbQuery.Limit(limit);

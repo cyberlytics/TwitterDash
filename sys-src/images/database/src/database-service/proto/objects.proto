@@ -8,6 +8,12 @@ enum TrendType{
     Hashtag = 1;
 }
 
+enum Granularity{
+    minute = 0;
+    hour = 1;
+    day = 2;
+}
+
 message Trend{
     TrendType trendType = 1;
     string name = 2;
