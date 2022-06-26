@@ -1,4 +1,4 @@
-import {TREND_SERVICE_CLIENT} from "../../util/TrendServiceClient"
+import {DATABASE_READER_CLIENT} from "../../util/DatabaseReaderClient"
 
 export default async function handler(req, res) {
     return new Promise((resolve, reject) => {
@@ -10,11 +10,11 @@ export default async function handler(req, res) {
                 reject(error);
             }
             else {
-                res.status(200).json(data.tweetCounts);
+                res.status(200).json(data.countries);
                 resolve();
             }
         }
-        let hashtag = req.query.hashtag;
-        TREND_SERVICE_CLIENT.GetRecentTweetCounts({query: hashtag, country:req.query.country}, dataCallBack);
+
+        DATABASE_READER_CLIENT.GetAvailableCountries(null, dataCallBack);
     });
 }

@@ -14,12 +14,8 @@ export default async function handler(req, res) {
                 resolve();
             }
         }
-        let num_results = req.query.num_results;
-        DATABASE_READER_CLIENT.GetCurrentTrends({limit: num_results}, dataCallBack);
+        let limit = req.query.num_results;
+        let country = req.query.country;
+        DATABASE_READER_CLIENT.GetCurrentTrends({limit, country}, dataCallBack);
     });
-
-
-    //client.GetRecentTrends(RecentTrendsRequest, dataCallback);
-    //client.GetAvailableCountries(null, dataCallback);
-    //TODO: return data
 }
