@@ -1,4 +1,5 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React from "react";
+import _ from "lodash";
 import {
     Chart as ChartJS,
     TimeScale,
@@ -67,27 +68,28 @@ export default class TweetCountsChart extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.hashtag != prevProps.hashtag) {
-            this.setState({
-                hashtag: this.props.hashtag
-            })
+    fetchData() {
+        let query = 'api/get_tweet_counts?' + new URLSearchParams({
+            hashtag: this.props.hashtag,
+            country: this.props.country
+        });
+        let fetch_promise = fetch(query);
+        let json_promise = fetch_promise.then((res) => res.json())
+        json_promise.then((data) => this.setState({
+            data: data
+        }));
+    }
 
-            if (this.props.hashtag != null) {
-                let query = 'api/get_tweet_counts?' + new URLSearchParams({
-                    hashtag: this.props.hashtag
-                });
-                let fetch_promise = fetch(query);
-                let json_promise = fetch_promise.then((res) => res.json())
-                json_promise.then((data) => this.setState({
-                    data: data
-                }));
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(this.props, prevProps)) {
+            if (this.props.hashtag != null && this.props.country != null) {
+                this.fetchData();
             }
         }
     }
 
     render() {
-        if (!this.state.hashtag) return <p>Please enter your search term ...</p>
+        if (!this.props.hashtag) return <p>Please enter your search term ...</p>
         if (!this.state.data) return <p>Hang on ...</p>
 
         let displayData = this.state.data;
@@ -107,7 +109,7 @@ export default class TweetCountsChart extends React.Component {
             labels: labels,
             datasets: [
                 {
-                    label: this.state.hashtag,
+                    label: this.props.hashtag,
                     data: tweetCounts,
                     borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.5)',

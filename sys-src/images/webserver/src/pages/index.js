@@ -5,6 +5,7 @@ import styles from '../styles/Home.module.css'
 import Trends from '../components/Trends'
 import TweetCountsChart from '../components/tweet_count_chart'
 import React, { useEffect, useState, Fragment } from "react";
+import Navigation from "../components/Navigation";
 
 export default class Home extends React.Component {
     render() {
@@ -16,11 +17,7 @@ export default class Home extends React.Component {
                 </Head>
 
                 <main className={styles.main}>
-                    <div className="topnav">
-                        <Link href="/"><a className="active">Twitter Dash</a></Link>
-                        <Link href="/trending"><a>Trending</a></Link>
-                        <Link href="/visualization"><a>Visualization</a></Link>
-                    </div>
+                    <Navigation active={"Twitter Dash"}></Navigation>
                     <h1 className={styles.title}>
                         Twitter Dash
                     </h1>

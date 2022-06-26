@@ -1,5 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 
+const _ = require("lodash");
+
 export default class Trends extends React.Component {
     constructor(props) {
         super(props);
@@ -10,7 +12,8 @@ export default class Trends extends React.Component {
 
     fetchData() {
         let query = 'api/get_hashtag_trends?' + new URLSearchParams({
-            num_results: this.props.num_results
+            num_results: this.props.num_results,
+            country: this.props.country
         });
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
@@ -35,10 +38,7 @@ export default class Trends extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.num_results != prevProps.num_results) {
-            this.setState({
-                num_results: this.props.num_results
-            })
+        if (!_.isEqual(this.props, prevProps)) {
             this.fetchData();
         }
     }
