@@ -19,8 +19,12 @@ export default class Navigation extends React.Component {
                 href: "/trending"
             },
             {
-                label: "Visualization",
-                href: "/visualization"
+                label: "Tweet Counts",
+                href: "/TweetCounts"
+            },
+            {
+                label: "Sentiment History",
+                href: "/SentimentHistory"
             }
         ];
     }
