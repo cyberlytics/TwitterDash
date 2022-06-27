@@ -1,37 +1,37 @@
 import React from "react";
 import styles from "../styles/Home.module.css";
 import Navigation from "../components/Navigation";
-import SentimentHistoryChart from "../components/SentimentHistoryChart";
+import TrendHistoryChart from "../components/TrendHistoryChart";
 import {Autocomplete} from "@mui/material";
 import {TextField} from "@mui/material";
 import TimeIntervalPicker from "../components/TimeIntervalPicker";
-import GranularitySelection from "../components/GranularitySelection";
+import CountrySelection from "../components/CountrySelection";
 
 const TYPING_DONE_DELAY = 250;
 
-export default class SentimentHistory extends React.Component {
+export default class TrendHistory extends React.Component {
     constructor(props) {
         super(props);
         let now = new Date();
         let one_week_ago = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7))
         this.state = {
             selected_hashtag: null,
+            country: "Germany",
             listOfOptions : [],
             start_date: one_week_ago,
-            end_date: now,
-            granularity: "hour"
+            end_date: now
         }
 
+        this.onCountrySelectChange = this.onSelectChange.bind(this, "country");
         this.onKeyDownInput = this.onKeyDownInput.bind(this);
         this.delayDataRetrieval = this.delayDataRetrieval.bind(this);
         this.handleNewDate = this.handleNewDate.bind(this);
-
-        this.onGranularitySelectChange = this.onSelectChange.bind(this, "granularity");
 
         this.timerIds = []
     }
 
     onSelectChange(key, e) {
+        console.log(e.target.value);
         this.setState({[key]: e.target.value});
     }
 
@@ -47,6 +47,7 @@ export default class SentimentHistory extends React.Component {
         this.timerIds = []
     }
 
+    //Sollte im Interface noch eine äquivalente Methode für die Trends ergängt werden, dann änndern!
     fetchData(searchQuery) {
         let query = 'api/GetTrendsWithAvailableSentiment?' + new URLSearchParams({
             query: searchQuery,
@@ -83,21 +84,21 @@ export default class SentimentHistory extends React.Component {
         return (
             <div className={styles.container}>
                 <main className={styles.main}>
-                    <Navigation active={"Sentiment History"}></Navigation>
+                    <Navigation active={"Trend History"}></Navigation>
                     <div className="content">
+                        <CountrySelection onChange={this.onCountrySelectChange}></CountrySelection>
                         <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
-                        <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
                         <Autocomplete
                             className={"autocomplete"}
                             autoHighlight
                             disablePortal
-                            id="autocomplete_sentiment"
+                            id="autocomplete_Trend"
                             options={this.state.listOfOptions}
                             sx={{ width: 300 }}
                             renderInput={(params) => <TextField onChange={this.delayDataRetrieval} onKeyDown={this.onKeyDownInput} {...params} label="Trend" />}
                         />
                         <div id="tweet_counts_chart">
-                            <SentimentHistoryChart trendName={this.state.selected_hashtag} start_date={this.state.start_date} end_date={this.state.end_date} granularity={this.state.granularity}></SentimentHistoryChart>
+                            <TrendHistoryChart trendName={this.state.selected_hashtag} start_date={this.state.start_date} end_date={this.state.end_date} country={this.state.country}></TrendHistoryChart>
                         </div>
                     </div>
                 </main>

@@ -25,6 +25,10 @@ export default class Navigation extends React.Component {
             {
                 label: "Sentiment History",
                 href: "/SentimentHistory"
+            },
+            {
+                label: "Trend History",
+                href: "/TrendHistory"
             }
         ];
     }

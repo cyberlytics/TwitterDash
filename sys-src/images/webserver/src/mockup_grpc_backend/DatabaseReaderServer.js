@@ -132,15 +132,21 @@ async function GetRecentTrendsInternal(GetRecentTrendsRequest) {
     country = "Worldwide";
   }
   let recentTrends = [];
+  let no_data_prob = 0.8;
   for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += 15 * 60) {
-    let randomPlacement = Math.floor(Math.random() * 50);
-    let trend = generateRandomTrend(randomPlacement, country, hashtag);
-    let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
-    let recentTrend = {
-      datetime: timestamp,
-      trend: trend
+    if (i > now_seconds) {
+      break;
     }
-    recentTrends.push(recentTrend)
+    if (Math.random() > no_data_prob) {
+      let randomPlacement = Math.floor(Math.random() * 50);
+      let trend = generateRandomTrend(randomPlacement, country, hashtag);
+      let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
+      let recentTrend = {
+        datetime: timestamp,
+        trend: trend
+      }
+      recentTrends.push(recentTrend)
+    }
   }
 
   let GetRecentTrendsReply = {

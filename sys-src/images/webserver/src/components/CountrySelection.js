@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import {Autocomplete, TextField} from "@mui/material";
+import Selection from "./Selection";
 
 export default class CountrySelection extends React.Component {
     constructor(props) {
@@ -14,10 +15,7 @@ export default class CountrySelection extends React.Component {
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
         json_promise.then((data) => {
-            let availableCountries = data.map((obj, index) => {
-                return {label: obj, id:index}
-            });
-            this.setState({availableCountries})
+            this.setState({availableCountries: data})
         });
     }
 
@@ -26,17 +24,9 @@ export default class CountrySelection extends React.Component {
     }
 
     render() {
+        if (this.state.availableCountries.length == 0) { return (<></>); }
         return (
-            <Autocomplete
-                className={"autocomplete"}
-                onChange={this.props.onChange}
-                autoHighlight
-                disablePortal
-                id="autocomplete_country"
-                options={this.state.availableCountries}
-                sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Country" />}
-            />
+            <Selection label="Country" onChange={this.props.onChange} defaultValue="Germany" raw_options={this.state.availableCountries}></Selection>
         );
     }
 }

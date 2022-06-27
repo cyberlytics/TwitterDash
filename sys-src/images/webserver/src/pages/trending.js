@@ -13,7 +13,7 @@ export default class Trending extends React.Component {
         this.onLimitSelectChange = this.onSelectChange.bind(this, "num_results");
         this.onCountrySelectChange = this.onSelectChange.bind(this, "country");
         this.state = {
-            num_results: "5",
+            num_results: "10",
             country: "Germany",
         }
     }
@@ -29,7 +29,7 @@ export default class Trending extends React.Component {
                     <Navigation active={"Trending"}></Navigation>
                     <div className="content">
                         <CountrySelection onChange={this.onCountrySelectChange}></CountrySelection>
-                        <LimitSelection onChange={this.onLimitSelectChange}></LimitSelection>
+                        <LimitSelection onChange={this.onLimitSelectChange} defaultValue={this.state.num_results}></LimitSelection>
                         <Trends num_results={this.state.num_results} country={this.state.country}></Trends>
                     </div>
                 </main>
