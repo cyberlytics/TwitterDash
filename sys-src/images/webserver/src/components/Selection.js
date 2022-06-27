@@ -1,20 +1,26 @@
-import React, { Fragment } from "react";
+import React from "react";
 import _ from "lodash";
+import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
 export default class Selection extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            options: null
+            options: null,
+            value: this.props.defaultValue
         }
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.setState({value: e.target.value});
+        this.props.onChange(e);
     }
 
     updateOptions(options) {
         let processed_options = options.map((obj, index) => {
             return (
-                <Fragment key={index}>
-                    <option key={index} value={obj}>{obj}</option>
-                </Fragment>
+                <MenuItem key={index} value={obj}>{obj}</MenuItem>
             )
         });
         this.setState({options: processed_options});
@@ -35,12 +41,19 @@ export default class Selection extends React.Component {
     }
 
     render() {
+        if (this.state.options == null) { return (<></>); }
         return (
-            <div className="selection">
-                <span>{this.props.label} </span>
-                <select defaultValue={this.props.defaultValue} onChange={this.props.onChange}>
-                    { this.state.options }
-                </select>
+            <div className={"SelectionWrapper"}>
+                <FormControl className={"Selection"}>
+                    <InputLabel>{this.props.label}</InputLabel>
+                    <Select
+                        value={this.state.value}
+                        onChange={this.handleChange}
+                        label={this.props.label}
+                    >
+                        { this.state.options }
+                    </Select>
+                </FormControl>
             </div>
         );
     }

@@ -33,7 +33,7 @@ export const options = {
         },
         title: {
             display: true,
-            text: 'tweet counts',
+            text: 'Tweet Counts',
         },
     },
     scales: {
@@ -71,7 +71,8 @@ export default class TweetCountsChart extends React.Component {
     fetchData() {
         let query = 'api/get_tweet_counts?' + new URLSearchParams({
             hashtag: this.props.hashtag,
-            country: this.props.country
+            start_date: this.props.start_date,
+            end_date: this.props.end_date
         });
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
@@ -82,7 +83,7 @@ export default class TweetCountsChart extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (!_.isEqual(this.props, prevProps)) {
-            if (this.props.hashtag != null && this.props.country != null) {
+            if (this.props.hashtag != null && this.props.start_date != null && this.props.end_date != null) {
                 this.fetchData();
             }
         }

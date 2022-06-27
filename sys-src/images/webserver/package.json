@@ -11,9 +11,11 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@google-cloud/scheduler": "^3.0.0",
     "@grpc/grpc-js": "^1.6.7",
     "@grpc/proto-loader": "^0.6.12",
     "@mui/material": "^5.8.5",
+    "@mui/x-date-pickers": "^5.0.0-alpha.7",
     "chart.js": "^3.8.0",
     "chartjs-adapter-moment": "^1.0.0",
     "grpc-promise": "^1.4.0",
