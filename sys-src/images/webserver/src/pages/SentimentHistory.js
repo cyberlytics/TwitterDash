@@ -68,6 +68,7 @@ export default class SentimentHistory extends React.Component {
                 <main className={styles.main}>
                     <Navigation active={"Sentiment History"}></Navigation>
                     <div className="content">
+
                         <Autocomplete
                             className={"autocomplete"}
                             autoHighlight

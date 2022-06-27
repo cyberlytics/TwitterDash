@@ -115,12 +115,12 @@ async function GetRecentTrendsInternal(GetRecentTrendsRequest) {
   let hashtag = GetRecentTrendsRequest.hashtag;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
   if (GetRecentTrendsRequest.hasOwnProperty("end_date")) {
-    end_date = GetRecentTrendsRequest.end_date;
+    end_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTrendsRequest.end_date);
   }
 
   let start_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: end_date.seconds - 7 * 24 * 60 * 60});
   if (GetRecentTrendsRequest.hasOwnProperty("start_date")) {
-    start_date = GetRecentTrendsRequest.start_date;
+    start_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTrendsRequest.start_date);
   }
 
   let country = null;
@@ -191,12 +191,12 @@ async function GetRecentSentimentsInternal(GetRecentSentimentsRequest) {
   let granularity = GetRecentSentimentsRequest.granularity;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
   if (GetRecentSentimentsRequest.hasOwnProperty("end_date")) {
-    end_date = GetRecentSentimentsRequest.end_date;
+    end_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentSentimentsRequest.end_date);
   }
 
   let start_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: end_date.seconds - 7 * 24 * 60 * 60});
   if (GetRecentSentimentsRequest.hasOwnProperty("start_date")) {
-    start_date = GetRecentSentimentsRequest.start_date;
+    start_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentSentimentsRequest.start_date);
   }
 
   let granularity_seconds = null;
