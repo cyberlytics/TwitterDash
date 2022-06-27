@@ -60,6 +60,7 @@ export const options = {
 
 export default class TweetCountsChart extends React.Component {
     constructor(props) {
+        console.log(props);
         super(props);
         this.state = {
             hashtag: props.hashtag,
@@ -70,7 +71,7 @@ export default class TweetCountsChart extends React.Component {
 
     fetchData() {
         let query = 'api/get_tweet_counts?' + new URLSearchParams({
-            hashtag: this.props.hashtag,
+            query: this.props.hashtag,
             start_date: this.props.start_date,
             end_date: this.props.end_date,
             granularity: this.props.granularity

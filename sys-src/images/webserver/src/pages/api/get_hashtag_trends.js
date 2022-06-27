@@ -10,7 +10,6 @@ export default async function handler(req, res) {
                 reject(error);
             }
             else {
-                console.log(data.trends[0])
                 res.status(200).json(data.trends);
                 resolve();
             }

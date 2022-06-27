@@ -12,13 +12,13 @@ const TYPING_DONE_DELAY = 250;
 export default class SentimentHistory extends React.Component {
     constructor(props) {
         super(props);
-        let now = new Date();
+        this.maxDate = new Date();
         let one_week_ago = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7))
         this.state = {
             selected_hashtag: null,
             listOfOptions : [],
             start_date: one_week_ago,
-            end_date: now,
+            end_date: this.maxDate,
             granularity: "hour"
         }
 
@@ -85,7 +85,7 @@ export default class SentimentHistory extends React.Component {
                 <main className={styles.main}>
                     <Navigation active={"Sentiment History"}></Navigation>
                     <div className="content">
-                        <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
+                        <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} minDate={null} maxDate={this.maxDate} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
                         <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
                         <Autocomplete
                             className={"autocomplete"}
