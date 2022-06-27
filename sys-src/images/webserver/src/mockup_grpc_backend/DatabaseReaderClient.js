@@ -46,12 +46,12 @@ let GetRecentTrendsCallback = (error, data) => {
 };
 
 function main() {
-  client.GetAvailableCountries(null, dataCallback);
-  client.GetCurrentTrends({limit: 2}, dataCallback);
-  client.GetRecentTrends({hashtag: "#TEST123", country:"Germany"}, GetRecentTrendsCallback);
-  client.GetAvailableSentimentTrends(null, dataCallback)
-  client.GetCurrentSentiment({trendName: "#BDCC"}, dataCallback);
-  client.GetRecentSentiment({trendName: "#BDCC"}, dataCallback);
+  //client.GetAvailableCountries(null, dataCallback);
+  //client.GetCurrentTrends({limit: 2, country:"Germany"}, dataCallback);
+  // client.GetRecentTrends({hashtag: "#TEST123", country:"Germany"}, GetRecentTrendsCallback);
+  // client.GetTrendsWithAvailableSentiment({query: "#BDCC", limit:10}, dataCallback)
+  // client.GetCurrentSentiment({trendName: "#BDCC"}, dataCallback);
+  client.GetRecentSentiments({trendName: "#BDCC", granularity: "hour"}, dataCallback);
 }
 
 if (require.main === module) {

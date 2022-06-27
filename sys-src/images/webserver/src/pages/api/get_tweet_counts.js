@@ -1,4 +1,5 @@
 import {TREND_SERVICE_CLIENT} from "../../util/TrendServiceClient"
+import {buildProtoRequest, convertToProtoTimeStamp} from "../../util/util";
 
 export default async function handler(req, res) {
     return new Promise((resolve, reject) => {
@@ -10,11 +11,16 @@ export default async function handler(req, res) {
                 reject(error);
             }
             else {
+                console.log(data.tweetCounts);
                 res.status(200).json(data.tweetCounts);
                 resolve();
             }
         }
-        let hashtag = req.query.hashtag;
-        TREND_SERVICE_CLIENT.GetRecentTweetCounts({query: hashtag}, dataCallBack);
+
+        let GetRecentTweetCountsRequest = buildProtoRequest(req, ["query", "granularity"]);
+        GetRecentTweetCountsRequest["start_date"] = convertToProtoTimeStamp(new Date(req.query.start_date))
+        GetRecentTweetCountsRequest["end_date"] = convertToProtoTimeStamp(new Date(req.query.end_date));
+        console.log(GetRecentTweetCountsRequest);
+        TREND_SERVICE_CLIENT.GetRecentTweetCounts(GetRecentTweetCountsRequest, dataCallBack);
     });
 }

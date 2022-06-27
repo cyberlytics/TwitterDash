@@ -35,6 +35,7 @@ const WOEIDS = {
   AUSTRIA: 23424750
 }
 
+let now_seconds = Math.floor(Date.now() / 1000)
 
 function genRandomString(len) {
   let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -62,13 +63,19 @@ function generateRandomTrend(placement, country, name=null) {
 
   let randomTweetVolume = Math.floor(Math.random() * 1000000);
 
-  return {
+  let randomTrend = {
     trendType: trendType,
     name: name,
     country: WOEIDS[country], // WOEID of the country
     placement: placement, // Place of the Tweet in the given Country
-    tweetVolume24: randomTweetVolume // Number of Tweets in the given Country
   }
+
+  let no_data_prob = 0.7;
+  if (Math.random() > no_data_prob) {
+    randomTrend["tweetVolume24"] = randomTweetVolume // Number of Tweets in the given Country
+  }
+
+  return randomTrend;
 }
 
 async function GetCurrentTrendsInternal(GetCurrentTrendsRequest) {
@@ -115,12 +122,12 @@ async function GetRecentTrendsInternal(GetRecentTrendsRequest) {
   let hashtag = GetRecentTrendsRequest.hashtag;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
   if (GetRecentTrendsRequest.hasOwnProperty("end_date")) {
-    end_date = GetRecentTrendsRequest.end_date;
+    end_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTrendsRequest.end_date);
   }
 
   let start_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: end_date.seconds - 7 * 24 * 60 * 60});
   if (GetRecentTrendsRequest.hasOwnProperty("start_date")) {
-    start_date = GetRecentTrendsRequest.start_date;
+    start_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTrendsRequest.start_date);
   }
 
   let country = null;
@@ -131,15 +138,21 @@ async function GetRecentTrendsInternal(GetRecentTrendsRequest) {
     country = "Worldwide";
   }
   let recentTrends = [];
+  let no_data_prob = 0.8;
   for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += 15 * 60) {
-    let randomPlacement = Math.floor(Math.random() * 50);
-    let trend = generateRandomTrend(randomPlacement, country, hashtag);
-    let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
-    let recentTrend = {
-      datetime: timestamp,
-      trend: trend
+    if (i > now_seconds) {
+      break;
     }
-    recentTrends.push(recentTrend)
+    if (Math.random() > no_data_prob) {
+      let randomPlacement = Math.floor(Math.random() * 50);
+      let trend = generateRandomTrend(randomPlacement, country, hashtag);
+      let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
+      let recentTrend = {
+        datetime: timestamp,
+        trend: trend
+      }
+      recentTrends.push(recentTrend)
+    }
   }
 
   let GetRecentTrendsReply = {
@@ -153,22 +166,25 @@ async function GetRecentTrends(call, callback) {
   callback(null, await GetRecentTrendsInternal(call.request));
 }
 
-async function GetAvailableSentimentTrendsInternal() {
+async function GetTrendsWithAvailableSentimentInternal(GetTrendsWithAvailableSentimentRequest) {
+  let query = GetTrendsWithAvailableSentimentRequest.query;
+  let limit = GetTrendsWithAvailableSentimentRequest.limit;
   let num_available = Math.floor(Math.random() * 100) + 1
-  let availableSentimentTrends = []
+  let availableTrendsWithSentiment = []
   for (let i = 0; i < num_available; ++i) {
-    let trend = generateRandomTrend(1, "Germany" )
-    availableSentimentTrends.push(trend.name);
+    let randomString = genRandomString(Math.floor(Math.random() * 10) + 1)
+    availableTrendsWithSentiment.push(query + randomString);
   }
-  let GetAvailableSentimentTrendsReply = {
-    availableSentimentTrends: availableSentimentTrends
+  availableTrendsWithSentiment = availableTrendsWithSentiment.slice(0, limit);
+  let GetTrendsWithAvailableSentimentReply = {
+    availableTrendsWithSentiment
   }
 
-  return GetAvailableSentimentTrendsReply
+  return GetTrendsWithAvailableSentimentReply
 }
 
-async function GetAvailableSentimentTrends(call, callback) {
-  callback(null, await GetAvailableSentimentTrendsInternal());
+async function GetTrendsWithAvailableSentiment(call, callback) {
+  callback(null, await GetTrendsWithAvailableSentimentInternal(call.request));
 }
 
 async function GetCurrentSentimentInternal(GetCurrentSentimentRequest) {
@@ -183,38 +199,57 @@ async function GetCurrentSentiment(call, callback) {
   callback(null, await GetCurrentSentimentInternal(call.request));
 }
 
-async function GetRecentSentimentInternal(GetRecentSentimentRequest) {
-  let trendName = GetRecentSentimentRequest.trendName;
+async function GetRecentSentimentsInternal(GetRecentSentimentsRequest) {
+  let trendName = GetRecentSentimentsRequest.trendName;
+  let granularity = GetRecentSentimentsRequest.granularity;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
-  if (GetRecentSentimentRequest.hasOwnProperty("end_date")) {
-    end_date = GetRecentSentimentRequest.end_date;
+  if (GetRecentSentimentsRequest.hasOwnProperty("end_date")) {
+    end_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentSentimentsRequest.end_date);
   }
 
   let start_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: end_date.seconds - 7 * 24 * 60 * 60});
-  if (GetRecentSentimentRequest.hasOwnProperty("start_date")) {
-    start_date = GetRecentSentimentRequest.start_date;
+  if (GetRecentSentimentsRequest.hasOwnProperty("start_date")) {
+    start_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentSentimentsRequest.start_date);
+  }
+
+  let granularity_seconds = null;
+  switch (granularity) {
+    case "day":
+      granularity_seconds = 60 * 60 * 24;
+      break;
+    case "hour":
+      granularity_seconds = 60 * 60;
+      break;
+    case "minute":
+      granularity_seconds = 60;
+      break;
   }
 
   let recentSentiments = [];
-  for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += 15 * 60) {
-    let sentiment = Math.random() * 2 - 1;
-    let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
-    let RecentSentiment = {
-      datetime: timestamp,
-      sentiment: sentiment
+  for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += granularity_seconds) {
+    if (i < now_seconds) {
+      let no_data_prob = 0.2;
+      if (Math.random() > no_data_prob) {
+        let sentiment = Math.random() * 2 - 1;
+        let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
+        let RecentSentiment = {
+          datetime: timestamp,
+          sentiment: sentiment
+        }
+        recentSentiments.push(RecentSentiment)
+      }
     }
-    recentSentiments.push(RecentSentiment)
   }
 
-  let GetRecentSentimentReply = {
-    recentSentiments: recentSentiments
+  let GetRecentSentimentsReply = {
+    recentSentiments
   }
 
-  return GetRecentSentimentReply;
+  return GetRecentSentimentsReply;
 }
 
-async function GetRecentSentiment(call, callback) {
-  callback(null, await GetRecentSentimentInternal(call.request));
+async function GetRecentSentiments(call, callback) {
+  callback(null, await GetRecentSentimentsInternal(call.request));
 }
 
 function getServer() {
@@ -223,9 +258,9 @@ function getServer() {
     GetCurrentTrends: GetCurrentTrends,
     GetAvailableCountries: GetAvailableCountries,
     GetRecentTrends: GetRecentTrends,
-    GetAvailableSentimentTrends: GetAvailableSentimentTrends,
+    GetTrendsWithAvailableSentiment: GetTrendsWithAvailableSentiment,
     GetCurrentSentiment: GetCurrentSentiment,
-    GetRecentSentiment: GetRecentSentiment
+    GetRecentSentiments: GetRecentSentiments
   });
   return server;
 }

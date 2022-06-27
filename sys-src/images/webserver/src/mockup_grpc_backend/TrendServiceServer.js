@@ -18,38 +18,34 @@ let packageDefinition = protoLoader.loadSync(
   });
 
 let protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
-//console.log(protoDescriptor);
 let twitterdash = protoDescriptor.twitterdash;
 
-const GRANULARITY = {
-  minute: 0,
-  hour: 1,
-  day: 2
-}
-
 async function GetRecentTweetCountsInternal(GetRecentTweetCountsRequest) {
+  let now_seconds = Math.floor(Date.now() / 1000)
+  let one_week_ago = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7))
+  let one_week_ago_seconds = Math.floor(one_week_ago.getTime() / 1000)
   let query = GetRecentTweetCountsRequest.query;
-  let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
+  let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: now_seconds});
   if (GetRecentTweetCountsRequest.hasOwnProperty("end_date")) {
-    end_date = GetRecentTweetCountsRequest.end_date;
+    end_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTweetCountsRequest.end_date);
   }
 
   let start_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: end_date.seconds - 7 * 24 * 60 * 60});
   if (GetRecentTweetCountsRequest.hasOwnProperty("start_date")) {
-    start_date = GetRecentTweetCountsRequest.start_date;
+    start_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTweetCountsRequest.start_date);
   }
 
-  let granularity = GetRecentTweetCountsRequest.hasOwnProperty("granularity") ? GetRecentTweetCountsRequest.granularity : GRANULARITY.hour;
+  let granularity = GetRecentTweetCountsRequest.hasOwnProperty("granularity") ? GetRecentTweetCountsRequest.granularity : "hour";
 
   let granularity_seconds = null;
   switch (granularity) {
-    case GRANULARITY.day:
+    case "day":
       granularity_seconds = 60 * 60 * 24;
       break;
-    case GRANULARITY.hour:
+    case "hour":
       granularity_seconds = 60 * 60;
       break;
-    case GRANULARITY.minute:
+    case "minute":
       granularity_seconds = 60;
       break;
   }
@@ -57,12 +53,14 @@ async function GetRecentTweetCountsInternal(GetRecentTweetCountsRequest) {
   let tweetCounts = [];
 
   for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += granularity_seconds) {
-    let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
-    let tweetCount = {
-      datetime: timestamp,
-      count: Math.floor(Math.random() * 100000)
+    if (i < now_seconds && i > one_week_ago_seconds) {
+      let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
+      let tweetCount = {
+        datetime: timestamp,
+        count: Math.floor(Math.random() * 100000)
+      }
+      tweetCounts.push(tweetCount)
     }
-    tweetCounts.push(tweetCount)
   }
 
   let GetRecentTweetCountsReply = {

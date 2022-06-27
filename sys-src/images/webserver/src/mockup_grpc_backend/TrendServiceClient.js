@@ -18,8 +18,13 @@ let packageDefinition = protoLoader.loadSync(
 
 let protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 let twitterdash = protoDescriptor.twitterdash;
-
 let client = new twitterdash.TweetCountsProvider(`${TREND_SERVICE_HOSTNAME}:${TREND_SERVICE_PORT}`, grpc.credentials.createInsecure());
+
+const GRANULARITY = {
+    minute: 0,
+    hour: 1,
+    day: 2
+}
 
 let dataCallback = (error, data) => {
   if (error) {
@@ -32,8 +37,9 @@ let dataCallback = (error, data) => {
   }
 };
 
+
 function main() {
-  client.GetRecentTweetCounts({query: "#BDCC"}, dataCallback);
+  client.GetRecentTweetCounts({query: "#BDCC", granularity: "minute"}, dataCallback);
 }
 
 if (require.main === module) {
