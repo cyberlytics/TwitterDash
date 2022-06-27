@@ -35,6 +35,7 @@ const WOEIDS = {
   AUSTRIA: 23424750
 }
 
+let now_seconds = Math.floor(Date.now() / 1000)
 
 function genRandomString(len) {
   let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -214,15 +215,17 @@ async function GetRecentSentimentsInternal(GetRecentSentimentsRequest) {
 
   let recentSentiments = [];
   for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += granularity_seconds) {
-    let no_data_prob = 0.2;
-    if (Math.random() > no_data_prob) {
-      let sentiment = Math.random() * 2 - 1;
-      let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
-      let RecentSentiment = {
-        datetime: timestamp,
-        sentiment: sentiment
+    if (i < now_seconds) {
+      let no_data_prob = 0.2;
+      if (Math.random() > no_data_prob) {
+        let sentiment = Math.random() * 2 - 1;
+        let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
+        let RecentSentiment = {
+          datetime: timestamp,
+          sentiment: sentiment
+        }
+        recentSentiments.push(RecentSentiment)
       }
-      recentSentiments.push(RecentSentiment)
     }
   }
 

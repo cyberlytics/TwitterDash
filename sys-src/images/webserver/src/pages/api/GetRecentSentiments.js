@@ -1,5 +1,5 @@
 import {DATABASE_READER_CLIENT} from "../../util/DatabaseReaderClient"
-import {buildProtoRequest} from "../../util/util";
+import {buildProtoRequest, convertToProtoTimeStamp} from "../../util/util";
 
 export default async function handler(req, res) {
     return new Promise((resolve, reject) => {
@@ -15,8 +15,9 @@ export default async function handler(req, res) {
                 resolve();
             }
         }
-        let GetRecentSentimentRequest = buildProtoRequest(req, ["trendName", "start_date", "end_date", "granularity"]);
-
+        let GetRecentSentimentRequest = buildProtoRequest(req, ["trendName", "granularity"]);
+        GetRecentSentimentRequest["start_date"] = convertToProtoTimeStamp(new Date(req.query.start_date))
+        GetRecentSentimentRequest["end_date"] = convertToProtoTimeStamp(new Date(req.query.end_date));
         DATABASE_READER_CLIENT.GetRecentSentiments(GetRecentSentimentRequest, dataCallBack);
     });
 }
