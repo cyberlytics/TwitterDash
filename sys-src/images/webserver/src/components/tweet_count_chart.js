@@ -33,7 +33,7 @@ export const options = {
         },
         title: {
             display: true,
-            text: 'Tweet Counts',
+            text: 'Tweet Volume History',
         },
     },
     scales: {
@@ -113,8 +113,8 @@ export default class TweetCountsChart extends React.Component {
                 {
                     label: this.props.hashtag,
                     data: tweetCounts,
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgb(29, 155, 240)',
+                    backgroundColor: 'rgba(29, 155, 240, 0.5)',
                 }
             ]
         }

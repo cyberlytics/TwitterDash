@@ -43,14 +43,13 @@ export default class TweetCounts extends React.Component {
         return (
             <div className={styles.container}>
                 <main className={styles.main}>
-                    <Navigation active={"Tweet Counts"}></Navigation>
+                    <Navigation active={"Tweet Volume History"}></Navigation>
                     <div className="content">
                         <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
                         <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
                         <div className={"TextFieldWrapper"}>
                             <TextField
                                 className={"TextFieldMUI"}
-                                required
                                 label="Trend"
                                 onKeyDown={this.onKeyDownInput}
                             />

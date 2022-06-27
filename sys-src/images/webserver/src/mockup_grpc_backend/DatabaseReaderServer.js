@@ -63,13 +63,19 @@ function generateRandomTrend(placement, country, name=null) {
 
   let randomTweetVolume = Math.floor(Math.random() * 1000000);
 
-  return {
+  let randomTrend = {
     trendType: trendType,
     name: name,
     country: WOEIDS[country], // WOEID of the country
     placement: placement, // Place of the Tweet in the given Country
-    tweetVolume24: randomTweetVolume // Number of Tweets in the given Country
   }
+
+  let no_data_prob = 0.7;
+  if (Math.random() > no_data_prob) {
+    randomTrend["tweetVolume24"] = randomTweetVolume // Number of Tweets in the given Country
+  }
+
+  return randomTrend;
 }
 
 async function GetCurrentTrendsInternal(GetCurrentTrendsRequest) {
