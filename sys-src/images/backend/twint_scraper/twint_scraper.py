@@ -140,9 +140,9 @@ class Twint_Scraper:
         df["date"] = df["date"].astype(str)
 
         # Feature Engineering
-        df["Wochentag"] = df["date"].apply(lambda x: x.weekday())
-        df["Stunde"] = df["date"].apply(lambda x: x.hour)
-        df["Originale_Tweetlaenge"] = df["tweet"].apply(lambda x: len(x))
+        # df["Wochentag"] = df["date"].apply(lambda x: x.weekday())
+        # df["Stunde"] = df["date"].apply(lambda x: x.hour)
+        # df["Originale_Tweetlaenge"] = df["tweet"].apply(lambda x: len(x))
 
         return df
 
