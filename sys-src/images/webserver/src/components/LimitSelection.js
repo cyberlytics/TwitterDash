@@ -9,7 +9,7 @@ export default class LimitSelection extends React.Component {
 
     render() {
         return (
-            <Selection label="top n results: " onChange={this.props.onChange} defaultValue="5" raw_options={this.limits}></Selection>
+            <Selection label="limit" onChange={this.props.onChange} defaultValue="5" raw_options={this.limits}></Selection>
         );
     }
 }

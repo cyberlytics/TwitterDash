@@ -22,16 +22,15 @@ let protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 let twitterdash = protoDescriptor.twitterdash;
 
 async function GetRecentTweetCountsInternal(GetRecentTweetCountsRequest) {
-  console.log(GetRecentTweetCountsRequest);
   let query = GetRecentTweetCountsRequest.query;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
   if (GetRecentTweetCountsRequest.hasOwnProperty("end_date")) {
-    end_date = GetRecentTweetCountsRequest.end_date;
+    end_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTweetCountsRequest.end_date);
   }
 
   let start_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: end_date.seconds - 7 * 24 * 60 * 60});
   if (GetRecentTweetCountsRequest.hasOwnProperty("start_date")) {
-    start_date = GetRecentTweetCountsRequest.start_date;
+    start_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTweetCountsRequest.start_date);
   }
 
   let granularity = GetRecentTweetCountsRequest.hasOwnProperty("granularity") ? GetRecentTweetCountsRequest.granularity : "hour";

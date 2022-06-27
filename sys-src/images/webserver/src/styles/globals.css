@@ -72,13 +72,23 @@ tr:nth-child(even) {
   width: 60%;
 }
 
-.selection {
-  width:100%;
-  text-align:center;
-  margin-bottom: 2em;
-}
+/*.selection {*/
+/*  width:100%;*/
+/*  text-align:center;*/
+/*  margin-bottom: 2em;*/
+/*}*/
 
 .autocomplete {
+  margin: auto;
+  margin-top: 10px;
+}
+
+.Selection, .TextFieldMUI, .TimePicker{
+  width: 100%;
+}
+
+.SelectionWrapper, .TextFieldWrapper, .Wrapper{
+  width:300px;
   margin: auto;
   margin-top: 10px;
 }
