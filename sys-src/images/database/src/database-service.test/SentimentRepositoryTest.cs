@@ -1,9 +1,9 @@
-using MongoDB.Driver;
-using MongoDB.Bson;
 using DatabaseService.Models;
 using DatabaseService.Repositories;
 using Mongo2Go;
-
+using MongoDB.Bson;
+using MongoDB.Driver;
+using Twitterdash;
 
 namespace DatabaseService.Tests
 {
@@ -64,10 +64,11 @@ namespace DatabaseService.Tests
             });
         }
 
-        [TestCase("test", 0, 2)]
+        [TestCase("test", 0, 1)]
         [TestCase("test", 1, 1)]
         [TestCase("bdcc", 0, 1)]
-        public async Task GetAvailableSentimentTrends_Should_Return_Correct_Sentiments(string query, int limit, int expectedCount)
+        [TestCase("bd", 0, 1)]
+        public async Task GetTrendsWithAvailableSentiment_Should_Return_Correct_Trends(string query, int limit, int expectedCount)
         {
             var sentiments = new List<Sentiment>() {
                 new Sentiment { Trend = "test" },
@@ -76,16 +77,16 @@ namespace DatabaseService.Tests
             };
             collection.InsertMany(sentiments);
 
-            var actual = await repository.GetAvailableSentimentTrends(query, limit);
+            var actual = await repository.GetTrendsWithAvailableSentiment(query, limit);
 
             Assert.Multiple(() =>
             {
                 Assert.That(actual, Has.Exactly(expectedCount).Items);
-                Assert.That(actual, Has.All.Property("Trend").EqualTo(query));
+                Assert.That(actual, Has.All.Contains(query));
             });
         }
 
-        [TestCase("test", 0.7f)]
+        [TestCase("test", 0.2f)]
         [TestCase("bdcc", 1.0f)]
         public async Task GetCurrentSentiment_Should_Return_Correct_Sentiment(string trendName, float value)
         {
@@ -105,8 +106,20 @@ namespace DatabaseService.Tests
                 new Sentiment
                 {
                     Trend = "test",
-                    Timestamp = new DateTime(2022, 1, 3, 0, 0, 0).ToUniversalTime(),
-                    Value = 0.7f,
+                    Timestamp = new DateTime(2022, 1, 3, 23, 0, 0).ToUniversalTime(),
+                    Value = 0.6f,
+                },
+                new Sentiment
+                {
+                    Trend = "test",
+                    Timestamp = new DateTime(2022, 1, 3, 23, 15, 0).ToUniversalTime(),
+                    Value = -1f,
+                },
+                new Sentiment
+                {
+                    Trend = "test",
+                    Timestamp = new DateTime(2022, 1, 3, 23, 30, 0).ToUniversalTime(),
+                    Value = 1f,
                 },
             };
             collection.InsertMany(sentiments);
@@ -115,9 +128,7 @@ namespace DatabaseService.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.That(actual, Is.TypeOf<Sentiment>());
-                Assert.That(actual, Has.Property("Trend").EqualTo(trendName));
-                Assert.That(actual, Has.Property("Value").EqualTo(value));
+                Assert.AreEqual(value,actual);
             });
         }
 
@@ -142,26 +153,27 @@ namespace DatabaseService.Tests
 
             var actual = await repository.GetCurrentSentiment(null);
 
-            Assert.That(actual, Is.Null);
+            Assert.AreEqual(0.0f, actual);
         }
 
-        [TestCase("test", 2)]
-        [TestCase("bdcc", 1)]
-        public async Task GetRecentSentiment_Should_Return_Correct_Sentiments(string query, int expectedCount)
+        [TestCase("test", 1, 0.5f)]
+        [TestCase("bdcc", 1, 1)]
+        public async Task GetRecentSentiment_Should_Return_Correct_Sentiments(string query, int expectedCount, float expectedMean)
         {
             var sentiments = new List<Sentiment>() {
-                new Sentiment { Trend = "test" },
-                new Sentiment { Trend = "bdcc" },
-                new Sentiment { Trend = "test" },
+                new Sentiment { Trend = "test" , Value = 1,Timestamp=DateTime.Now},
+                new Sentiment { Trend = "bdcc" , Value = 1,Timestamp=DateTime.Now},
+                new Sentiment { Trend = "test" , Value = 0,Timestamp=DateTime.Now},
             };
             collection.InsertMany(sentiments);
 
-            var actual = await repository.GetRecentSentiment(query, null, null);
+            var actual = await repository.GetRecentSentiments(query, null, null, Granularity.Hour);
 
             Assert.Multiple(() =>
             {
                 Assert.That(actual, Has.Exactly(expectedCount).Items);
-                Assert.That(actual, Has.All.Property("Trend").EqualTo(query));
+                if (expectedCount > 0)
+                    Assert.That(actual.First().Mean, Is.EqualTo(expectedMean));
             });
         }
 
@@ -175,7 +187,7 @@ namespace DatabaseService.Tests
             };
             collection.InsertMany(sentiments);
 
-            var actual = await repository.GetRecentSentiment("invalid", null, null);
+            var actual = await repository.GetRecentSentiments("invalid", null, null, Granularity.Hour);
 
             Assert.That(actual, Is.Empty);
         }
@@ -190,21 +202,25 @@ namespace DatabaseService.Tests
                 new Sentiment
                 {
                     Trend = "test",
+                    Value = 1,
                     Timestamp = new DateTime(2022, 1, 1, 0, 0, 0).ToUniversalTime(),
                 },
                 new Sentiment
                 {
                     Trend = "bdcc",
+                    Value = -1,
                     Timestamp = new DateTime(2022, 1, 2, 0, 0, 0).ToUniversalTime(),
                 },
                 new Sentiment
                 {
                     Trend = "test",
+                    Value = 1,
                     Timestamp = new DateTime(2022, 1, 5, 0, 0, 0).ToUniversalTime(),
                 },
                 new Sentiment
                 {
                     Trend = "test",
+                    Value = 1,
                     Timestamp = new DateTime(2022, 1, 7, 0, 0, 0).ToUniversalTime(),
                 },
             };
@@ -212,12 +228,47 @@ namespace DatabaseService.Tests
 
             var trendName = "test";
 
-            var actual = await repository.GetRecentSentiment(trendName, start, end);
+            var actual = await repository.GetRecentSentiments(trendName, start, end, Granularity.Day);
 
             Assert.Multiple(() =>
             {
                 Assert.That(actual, Has.Exactly(2).Items);
-                Assert.That(actual, Has.All.Property("Trend").EqualTo(trendName));
+                Assert.That(actual, Has.All.Property("Mean").EqualTo(1));
+            });
+        }
+
+        [Test]
+        public async Task GetRecentSentiment_Returns_Correct_Batches ()
+        {
+            var start = new DateTime(2022, 1, 2, 0, 0, 0).ToUniversalTime();
+            var end = new DateTime(2022, 1, 31, 0, 0, 0).ToUniversalTime();
+
+
+            var sentiments = new List<Sentiment>();
+            var startTimes = new List<DateTime>();
+            for (int i = 0; i<30; i++)
+            {
+                startTimes.Add(new DateTime(2022, 1, 2+i, 0, 0, 0).ToUniversalTime());
+                for (int j=0;j<24;j++)
+                    sentiments.Add(new()
+                    {
+                        Trend = "test",
+                        Value = i+1,
+                        Timestamp = new DateTime(2022, 1, 2+i, j, 0, 0).ToUniversalTime(),
+                    });
+            }
+
+            collection.InsertMany(sentiments);
+
+            var trendName = "test";
+
+            var actual = await repository.GetRecentSentiments(trendName, start, end, Granularity.Day);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(actual, Has.Exactly(30).Items);
+                foreach (var batch in actual)
+                    Assert.That(batch.Time.Day, Is.EqualTo(batch.Mean));
             });
         }
     }

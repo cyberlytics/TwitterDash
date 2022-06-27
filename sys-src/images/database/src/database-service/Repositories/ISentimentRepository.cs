@@ -6,8 +6,8 @@ namespace DatabaseService.Repositories
     {
         Task StoreSentiment(IEnumerable<Sentiment> sentiments);
         Task<IEnumerable<long>> FilterStoredIds(IEnumerable<long> tweetIDs);
-        Task<IEnumerable<Sentiment>> GetAvailableSentimentTrends(string query, int limit);
-        Task<Sentiment> GetCurrentSentiment(string trendName);
-        Task<IEnumerable<Sentiment>> GetRecentSentiment(string trendName, DateTime? start, DateTime? end);
+        Task<IEnumerable<string>> GetTrendsWithAvailableSentiment(string query, int limit);
+        Task<float> GetCurrentSentiment(string trendName);
+        Task<IEnumerable<SentimentBatch>> GetRecentSentiments(string trendName, DateTime? start, DateTime? end, Twitterdash.Granularity granularity);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using conductor.activities;
+using conductor.Nameservice;
 using conductor.tests.Mocks;
 using Elsa.ActivityResults;
 using Microsoft.Extensions.Logging;
@@ -53,7 +54,7 @@ namespace conductor.tests.activities
                     Assert.IsNotNull(call.Since);
                     Assert.IsNotNull(call.Until);
                     Assert.IsNotNull(call.Languages);
-                    Assert.AreEqual(1000, call.Limit);
+                    Assert.AreEqual(Constants.TweetLimit, call.Limit);
                 }
             });
         }
