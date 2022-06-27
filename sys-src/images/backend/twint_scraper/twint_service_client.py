@@ -20,7 +20,7 @@ if __name__ == "__main__":
     timestamp_since.ToDatetime().strftime("%Y-%m-%d")
 
 
-    request = GetTweetsRequest(trend="corona", since=timestamp_since, until=timestamp_until, languages=["de", "nl"], limit=100)
+    request = GetTweetsRequest(trend="corona", since=timestamp_since, until=timestamp_until, languages=["de", "nl", "fr", "en"], limit=100)
 
     response = client.GetTweets(request)
 

@@ -1,14 +1,12 @@
+# Imports
 import twint
 import pandas as pd
 import nest_asyncio
-from ast import literal_eval
-import re
 
 
 class Twint_Scraper:
     def __init__(self):
         self.df = None
-
         nest_asyncio.apply()
 
     def searchTwint(
@@ -21,9 +19,28 @@ class Twint_Scraper:
         createDataFrame=True,
         hide_out=True,
     ):
+        """
+        Searches for tweets with the given parameters
+
+        Args:
+            keyword (string): keywoard, which is searched for
+            since (Timestamp): period boundary (since)
+            until (Timestamp):period boundary (until)
+            language (List): language of the tweets (e.g. ["de"])
+            limit (int): maximum quantity of tweets to return
+            createDataFrame (bool): Creates a dataframe
+            hide_out (bool): hide output in console
+
+        Returns:
+            List: emtpy list if no tweets were farmed, else a list of tweets containing the tweet's attributes
+        """
+
         c = twint.Config()
         if language is not None:
-            stringLanguage = self.convertToString(language)
+            stringLanguage = self.convertToString(
+                language
+            )  # convert language list to string
+            # twint c.lang has a bug, so now it is within the query
             c.Search = "{}{}".format(keyword, stringLanguage)
         else:
             c.Search = "{}".format(keyword)
@@ -37,37 +54,60 @@ class Twint_Scraper:
         c.Hide_output = hide_out
         if createDataFrame:
             c.Pandas = True
+
+        # Search is performed
         twint.run.Search(c)
         if createDataFrame:
             self.df = twint.storage.panda.Tweets_df
-            # If no tweet
+
+            # If no tweet was farmed for a specific query
             if self.df.empty:
-                print("EMPTY")
-                print("Language:" + language)
-                print(self.df)
                 return []
             else:
                 self.df = self.dataframe_cleanup(self.df)
                 return self.toTweet(self.df)
 
-    def convertToString(self, tmpliste):
-        tmpString = ""
+    def convertToString(self, listOfLanguages):
+        """
+        Converts list of languages to a concatenated string, which the twitter search query can handle
 
-        lentmp = len(tmpliste)
+        Args:
+            tmpliste (list): list of languages (e.g. ["de", "en"])
 
+        Returns:
+            string: string of languages (e.g. " lang:de OR lang:en")
+        """
+
+        tmperg = ""
+        lentmp = len(listOfLanguages)
+
+        # If only one language is in the list
         if lentmp == 1:
-            return f" lang:{tmpliste[0]}"
+            return f" lang:{listOfLanguages[0]}"
         else:
-            for i, eintrag in enumerate(tmpliste):
+            # If multiple languages are in the list
+            for i, eintrag in enumerate(listOfLanguages):
                 if i < lentmp - 1:
-                    tmpString += f" lang:{eintrag} OR"
+                    tmperg += f" lang:{eintrag} OR"
                 else:
-                    tmpString += f" lang:{eintrag}"
-
-        return tmpString
+                    # If it is the last element in the list
+                    tmperg += f" lang:{eintrag}"
+        return tmperg
 
     def dataframe_cleanup(self, df):
-        df = df.drop_duplicates(subset=["id"])
+        """
+        Cleans up the stock dataframe of the twint scraper
+
+        Args:
+            df (dataframe): dataframe of the twint scraper
+
+        Returns:
+            dataframe: cleaned dataframe
+        """
+
+        df = df.drop_duplicates(subset=["id"])  # remove duplicates
+
+        # Drop columns which are not needed
         df.drop(
             columns=[
                 "created_at",
@@ -93,18 +133,32 @@ class Twint_Scraper:
             ],
             inplace=True,
         )
+
+        # Change datatypes of specific columns
         df["date"] = df["date"].astype("datetime64")
+        df["language"] = df["language"].astype(str)
+        df["date"] = df["date"].astype(str)
+
+        # Feature Engineering
         df["Wochentag"] = df["date"].apply(lambda x: x.weekday())
         df["Stunde"] = df["date"].apply(lambda x: x.hour)
         df["Originale_Tweetlaenge"] = df["tweet"].apply(lambda x: len(x))
-        df["date"] = df["date"].astype(str)
-        df["language"] = df["language"].astype(str)
 
         return df
 
     def toTweet(self, df):
+        """
+        Converts the dataframe to a list of tweets, which is in the appropriate format for the gRPC service
+
+        Args:
+            df (dataframe): cleaned dataframe
+
+        Returns:
+            List: list of tweets, each containing a dictonary with the tweet's attributes
+        """
+
         tweets = []
-        for index, row in df.iterrows():
+        for index, row in df.iterrows():  # iterate over dataframe
             tweets.append(
                 {
                     "id": int(row["id"]),
