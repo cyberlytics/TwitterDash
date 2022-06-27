@@ -18,12 +18,14 @@ let packageDefinition = protoLoader.loadSync(
   });
 
 let protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
-//console.log(protoDescriptor);
 let twitterdash = protoDescriptor.twitterdash;
 
 async function GetRecentTweetCountsInternal(GetRecentTweetCountsRequest) {
+  let now_seconds = Math.floor(Date.now() / 1000)
+  let one_week_ago = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7))
+  let one_week_ago_seconds = Math.floor(one_week_ago.getTime() / 1000)
   let query = GetRecentTweetCountsRequest.query;
-  let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
+  let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: now_seconds});
   if (GetRecentTweetCountsRequest.hasOwnProperty("end_date")) {
     end_date = new gs.protos.google.protobuf.Timestamp.fromObject(GetRecentTweetCountsRequest.end_date);
   }
@@ -51,12 +53,14 @@ async function GetRecentTweetCountsInternal(GetRecentTweetCountsRequest) {
   let tweetCounts = [];
 
   for (let i = start_date.seconds.low; i <= end_date.seconds.low ; i += granularity_seconds) {
-    let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
-    let tweetCount = {
-      datetime: timestamp,
-      count: Math.floor(Math.random() * 100000)
+    if (i < now_seconds && i > one_week_ago_seconds) {
+      let timestamp = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: i});
+      let tweetCount = {
+        datetime: timestamp,
+        count: Math.floor(Math.random() * 100000)
+      }
+      tweetCounts.push(tweetCount)
     }
-    tweetCounts.push(tweetCount)
   }
 
   let GetRecentTweetCountsReply = {
