@@ -1,4 +1,5 @@
-﻿using Elsa.ActivityResults;
+﻿using conductor.Nameservice;
+using Elsa.ActivityResults;
 using Elsa.Services;
 using Elsa.Services.Models;
 using Twitterdash;
@@ -10,7 +11,6 @@ namespace conductor.activities
         private readonly SentimentProvider.SentimentProviderClient client;
         private readonly ILogger<PerformSentimentAnalysis> logger;
         private readonly int max_retries;
-        readonly HashSet<string> valid_languages = new() { "de","en","fr","nl" };
         public PerformSentimentAnalysis(SentimentProvider.SentimentProviderClient client, ILogger<PerformSentimentAnalysis> logger,int max_retries=10)
         {
             this.client=client;
@@ -49,7 +49,7 @@ namespace conductor.activities
                 {
                     try
                     {
-                        if (!valid_languages.Contains(tweet.Language))
+                        if (!Constants.Valid_Languages.Contains(tweet.Language))
                             continue;
 
                         if (sentiments.ContainsKey(tweet.ID))

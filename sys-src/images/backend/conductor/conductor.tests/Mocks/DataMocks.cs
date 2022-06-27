@@ -20,7 +20,7 @@ namespace conductor.tests.Mocks
             {
                 trends.Add(new Twitterdash.Trend()
                 {
-                    Country = jsonElement.GetProperty("country").GetInt32(),
+                    Country = 23424977, // US WOEID
                     Name = jsonElement.GetProperty("hashtag").GetString(),
                     Placement =  jsonElement.GetProperty("top").GetInt32(),
                     TrendType = Twitterdash.TrendType.Hashtag,
