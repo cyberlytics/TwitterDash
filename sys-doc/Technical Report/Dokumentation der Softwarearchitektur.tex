@@ -97,8 +97,30 @@ Um Konflikten zwischen den Schnittstellendefinitionen der einzelnen Dienste zu v
 wurden alle gRPC-Schnittstellen in einem globalen Ordner definiert und vor dem Ausführen der Container über ein Script in die jeweiligen Source-Verzeichnisse der Dienste kopiert, bzw. wenn nötig mit dem gRPC-Tool kompiliert.
 Dadurch werden Änderungen an den Schnittstellen gleichzeitig für alle Dienste vorgenommen.
 
-%TODO Frontend
+\section{Frontend}
+Das Frontend wurde mithilfe des React Frameworks Next.js entwickelt \cite{nextjs}. 
+Die UI Elemente stammen zum Großteil aus dem MUI Framework \cite{mui}.
+Für die Visualisierung wurde Chart.js verwendet \cite{chartjs}.
+Für jeden Datenpunkt in einer Visualierung können durch Hovern der Maus genauere Informationen angezeigt werden.
+Mithilfe von "API Routes" wurde eine API implementiert, welche die Schnittstelle zu den gRPC Services bildet \cite{apiroutes}. 
+Das Frontend greift für die Live-Abfrage der "Tweet Volume History" auf den Trend-Service zu.
+Für alle anderen Datenabfragen wird der Datenbank-Service verwendet.
 
+Das Frontend verfügt über 5 Seiten, welche über eine Navigationsleiste am oberen Rand der Website erreichbar sind.
+
+\subsection*{Twitter Dash}
+In der Rubrik "Twitter Dash" sind ein Überblick über die Funktionalität von Twitter-Dash, 
+eine technische Beschreibung, eine Bedienungsanleitung und die Namen der Entwickler zu finden.
+\subsection*{Trending Now}
+Unter der Rubrik "Trending Now" gibt es die Möglichkeit die aktuellen top Trends aus einem bestimmten Land tabellarisch anzuzeigen.
+Die Anzahl der Trends kann dabei limitiert werden. Die Tabelle verfügt über mehrere Seiten.
+\subsection*{Tweet Volume History}
+Im Abschnitt "Tweet Volume History" wird es dem Nutzer ermöglicht den Verlauf der Anzahl an Tweets in einem bestimmten selbst definierbaren Zeitrahmen 
+mit einer auswählbaren Granularität anzuzeigen.
+\subsection*{Sentiment History}
+Der Bereich "Sentiment History" bietet die Möglichkeit den Verlauf des Sentiments zu einem bestimmten Topic in einem bestimmten Zeitbereich mit einer bestimmten Granularität anzuzeigen.
+\subsection*{Trend History}
+Mit der Rubrik "Trend History" ist es möglich den Verlauf der Platzierung eines Trends pro Land in einem selbst definierbaren Zeitintervall anzuzeigen.
 
 \section{Datenakquise}
 Um Daten für das Dashboard zu erhalten, werden zwei unterschiedliche Vorgehensweisen verwendet.
@@ -353,9 +375,6 @@ Für alle erfassten Tweets werden folgende Felder gespeichert:
     \item Zeitstempel
 \end{itemize}
 
-\section{Frontend}
-%TODO
-
 \section{Testing}
 Um die Funktionalität des Backends zu garantieren wurden alle Backend-Dienste mit einem zur verwendeten Programmiersprache passenden Unit-Test Framework getestet.
 Die Code-Converage liegt dabei bei jeden Dienst über 90\%.
@@ -373,8 +392,10 @@ Das Frontend wurde noch nicht mit Unittests abgedeckt.
     \bibitem{elsa}ELSA - An open source .NET Standard workflow library [Online] \url{https://elsa-workflows.github.io/elsa-core/} (visited on Jun. 25, 2022)
     \bibitem{unittest}Unittest - Unit testing framework [Online] \url{https://docs.python.org/3/library/unittest.html} (visited on Jun. 25, 2022)
     \bibitem{nunit}NUnit is a unit-testing framework for all .Net languages. [Online] \url{https://nunit.org/} (visited on Jun. 25, 2022)
-
-    
+    \bibitem{nextjs} Next.js is a React Framework. [Online] \url{https://nextjs.org/} (visited on Jun. 27, 2022)
+    \bibitem{mui} MUI is a React component library [Online] \url{https://mui.com/} (visited on Jun. 27, 2022)
+    \bibitem{chartjs} Chart.js is a popular charting library [Online] \url{https://www.chartjs.org/} (visited on Jun. 27, 2022)
+    \bibitem{apiroutes} Solution for building a Next.js API [Online] \url{https://nextjs.org/docs/api-routes/introduction} (visited on Jun. 27, 2022)
 \end{thebibliography}
 
 \end{document}
