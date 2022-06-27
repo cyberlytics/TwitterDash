@@ -13,7 +13,7 @@ import datetime
 
 
 if __name__ == "__main__":
-    channel = grpc.insecure_channel("127.0.0.1:50012")
+    channel = grpc.insecure_channel("127.0.0.1:50013")
     client = TweetCountsProviderStub(channel)
 
     timestamp_since = Timestamp()

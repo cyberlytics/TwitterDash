@@ -1,6 +1,6 @@
-const USE_MOCKUP_BACKEND = false;
-const DB_SERVICE_HOSTNAME = USE_MOCKUP_BACKEND ? "localhost" : process.env.DB_SERVICE_HOSTNAME;
-const DB_SERVICE_PORT = USE_MOCKUP_BACKEND ? 50051 : process.env.DB_SERVICE_PORT;
+const LOCAL_DEVELOPMENT = false;
+const DB_SERVICE_HOSTNAME = LOCAL_DEVELOPMENT ? "localhost" : process.env.DB_SERVICE_HOSTNAME;
+const DB_SERVICE_PORT = LOCAL_DEVELOPMENT ? 50051 : process.env.DB_SERVICE_PORT;
 
 const PROTO_PATH = __dirname + "/../../../../protos/DatabaseService.proto";
 const PROTO_DIR = __dirname + "/../../../../protos";

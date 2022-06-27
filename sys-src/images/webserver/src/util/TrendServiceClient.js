@@ -1,6 +1,6 @@
-const USE_MOCKUP_BACKEND = false;
-const TREND_SERVICE_HOSTNAME = USE_MOCKUP_BACKEND ? "localhost" : process.env.TREND_SERVICE_HOSTNAME;
-const TREND_SERVICE_PORT = USE_MOCKUP_BACKEND ? 50010 : process.env.TREND_SERVICE_PORT;
+const LOCAL_DEVELOPMENT = false;
+const TREND_SERVICE_HOSTNAME = LOCAL_DEVELOPMENT ? "localhost" : process.env.TREND_SERVICE_HOSTNAME;
+const TREND_SERVICE_PORT = LOCAL_DEVELOPMENT ? 50010 : process.env.TREND_SERVICE_PORT;
 
 //relative path as seen during next.js execution
 const PROTO_PATH = __dirname + "/../../../../protos/TrendService.proto";

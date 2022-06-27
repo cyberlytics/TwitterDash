@@ -10,12 +10,11 @@ export default async function handler(req, res) {
                 reject(error);
             }
             else {
-                res.status(200).json(data.trends);
+                res.status(200).json(data.countries);
                 resolve();
             }
         }
-        let limit = req.query.num_results;
-        let country = req.query.country;
-        DATABASE_READER_CLIENT.GetCurrentTrends({limit, country}, dataCallBack);
+
+        DATABASE_READER_CLIENT.GetAvailableCountries(null, dataCallBack);
     });
 }

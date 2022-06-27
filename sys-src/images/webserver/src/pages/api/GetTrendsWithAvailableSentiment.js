@@ -1,4 +1,5 @@
 import {DATABASE_READER_CLIENT} from "../../util/DatabaseReaderClient"
+import {buildProtoRequest} from "../../util/util";
 
 export default async function handler(req, res) {
     return new Promise((resolve, reject) => {
@@ -10,12 +11,12 @@ export default async function handler(req, res) {
                 reject(error);
             }
             else {
-                res.status(200).json(data.trends);
+                res.status(200).json(data.availableTrendsWithSentiment);
                 resolve();
             }
         }
-        let limit = req.query.num_results;
-        let country = req.query.country;
-        DATABASE_READER_CLIENT.GetCurrentTrends({limit, country}, dataCallBack);
+        let GetTrendsWithAvailableSentimentRequest = buildProtoRequest(req, ["query", "limit"]);
+
+        DATABASE_READER_CLIENT.GetTrendsWithAvailableSentiment(GetTrendsWithAvailableSentimentRequest, dataCallBack);
     });
 }

@@ -76,7 +76,7 @@ if __name__ == "__main__":
     stub.TrendService_pb2_grpc.add_TweetCountsProviderServicer_to_server(
         TweetCountsService(), server
     )
-    server.add_insecure_port("0.0.0.0:50012")
+    server.add_insecure_port("0.0.0.0:50013")
     server.start()
     print("Started Tweet Counts Service")
     server.wait_for_termination()

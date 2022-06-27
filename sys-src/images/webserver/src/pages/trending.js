@@ -2,42 +2,35 @@ import React, { useEffect, useState, Fragment } from "react";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
 import Trends from "../components/Trends";
+import Selection from "../components/Selection";
+import CountrySelection from "../components/CountrySelection";
+import LimitSelection from "../components/LimitSelection"
+import Navigation from "../components/Navigation";
 
 export default class Trending extends React.Component {
-    constructor() {
-        super();
-        this.onSelectChange = this.onSelectChange.bind(this);
+    constructor(props) {
+        super(props);
+        this.onLimitSelectChange = this.onSelectChange.bind(this, "num_results");
+        this.onCountrySelectChange = this.onSelectChange.bind(this, "country");
         this.state = {
-            num_results: "5"
+            num_results: "10",
+            country: "Germany",
         }
     }
 
-    onSelectChange(e) {
-        this.setState({
-            num_results: e.target.value
-        });
+    onSelectChange(key, e) {
+        this.setState({[key]: e.target.value});
     }
 
     render() {
         return (
             <div className={styles.container}>
                 <main className={styles.main}>
-                    <div className="topnav">
-                        <Link href="/"><a>Twitter Dash</a></Link>
-                        <Link href="/trending"><a className="active">Trending</a></Link>
-                        <Link href="/visualization"><a>Visualization</a></Link>
-                    </div>
+                    <Navigation active={"Trending Now"}></Navigation>
                     <div className="content">
-                        <div className="selection">
-                            <span>top n results: </span>
-                            <select defaultValue="5" onChange={this.onSelectChange}>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                            </select>
-                        </div>
-                        <Trends num_results={this.state.num_results}></Trends>
+                        <CountrySelection onChange={this.onCountrySelectChange}></CountrySelection>
+                        <LimitSelection onChange={this.onLimitSelectChange} defaultValue={this.state.num_results}></LimitSelection>
+                        <Trends num_results={this.state.num_results} country={this.state.country}></Trends>
                     </div>
                 </main>
             </div>
