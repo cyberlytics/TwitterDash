@@ -117,11 +117,10 @@ namespace DatabaseService.Controller
             return response;
         }
 
-        public override async Task<GetAvailableSentimentTrendsReply> GetAvailableSentimentTrends(GetAvailableSentimentTrendsRequest request, ServerCallContext context)
+        public override async Task<GetTrendsWithAvailableSentimentReply> GetTrendsWithAvailableSentiment(GetTrendsWithAvailableSentimentRequest request, ServerCallContext context)
         {
-            var sentiments = await sentimentRepository.GetAvailableSentimentTrends(request.Query, request.Limit);
-            var trends = sentiments.Select(x => x.Trend);
-            var reply = new GetAvailableSentimentTrendsReply();
+            var trends = await sentimentRepository.GetTrendsWithAvailableSentiment(request.Query, request.Limit);
+            var reply = new GetTrendsWithAvailableSentimentReply();
             reply.AvailableTrendsWithSentiment.Add(trends);
             return reply;
         }
@@ -130,23 +129,25 @@ namespace DatabaseService.Controller
         {
             var sentiment = await sentimentRepository.GetCurrentSentiment(request.TrendName);
             var reply = new GetCurrentSentimentReply();
-            reply.Sentiment = sentiment.Value;
+            reply.Sentiment = sentiment;
             return reply;
         }
 
-        public override async Task<GetRecentSentimentReply> GetRecentSentiment(GetRecentSentimentRequest request, ServerCallContext context)
+        public override async Task<GetRecentSentimentsReply> GetRecentSentiments(GetRecentSentimentsRequest request, ServerCallContext context)
         {
-            var sentiments = await sentimentRepository.GetRecentSentiment(
+            
+            var sentiments = await sentimentRepository.GetRecentSentiments(
                 request.TrendName,
                 request.StartDate?.ToDateTime(),
-                request.EndDate?.ToDateTime()
+                request.EndDate?.ToDateTime(),
+                request.Granularity
             );
-            var reply = new GetRecentSentimentReply();
+            var reply = new GetRecentSentimentsReply();
             reply.RecentSentiments.Add(sentiments.Select(x =>
             {
                 var recentSentiment = new RecentSentiment();
-                recentSentiment.Datetime = x.Timestamp.ToTimestamp();
-                recentSentiment.Sentiment = x.Value;
+                recentSentiment.Datetime = x.Time.ToUniversalTime().ToTimestamp();
+                recentSentiment.Sentiment = x.Mean;
                 return recentSentiment;
             }));
             return reply;

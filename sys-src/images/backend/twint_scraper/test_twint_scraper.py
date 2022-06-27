@@ -1,7 +1,7 @@
+# Imports
 import unittest
 from unittest.mock import patch, Mock, MagicMock
 from pandas.util.testing import assert_frame_equal
-
 from twint_scraper import Twint_Scraper
 import pickle
 import json
@@ -32,6 +32,20 @@ class TestTwintScraper(unittest.TestCase):
         tweets = ts.toTweet(twint_search_result)
 
         self.assertEqual(tweets, res)
+
+    def test_convertToString_MultipleLanguages(self):
+        ts = Twint_Scraper()
+
+        res = ts.convertToString(["en", "de"])
+
+        self.assertEqual(res, " lang:en OR lang:de")
+
+    def test_convertToString_SingleLanguages(self):
+        ts = Twint_Scraper()
+
+        res = ts.convertToString(["de"])
+
+        self.assertEqual(res, " lang:de")
 
 
 if __name__ == "__main__":

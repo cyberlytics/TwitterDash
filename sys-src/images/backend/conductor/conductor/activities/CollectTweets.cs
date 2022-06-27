@@ -1,4 +1,5 @@
-﻿using Elsa.ActivityResults;
+﻿using conductor.Nameservice;
+using Elsa.ActivityResults;
 using Elsa.Services;
 using Elsa.Services.Models;
 using Google.Protobuf.WellKnownTypes;
@@ -10,7 +11,7 @@ namespace conductor.activities
     {
         private readonly TweetProvider.TweetProviderClient client;
         private readonly ILogger<CollectTweets> logger;
-        const int limit = 300;
+   
         public CollectTweets(Twitterdash.TweetProvider.TweetProviderClient client, ILogger<CollectTweets> logger)
         {
             this.client=client;
@@ -25,14 +26,16 @@ namespace conductor.activities
             {
                 try
                 {
+                    if (!Constants.Valid_Countries.ContainsKey(trend.Country))
+                        continue;
+
                     var time = DateTime.Now.ToUniversalTime();
                     var request = new GetTweetsRequest();
                     request.Since = time.AddDays(-1).ToTimestamp();
                     request.Until = time.ToTimestamp();
-                    request.Limit = limit;
+                    request.Limit = Constants.TweetLimit;
                     request.Trend = trend.Name;
-                    request.Languages.Add("de");
-                    request.Languages.Add("en");
+                    request.Languages.Add(Constants.Valid_Languages);
                     var reply = await client.GetTweetsAsync(request);
                     if (tweets.ContainsKey(trend.Name))
                     {

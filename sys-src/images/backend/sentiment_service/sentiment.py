@@ -1,3 +1,4 @@
+# Imports
 import pandas as pd
 import re
 from textblob_de import TextBlobDE
@@ -8,35 +9,47 @@ from textblob_nl import PatternAnalyzer as PatternAnalyzerNL
 from textblob import TextBlob
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from numpy import interp
-
-# from typing import List
 import torch
 import re
-
-# python3 -m textblob.download_corpora
 import nltk
 
-# nltk.download('punkt')
-
-
+# Sentiment Analysis with Textblob
 class Sentiment_Service_Blob:
     def __init__(self, onlyThree=False):
         self.onlyThreeLabels = onlyThree
+
+        # Regex
         self.clean_chars = re.compile(r"[^A-Za-züöäÖÜÄß ]", re.MULTILINE)
         self.clean_http_urls = re.compile(r"http\S+", re.MULTILINE)
         self.clean_at_mentions = re.compile(r"@\S+", re.MULTILINE)
 
     def get_sentiment(self, text, language):
+        """
+        Calculates a sentiment score for a specific tweet
+
+        Args:
+            text (string): raw tweet
+            language (_type_): language of the tweet (en, de, nl, fr)
+
+        Raises:
+            ValueError: if language is not supported
+
+        Returns:
+            float: in range [-1, 1], or if onlyThreeLabels is true -1 = negative, 0 = neutral, 1 = positive
+        """
         sentiment_value = 0.0
 
+        # German
         if language == "de":
             blob = TextBlobDE(self.clean_text(text))
             sentiment_value = blob.sentiment.polarity
 
+        # English
         elif language == "en":
             blob = TextBlob(self.clean_text(text))
             sentiment_value = blob.sentiment.polarity
 
+        # French
         elif language == "fr":
             blob = TextBlob(
                 self.clean_text(text),
@@ -45,6 +58,7 @@ class Sentiment_Service_Blob:
             )
             sentiment_value = blob.sentiment[0]
 
+        # Dutch
         elif language == "nl":
             blob = TextBlob(
                 self.clean_text(text),
@@ -56,6 +70,7 @@ class Sentiment_Service_Blob:
         else:
             raise ValueError("Language not supported")
 
+        # If only three values are needed, return -1, 0, 1
         if self.onlyThreeLabels:
             if sentiment_value > 0:
                 return 1
@@ -67,6 +82,16 @@ class Sentiment_Service_Blob:
             return sentiment_value
 
     def clean_text(self, text):
+        """
+        Light cleaning of the tweet before sentiment analysis
+
+        Args:
+            text (string): raw string of the tweet
+
+        Returns:
+            string: cleaed string of the tweet
+        """
+
         text = text.replace("\n", " ")
         text = self.clean_http_urls.sub("", text)
         text = self.clean_at_mentions.sub("", text)
@@ -78,27 +103,39 @@ class Sentiment_Service_Blob:
         return text
 
 
+# Sentiment Analysis with a Transformer (BERT)
 class Sentiment_Service_Transformer:
     def __init__(self, internationalModel=True):
         self.internationalModel = internationalModel
 
+        # Two models are available, one for international tweets (en, nl, de, fr, it, es) and one for German tweets
         if self.internationalModel:
             self.model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
         else:
             self.model_name = "oliverguhr/german-sentiment-bert"
 
+        # Tokenizer for the model
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
+        # Regex
         self.clean_chars = re.compile(r"[^A-Za-züöäÖÜÄß ]", re.MULTILINE)
         self.clean_http_urls = re.compile(r"http\S+", re.MULTILINE)
         self.clean_at_mentions = re.compile(r"@\S+", re.MULTILINE)
 
     def init_model(self):
+        """
+        Initializes the model and export it to torchscript (makes it run a little faster)
+        """
+
+        # Load model from huggingface
         self.model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name, torchscript=True
         ).to("cpu")
 
+        # Torchscripts exptects example inputs
         dummy_example = ["Ich hasse mein Leben so sehr.", "Ich liebe mein Leben"]
+
+        # Tokenize the dummy example
         encoded = self.tokenizer.batch_encode_plus(
             dummy_example,
             padding=True,
@@ -110,14 +147,29 @@ class Sentiment_Service_Transformer:
 
         dummy_input = [encoded["input_ids"], encoded["attention_mask"]]
 
+        # Save
         traced_model = torch.jit.trace(self.model, dummy_input)
         torch.jit.save(traced_model, "model.pt")
 
     def load_model(self):
+        """
+        Loads the model from torchscript
+        """
+
         self.model = torch.jit.load("model.pt")
         self.model.eval()
 
     def clean_text(self, text):
+        """
+        Light cleaning of the tweet before sentiment analysis
+
+        Args:
+            text (string): raw string of the tweet
+
+        Returns:
+            string: cleaed string of the tweet
+        """
+
         text = text.replace("\n", " ")
         text = self.clean_http_urls.sub("", text)
         text = self.clean_at_mentions.sub("", text)
@@ -129,8 +181,21 @@ class Sentiment_Service_Transformer:
         return text
 
     def get_sentiment(self, text, language):
+        """
+        Calculates a sentiment score for a specific tweet
+
+        Args:
+            text (string): raw tweet
+            language (_type_): Ignored in this method
+
+        Returns:
+            float: in range [-1, 1], or if onlyThreeLabels is true -1 = negative, 0 = neutral, 1 = positive
+        """
+
+        # Clean text
         text = self.clean_text(text)
 
+        # Tokenize text
         encoded = self.tokenizer.batch_encode_plus(
             [text],
             padding=True,
@@ -140,8 +205,10 @@ class Sentiment_Service_Transformer:
         )
         input_features = [encoded["input_ids"], encoded["attention_mask"]]
 
+        # Run it through the model
         output = self.model(*input_features)[0].argmax(1)
 
+        # Distinction between the two models
         if self.internationalModel == False:
             if output == 0:
                 return 1.0
