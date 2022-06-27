@@ -113,8 +113,8 @@ export default class SentimentHistoryChart extends React.Component {
                 {
                     label: this.props.trendName,
                     data: placements,
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgb(29, 155, 240)',
+                    backgroundColor: 'rgba(29, 155, 240, 0.5)',
                 }
             ]
         }
