@@ -37,14 +37,18 @@ namespace DatabaseService.Controller
                 Trends.Add(twitterTrend);
             }
 
-            var trends = new TwitterTrends
-            {
-                DateTime = timestamp,
-                Country = Trends[0].woeid,
-                Trends = Trends
-            };
-            await trendRepository.StoreTrends(trends);
+            var grouped_trends = Trends.GroupBy(x => x.woeid);
 
+            foreach(var group in grouped_trends)
+            {
+                var trends = new TwitterTrends
+                {
+                    DateTime = timestamp,
+                    Country = group.Key,
+                    Trends = group.ToList()
+                };
+                await trendRepository.StoreTrends(trends);
+            }
             return new Empty();
         }
 
