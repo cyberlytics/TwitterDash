@@ -9,16 +9,15 @@ import GranularitySelection from "../components/GranularitySelection";
 export default class TweetCounts extends React.Component {
     constructor(props) {
         super(props);
-        let now = new Date();
-        let one_week_ago = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7))
+        this.maxDate = new Date(Date.now() - 20 * 1000);
+        this.minDate = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7) + 20 * 1000)
         this.onKeyDownInput = this.onKeyDownInput.bind(this);
         this.state = {
             selected_hashtag: null,
-            start_date: one_week_ago,
-            end_date: now,
+            start_date: this.minDate,
+            end_date: this.maxDate,
             granularity: "hour"
         }
-
         this.onGranularitySelectChange = this.onSelectChange.bind(this, "granularity");
         this.handleNewDate = this.handleNewDate.bind(this);
     }
@@ -45,7 +44,7 @@ export default class TweetCounts extends React.Component {
                 <main className={styles.main}>
                     <Navigation active={"Tweet Volume History"}></Navigation>
                     <div className="content">
-                        <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
+                        <TimeIntervalPicker start_date={this.state.start_date} minDate={this.minDate} maxDate={this.maxDate} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
                         <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
                         <div className={"TextFieldWrapper"}>
                             <TextField

@@ -30,6 +30,8 @@ export default class TimeIntervalPicker extends React.Component {
                         label="Start Date"
                         value={this.state.start_date}
                         onChange={this.handleNewStartDate}
+                        minDate={this.props.minDate}
+                        maxDate={this.props.maxDate}
                         renderInput={(params) => <TextField {...params} fullWidth />}
                     />
                 </div>
@@ -39,6 +41,8 @@ export default class TimeIntervalPicker extends React.Component {
                         label="End Date"
                         value={this.state.end_date}
                         onChange={this.handleNewEndDate}
+                        minDate={this.props.minDate}
+                        maxDate={this.props.maxDate}
                         renderInput={(params) => <TextField {...params} fullWidth/>}
                     />
                 </div>

@@ -12,14 +12,14 @@ const TYPING_DONE_DELAY = 250;
 export default class TrendHistory extends React.Component {
     constructor(props) {
         super(props);
-        let now = new Date();
+        this.maxDate = new Date();
         let one_week_ago = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7))
         this.state = {
             selected_hashtag: null,
             country: "Germany",
             listOfOptions : [],
             start_date: one_week_ago,
-            end_date: now
+            end_date: this.maxDate
         }
 
         this.onCountrySelectChange = this.onSelectChange.bind(this, "country");
@@ -87,7 +87,7 @@ export default class TrendHistory extends React.Component {
                     <Navigation active={"Trend History"}></Navigation>
                     <div className="content">
                         <CountrySelection onChange={this.onCountrySelectChange}></CountrySelection>
-                        <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
+                        <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} minDate={null} maxDate={this.maxDate} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
                         <Autocomplete
                             className={"autocomplete"}
                             autoHighlight
