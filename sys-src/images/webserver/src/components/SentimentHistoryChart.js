@@ -71,7 +71,9 @@ export default class SentimentHistoryChart extends React.Component {
     fetchData() {
         let query = 'api/GetRecentSentiments?' + new URLSearchParams({
             trendName: this.props.trendName,
-            granularity: "hour"
+            granularity: "hour",
+            start_date: this.props.start_date,
+            end_date: this.props.end_date
         });
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
