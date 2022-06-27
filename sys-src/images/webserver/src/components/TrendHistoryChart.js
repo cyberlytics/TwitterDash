@@ -33,7 +33,7 @@ export const options = {
         },
         title: {
             display: true,
-            text: 'Tweet Counts',
+            text: 'Trend History',
         },
     },
     scales: {
@@ -58,22 +58,22 @@ export const options = {
     }
 };
 
-export default class TweetCountsChart extends React.Component {
+export default class SentimentHistoryChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            hashtag: props.hashtag,
+            trendName: props.trendName,
             data: null,
             loading: false,
         }
     }
 
     fetchData() {
-        let query = 'api/get_tweet_counts?' + new URLSearchParams({
-            hashtag: this.props.hashtag,
+        let query = 'api/GetRecentTrends?' + new URLSearchParams({
+            hashtag: this.props.trendName,
+            country: this.props.country,
             start_date: this.props.start_date,
-            end_date: this.props.end_date,
-            granularity: this.props.granularity
+            end_date: this.props.end_date
         });
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
@@ -84,14 +84,14 @@ export default class TweetCountsChart extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (!_.isEqual(this.props, prevProps)) {
-            if (this.props.hashtag != null && this.props.start_date != null && this.props.end_date != null) {
+            if (this.props.trendName != null) {
                 this.fetchData();
             }
         }
     }
 
     render() {
-        if (!this.props.hashtag) return <p>Please enter your search term ...</p>
+        if (!this.props.trendName) return <p>Please enter your search term ...</p>
         if (!this.state.data) return <p>Hang on ...</p>
 
         let displayData = this.state.data;
@@ -101,9 +101,9 @@ export default class TweetCountsChart extends React.Component {
                 new Date(obj.datetime.seconds * 1000)
             );
         });
-        let tweetCounts = displayData.map((obj, index) => {
+        let placements = displayData.map((obj, index) => {
             return (
-                obj.count
+                obj.trend.placement
             );
         });
 
@@ -111,8 +111,8 @@ export default class TweetCountsChart extends React.Component {
             labels: labels,
             datasets: [
                 {
-                    label: this.props.hashtag,
-                    data: tweetCounts,
+                    label: this.props.trendName,
+                    data: placements,
                     borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 }

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import Selection from "./Selection";
 
 export default class LimitSelection extends React.Component {
@@ -9,7 +9,7 @@ export default class LimitSelection extends React.Component {
 
     render() {
         return (
-            <Selection label="limit" onChange={this.props.onChange} defaultValue="5" raw_options={this.limits}></Selection>
+            <Selection label="Limit" onChange={this.props.onChange} defaultValue={this.props.defaultValue} raw_options={this.limits}></Selection>
         );
     }
 }
