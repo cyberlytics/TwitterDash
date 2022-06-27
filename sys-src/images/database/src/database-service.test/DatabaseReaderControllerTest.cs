@@ -212,9 +212,11 @@ namespace DatabaseService.Tests
             });
         }
 
-        [TestCase("test", 0, 2)]
+        [TestCase("test", 0, 1)]
         [TestCase("test", 1, 1)]
         [TestCase("bdcc", 0, 1)]
+        [TestCase("cc", 0, 1)]
+        [TestCase("notindb", 0, 0)]
         public async Task GetAvailableSentimentTrends_Should_Return_Correct_Sentiments(string query, int limit, int expectedCount)
         {
             var sentiments = new List<Sentiment>() {
@@ -227,20 +229,21 @@ namespace DatabaseService.Tests
 
             var service = new DatabaseReaderController(trendRepository, sentimentRepository, WOEID);
 
-            var request = new Twitterdash.GetAvailableSentimentTrendsRequest
+            var request = new Twitterdash.GetTrendsWithAvailableSentimentRequest
             {
                 Query = query,
                 Limit = limit,
             };
 
-            var response = await service.GetAvailableSentimentTrends(
+            var response = await service.GetTrendsWithAvailableSentiment(
                 request, TestServerCallContext.Create());
 
 
             Assert.Multiple(() =>
             {
                 Assert.That(response.AvailableTrendsWithSentiment, Has.Exactly(expectedCount).Items);
-                Assert.That(response.AvailableTrendsWithSentiment.ToList()[0], Is.EqualTo(query));
+                if(expectedCount > 0)
+                    Assert.That(response.AvailableTrendsWithSentiment.ToList(), Has.All.Contains(query));
             });
         }
 
@@ -288,23 +291,41 @@ namespace DatabaseService.Tests
         public async Task GetRecentSentiment_Should_Return_Recent_Sentiment(string query, int expectedCount)
         {
             var sentiments = new List<Sentiment>() {
-                new Sentiment { Trend = "test" },
-                new Sentiment { Trend = "bdcc" },
-                new Sentiment { Trend = "test" },
+                new Sentiment { Trend = "test",Timestamp = new DateTime(2022,1,1,0,0,0).ToUniversalTime() },
+                new Sentiment { Trend = "bdcc",Timestamp = new DateTime(2022,1,1,0,0,0).ToUniversalTime() },
+                new Sentiment { Trend = "test",Timestamp = new DateTime(2022,1,1,4,0,0).ToUniversalTime() },
             };
             sentimentCollection.InsertMany(sentiments);
 
             var service = new DatabaseReaderController(trendRepository, sentimentRepository, WOEID);
 
-            var request = new Twitterdash.GetRecentSentimentRequest
+            var request = new Twitterdash.GetRecentSentimentsRequest
             {
-                TrendName = query
+                TrendName = query,
+                Granularity = Twitterdash.Granularity.Hour
             };
 
-            var response = await service.GetRecentSentiment(
+            var response = await service.GetRecentSentiments(
                 request, TestServerCallContext.Create());
 
             Assert.That(response.RecentSentiments.Count, Is.EqualTo(expectedCount));
+        }
+
+        [Test]
+        public async Task GetRecentSentiment_Should_Return_Empty_List_When_BD_Is_Empty()
+        {
+            var service = new DatabaseReaderController(trendRepository, sentimentRepository, WOEID);
+
+            var request = new Twitterdash.GetRecentSentimentsRequest
+            {
+                TrendName = "foobar",
+                Granularity = Twitterdash.Granularity.Hour
+            };
+
+            var response = await service.GetRecentSentiments(
+                request, TestServerCallContext.Create());
+
+            Assert.IsEmpty(response.RecentSentiments);
         }
 
         [Test]
@@ -339,14 +360,15 @@ namespace DatabaseService.Tests
 
             var service = new DatabaseReaderController(trendRepository, sentimentRepository, WOEID);
 
-            var request = new Twitterdash.GetRecentSentimentRequest
+            var request = new Twitterdash.GetRecentSentimentsRequest
             {
                 TrendName = "test",
                 StartDate = Timestamp.FromDateTime(start),
                 EndDate = Timestamp.FromDateTime(end),
+                Granularity = Twitterdash.Granularity.Day
             };
 
-            var response = await service.GetRecentSentiment(
+            var response = await service.GetRecentSentiments(
                 request, TestServerCallContext.Create());
 
             Assert.That(response.RecentSentiments.Count, Is.EqualTo(2));
