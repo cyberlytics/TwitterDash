@@ -11,7 +11,6 @@ export default async function handler(req, res) {
                 reject(error);
             }
             else {
-                console.log(data.tweetCounts);
                 res.status(200).json(data.tweetCounts);
                 resolve();
             }
