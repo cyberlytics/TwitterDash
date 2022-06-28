@@ -12,6 +12,10 @@
 \usepackage[ngerman]{babel}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+% Hurenkinder und Schusterjungen
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
 \begin{document}
 
 \title{Dokumentation der Softwarearchitektur des Projekts Twitter-Dash}
@@ -98,29 +102,29 @@ wurden alle gRPC-Schnittstellen in einem globalen Ordner definiert und vor dem A
 Dadurch werden Änderungen an den Schnittstellen gleichzeitig für alle Dienste vorgenommen.
 
 \section{Frontend}
-Das Frontend wurde mithilfe des React Frameworks Next.js entwickelt \cite{nextjs}. 
+Das Frontend wurde mithilfe des React Frameworks Next.js entwickelt \cite{nextjs}.
 Die UI Elemente stammen zum Großteil aus dem MUI Framework \cite{mui}.
 Für die Visualisierung wurde Chart.js verwendet \cite{chartjs}.
 Für jeden Datenpunkt in einer Visualierung können durch Hovern der Maus genauere Informationen angezeigt werden.
-Mithilfe von "API Routes" wurde eine API implementiert, welche die Schnittstelle zu den gRPC Services bildet \cite{apiroutes}. 
-Das Frontend greift für die Live-Abfrage der "Tweet Volume History" auf den Trend-Service zu.
+Mithilfe von \glqq API Routes\grqq\ wurde eine API implementiert, welche die Schnittstelle zu den gRPC-Services bildet \cite{apiroutes}.
+Das Frontend greift für die Live-Abfrage der \glqq Tweet Volume History\grqq\ auf den Trend-Service zu.
 Für alle anderen Datenabfragen wird der Datenbank-Service verwendet.
 
-Das Frontend verfügt über 5 Seiten, welche über eine Navigationsleiste am oberen Rand der Website erreichbar sind.
+Das Frontend verfügt über fünf Seiten, welche über eine Navigationsleiste am oberen Rand der Website erreichbar sind.
 
 \subsection*{Twitter Dash}
-In der Rubrik "Twitter Dash" sind ein Überblick über die Funktionalität von Twitter-Dash, 
+In der Rubrik \glqq Twitter Dash\grqq\ sind ein Überblick über die Funktionalität von Twitter-Dash,
 eine technische Beschreibung, eine Bedienungsanleitung und die Namen der Entwickler zu finden.
 \subsection*{Trending Now}
-Unter der Rubrik "Trending Now" gibt es die Möglichkeit die aktuellen top Trends aus einem bestimmten Land tabellarisch anzuzeigen.
+Unter der Rubrik \glqq Trending Now\grqq\ gibt es die Möglichkeit, die aktuellen top Trends aus einem bestimmten Land tabellarisch anzuzeigen.
 Die Anzahl der Trends kann dabei limitiert werden. Die Tabelle verfügt über mehrere Seiten.
 \subsection*{Tweet Volume History}
-Im Abschnitt "Tweet Volume History" wird es dem Nutzer ermöglicht den Verlauf der Anzahl an Tweets in einem bestimmten selbst definierbaren Zeitrahmen 
+Im Abschnitt \glqq Tweet Volume History\grqq\ wird es dem Nutzer ermöglicht, den Verlauf der Anzahl an Tweets in einem selbst definierbaren Zeitrahmen
 mit einer auswählbaren Granularität anzuzeigen.
 \subsection*{Sentiment History}
-Der Bereich "Sentiment History" bietet die Möglichkeit den Verlauf des Sentiments zu einem bestimmten Topic in einem bestimmten Zeitbereich mit einer bestimmten Granularität anzuzeigen.
+Der Bereich \glqq Sentiment History\grqq\ bietet die Möglichkeit, den Verlauf des Sentiments zu einem bestimmten Topic in einem bestimmten Zeitbereich mit einer bestimmten Granularität anzuzeigen.
 \subsection*{Trend History}
-Mit der Rubrik "Trend History" ist es möglich den Verlauf der Platzierung eines Trends pro Land in einem selbst definierbaren Zeitintervall anzuzeigen.
+Mit der Rubrik \glqq Trend History\grqq\ ist es möglich, den Verlauf der Platzierung eines Trends pro Land in einem selbst definierbaren Zeitintervall anzuzeigen.
 
 \section{Datenakquise}
 Um Daten für das Dashboard zu erhalten, werden zwei unterschiedliche Vorgehensweisen verwendet.
@@ -129,8 +133,6 @@ Der meist verwendete Ansatz ist die Abfrage über die offizielle Twitter-API \ci
 Außerdem wurde Twint, ein fortschrittliches Scraping-Tool verwendet.
 Dieses Tool liefert vollständige Tweets, inklusive zugehöriger Meta-Daten,
 ohne direkten Zugriff auf die Twitter-API zu benötigen \cite{twint}.
-
-\newpage 
 
 \subsection*{Trend-Service}
 Für den Zugriff auf die Twitter-API wurde die Python-Bibliothek Tweepy \cite{tweepy} verwendet.
@@ -189,7 +191,6 @@ Bevor der Text analysiert werden kann, muss er bereinigt werden.
 Dabei werden zum Beispiel unerwünschte Zeichen entfernt und die Zeichenkette in Kleinbuchstaben umgewandelt.
 Als Ausgabe liefert der Service einen Zahlenwert zwischen -1 und 1.
 Dabei wird der Wert -1 für negative und 1 für positive Stimmungen angenommen.
-
 
 \section{Workflow}
 Um die Zusammenarbeit zwischen den verschiedenen Datenakquise Diensten zu ermöglichen wurde ein Conductor-Service erstellt.
@@ -292,11 +293,11 @@ Zum Laden aus der Datenbank:
                         \item Zeitstempel
                         \item Liste von Trends mit folgenden Attributen:
                               \begin{itemize}
-                                \item Trendtyp
-                                \item Name
-                                \item Land
-                                \item Platzierung
-                                \item 24Stunden-Volumen
+                                  \item Trendtyp
+                                  \item Name
+                                  \item Land
+                                  \item Platzierung
+                                  \item 24Stunden-Volumen
                               \end{itemize}
                     \end{itemize}
           \end{itemize}
@@ -345,7 +346,7 @@ Zum Laden aus der Datenbank:
               \item Endzeitpunkt (optional)
               \item Auflösung
           \end{itemize}
-    \item Rückgabe: Liste der vergangenen Sentiments in Zeitabschnitt 
+    \item Rückgabe: Liste der vergangenen Sentiments in Zeitabschnitt
 \end{itemize}
 
 \smallskip
@@ -382,6 +383,7 @@ Der Trend-,Twint- und Sentiment-Dienst wurden mit dem Python Unittest\cite{unitt
 Der Conductor- und Datenbank-Dienst wurden mit dem NUnit\cite{nunit} Framework in einem Arrange-Act-Assert-Pattern getestet.
 Das Frontend wurde noch nicht mit Unittests abgedeckt.
 
+\pagebreak
 \begin{thebibliography}{0}
     \bibitem{microservices}Microservice-Frontend-Architekturen [Online] \url{https://www.sigs-datacom.de/uploads/tx_dmjournals/attermeyer_OTS_Microservices_Docker_16.pdf} (visited on Jun. 21, 2022)
     \bibitem{twitterapi}Twitter-API [Online] \url{https://developer.twitter.com/en/docs/twitter-api} (visited on Jun. 23, 2022)
