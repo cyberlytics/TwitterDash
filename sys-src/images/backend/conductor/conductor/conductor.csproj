@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>317dcf5f-b807-4a66-845b-664713f20401</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<RunSettingsFilePath>$(MSBuildProjectDirectory)\..\CompleteRunsettings.runsettings</RunSettingsFilePath>
+  </PropertyGroup>
+
+
+    <ItemGroup>
+		<Protobuf Include="objects.proto" ProtoRoot=".\proto\" />
+		<Protobuf Include="TrendService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
+		<Protobuf Include="DatabaseService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
+		<Protobuf Include="TweetService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
+		<Protobuf Include="SentimentService.proto" ProtoRoot=".\proto\" GrpcServices="Client" />
+	</ItemGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="Elsa" Version="2.7.0" />
+    <PackageReference Include="Elsa.Activities.Http" Version="2.7.0" />
+    <PackageReference Include="Elsa.Activities.UserTask" Version="2.7.0" />
+    <PackageReference Include="Elsa.Designer.Components.Web" Version="2.7.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.7.0" />
+    <PackageReference Include="Elsa.Server.Api" Version="2.7.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+	<PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+  </ItemGroup>
+
+</Project>

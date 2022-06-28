@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "database-service": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "DockerfileRunArguments": "--env \"MONGODB_IP=host.docker.internal\" --env \"MONGODB_PORT=27017\" --env \"MONGODB_USER=root\" --env \"MONGODB_PASSWORD=example\""
+    }
+  }
+}

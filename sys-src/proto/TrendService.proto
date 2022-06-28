@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package twitterdash;
+
+import "objects.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+
+
+service TrendProvider {
+    rpc OnNewTrends(google.protobuf.Empty) returns (stream TrendProviderReply) {}
+}
+
+service TweetCountsProvider {
+    //https://developer.twitter.com/en/docs/twitter-api/tweets/counts/api-reference/get-tweets-counts-recent
+    rpc GetRecentTweetCounts(GetRecentTweetCountsRequest) returns (GetRecentTweetCountsReply) {}
+}
+
+message GetRecentTweetCountsRequest {
+    string query = 1;
+    optional google.protobuf.Timestamp start_date = 2;
+    optional google.protobuf.Timestamp end_date = 3;
+    optional Granularity granularity = 4;
+}
+
+message TweetCount {
+  google.protobuf.Timestamp datetime = 1;
+  int32 count = 2;
+}
+
+message GetRecentTweetCountsReply {
+  repeated TweetCount tweetCounts = 1;
+}
+
