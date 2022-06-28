@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package twitterdash;
+
+import "objects.proto";
+import "google/protobuf/timestamp.proto";
+
+service TweetProvider {
+    rpc GetTweets(GetTweetsRequest) returns (GetTweetsReply) {}
+}
+
+message GetTweetsRequest{
+    string trend = 1;
+    repeated string languages = 2; //Language Tags for the tweets
+    google.protobuf.Timestamp since = 3;
+    google.protobuf.Timestamp until = 4;
+    optional int32 limit = 5;
+}
+
+message GetTweetsReply{
+    repeated Tweet tweets = 1;
+}

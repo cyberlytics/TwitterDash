@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package twitterdash;
+
+import "objects.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service DatabaseReader {
+    rpc GetCurrentTrends(GetCurrentTrendsRequest) returns (TrendProviderReply) {}
+    
+    rpc GetRecentTrends(GetRecentTrendsRequest) returns (GetRecentTrendsReply) {}
+
+    //Gets the list of available countries in the Database 
+    rpc GetAvailableCountries(google.protobuf.Empty) returns (GetAvailableCountriesReply) {}
+
+    // Gets n trendnames for a given query where sentiments exist
+    rpc GetTrendsWithAvailableSentiment(GetTrendsWithAvailableSentimentRequest) returns (GetTrendsWithAvailableSentimentReply) {}
+    
+    // Gets the last available Sentiment (1h average) for a given trend
+    rpc GetCurrentSentiment(GetCurrentSentimentRequest) returns (GetCurrentSentimentReply) {}
+    // Gets the Sentiment for a given trend in a defined timeframe and granularity
+    rpc GetRecentSentiments(GetRecentSentimentsRequest) returns (GetRecentSentimentsReply) {}
+
+    //Takes a list of Tweet IDs and returns a list of IDs that aren't already in the Database
+    rpc GetUniqueTweets(GetUniqueTweetsPayload) returns (GetUniqueTweetsPayload) {}
+}
+
+service DatabaseWriter{
+    //stores the griven Trends
+    rpc StoreTrends(TrendProviderReply) returns (google.protobuf.Empty) {}
+    //Stores the sentiment of the given Tweet-Batch
+    rpc StoreSentiment(StoreSentimentRequest) returns (google.protobuf.Empty) {}
+}
+
+message SentimentPayload{
+    Tweet tweet = 1;
+    float sentiment = 2;
+    string topic = 3;
+}
+
+message StoreSentimentRequest{
+    repeated SentimentPayload sentiments = 1;
+}
+
+message GetUniqueTweetsPayload{
+    repeated int64 tweet_ids = 1;
+}
+
+//GetCurrentTrends
+message GetCurrentTrendsRequest{
+    string country = 1; // country name
+    int32 limit = 2;
+}
+
+//GetRecentTrends
+message GetRecentTrendsRequest {
+    string hashtag = 1;
+    string country = 2;
+    optional google.protobuf.Timestamp start_date = 3;
+    optional google.protobuf.Timestamp end_date = 4;
+}
+
+//GetRecentTrends
+message RecentTrend{
+    google.protobuf.Timestamp datetime = 1;
+    Trend trend = 2;
+}
+
+//GetRecentTrends
+message GetRecentTrendsReply{
+     repeated RecentTrend recentTrends = 1;
+}
+
+//GetAvailableCountries
+message GetAvailableCountriesReply{
+    repeated string countries = 1;// list of country names  
+}
+
+
+message GetTrendsWithAvailableSentimentRequest{
+    string query = 1; // String to querry 
+    int32 limit = 2;
+}
+
+//GetAvailableSentimentTrends
+message GetTrendsWithAvailableSentimentReply{
+    repeated string availableTrendsWithSentiment = 1; //List of trends with available sentiment
+}
+
+//GetCurrentSentiment
+message GetCurrentSentimentRequest{
+    string trendName = 1;
+}
+
+//GetCurrentSentiment
+message GetCurrentSentimentReply{
+    float sentiment = 1;
+}
+
+//GetRecentSentiment
+message GetRecentSentimentsRequest{
+    string trendName = 1;
+    Granularity granularity = 2;
+    optional google.protobuf.Timestamp start_date = 3;
+    optional google.protobuf.Timestamp end_date = 4;
+}
+
+//GetRecentSentiment
+message RecentSentiment{
+    google.protobuf.Timestamp datetime = 1;
+    float sentiment = 2;
+}
+
+//GetRecentSentiment
+message GetRecentSentimentsReply{
+    repeated RecentSentiment recentSentiments = 1;
+}
