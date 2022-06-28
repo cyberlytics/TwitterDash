@@ -9,8 +9,8 @@ import GranularitySelection from "../components/GranularitySelection";
 export default class TweetCounts extends React.Component {
     constructor(props) {
         super(props);
-        this.maxDate = new Date(Date.now() - 20 * 1000);
-        this.minDate = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7) + 20 * 1000)
+        this.maxDate = new Date(Date.now() - 5 * 60 * 1000);
+        this.minDate = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7) + 5 * 60 * 1000)
         this.onKeyDownInput = this.onKeyDownInput.bind(this);
         this.state = {
             selected_hashtag: null,
