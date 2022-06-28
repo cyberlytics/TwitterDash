@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace DatabaseService.Models
 {
@@ -11,14 +12,14 @@ namespace DatabaseService.Models
             this.woeid_places = JsonSerializer.Deserialize<List<place>>(WOEIDjson.jsonString)!;
         }
 
-        public int getWOEID(string country)
+        public int? getWOEID(string country)
         {
-            return this.woeid_places.Find(x => x.country == country).parentid;
+            return this.woeid_places.Find(x => x.country == country)?.parentid;
         }
 
-        public string getCountry(int woeid)
+        public string? getCountry(int woeid)
         {
-            return this.woeid_places.Find(x => x.parentid == woeid).country;
+            return this.woeid_places.Find(x => x.parentid == woeid)?.country;
         }
     }
 
