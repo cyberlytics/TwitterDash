@@ -1,12 +1,8 @@
-﻿using MongoDB.Driver;
-using MongoDB.Bson;
-using DatabaseService.Models;
-using DatabaseService.Repositories;
-using Mongo2Go;
-using DatabaseService.Controller;
+﻿using DatabaseService.Controller;
 using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
 using Helpers;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Twitterdash;
 
 namespace DatabaseService.Tests
@@ -24,19 +20,40 @@ namespace DatabaseService.Tests
                 Timestamp = Timestamp.FromDateTime(DateTime.Now.ToUniversalTime()),
                 Trends = { new Twitterdash.Trend{
                     TrendType = Twitterdash.TrendType.Hashtag,
-                    Name = "TestTrend",
+                    Name = "TestTrend1",
                     Country = 23424829,
                     Placement = 1,
                     TweetVolume24 = 100
-                }}
+                },
+                new Twitterdash.Trend{
+                    TrendType = Twitterdash.TrendType.Hashtag,
+                    Name = "TestTrend2",
+                    Country = 23424977,
+                    Placement = 1,
+                    TweetVolume24 = 100
+                },
+                new Twitterdash.Trend
+                {
+                    TrendType = Twitterdash.TrendType.Hashtag,
+                    Name = "TestTrend3",
+                    Country = 23424977,
+                    Placement = 1,
+                    TweetVolume24 = 100
+                }
+                }
             };
 
             var response = await service.StoreTrends(
                 request, TestServerCallContext.Create());
 
             var db = trendCollection.Find(new BsonDocument()).ToList();
-            Assert.That(db.Count, Is.EqualTo(1));
-            Assert.That(db[0].Trends[0].name, Is.EqualTo("TestTrend"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(db.Count, Is.EqualTo(2));
+                Assert.That(db[0].Country, Is.EqualTo(23424829));
+                Assert.That(db[1].Country, Is.EqualTo(23424977));
+            });
+
         }
 
         [Test]

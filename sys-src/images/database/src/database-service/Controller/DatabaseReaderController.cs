@@ -27,7 +27,8 @@ namespace DatabaseService.Controller
 
             foreach (int woeid in countries)
             {
-                getAvailableCountriesReply.Countries.Add(this.Woeid.getCountry(woeid));
+                if(this.Woeid.getCountry(woeid) is { } country)
+                    getAvailableCountriesReply.Countries.Add(country);
             }
             return getAvailableCountriesReply;
         }
