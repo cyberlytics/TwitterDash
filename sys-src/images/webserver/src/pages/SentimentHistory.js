@@ -86,7 +86,7 @@ export default class SentimentHistory extends React.Component {
                     <Navigation active={"Sentiment History"}></Navigation>
                     <div className="content">
                         <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} minDate={null} maxDate={this.maxDate} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
-                        <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
+                        <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity} excludeMinute={true}></GranularitySelection>
                         <Autocomplete
                             className={"autocomplete"}
                             autoHighlight
