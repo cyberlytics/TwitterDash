@@ -22,13 +22,18 @@ export default class SentimentHistory extends React.Component {
             granularity: "hour"
         }
 
-        this.onKeyDownInput = this.onKeyDownInput.bind(this);
         this.delayDataRetrieval = this.delayDataRetrieval.bind(this);
         this.handleNewDate = this.handleNewDate.bind(this);
-
         this.onGranularitySelectChange = this.onSelectChange.bind(this, "granularity");
+        this.autoCompleteHandleChange = this.autoCompleteHandleChange.bind(this);
 
         this.timerIds = []
+    }
+
+    autoCompleteHandleChange(event, value) {
+        this.setState({
+            selected_hashtag: value.label
+        });
     }
 
     onSelectChange(key, e) {
@@ -66,17 +71,7 @@ export default class SentimentHistory extends React.Component {
 
     delayDataRetrieval(event) {
         this.clearAllTimers();
-        if(event.key != "Enter" && event.key != "Escape") {
-            this.timerIds.push(setTimeout(this.fetchData.bind(this), TYPING_DONE_DELAY, event.target.value));
-        }
-    }
-
-    onKeyDownInput(e) {
-        if (e.key === 'Enter') {
-            this.setState({
-                selected_hashtag: e.target.value
-            });
-        }
+        this.timerIds.push(setTimeout(this.fetchData.bind(this), TYPING_DONE_DELAY, event.target.value));
     }
 
     render() {
@@ -89,12 +84,13 @@ export default class SentimentHistory extends React.Component {
                         <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity} excludeMinute={true}></GranularitySelection>
                         <Autocomplete
                             className={"autocomplete"}
+                            onChange={this.autoCompleteHandleChange}
                             autoHighlight
                             disablePortal
                             id="autocomplete_sentiment"
                             options={this.state.listOfOptions}
                             sx={{ width: 300 }}
-                            renderInput={(params) => <TextField onChange={this.delayDataRetrieval} onKeyDown={this.onKeyDownInput} {...params} label="Trend" />}
+                            renderInput={(params) => <TextField onChange={this.delayDataRetrieval} {...params} label="Trend" />}
                         />
                         <div id="tweet_counts_chart">
                             <SentimentHistoryChart trendName={this.state.selected_hashtag} start_date={this.state.start_date} end_date={this.state.end_date} granularity={this.state.granularity}></SentimentHistoryChart>
