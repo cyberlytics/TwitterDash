@@ -5,8 +5,9 @@ import Navigation from "../components/Navigation";
 import {TextField} from "@mui/material";
 import TimeIntervalPicker from "../components/TimeIntervalPicker";
 import GranularitySelection from "../components/GranularitySelection";
+import { withRouter } from 'next/router'
 
-export default class TweetCounts extends React.Component {
+export default withRouter(class TweetCounts extends React.Component {
     constructor(props) {
         super(props);
         this.maxDate = new Date(Date.now() - 5 * 60 * 1000);
@@ -20,6 +21,14 @@ export default class TweetCounts extends React.Component {
         }
         this.onGranularitySelectChange = this.onSelectChange.bind(this, "granularity");
         this.handleNewDate = this.handleNewDate.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.props.router.query.trendName) {
+            this.setState({
+                selected_hashtag: this.props.router.query.trendName,
+            })
+        }
     }
 
     onSelectChange(key, e) {
@@ -51,6 +60,7 @@ export default class TweetCounts extends React.Component {
                                 className={"TextFieldMUI"}
                                 label="Trend"
                                 onKeyDown={this.onKeyDownInput}
+                                defaultValue={this.props.router.query.trendName ? this.props.router.query.trendName : ""}
                             />
                         </div>
                         <div id="tweet_counts_chart">
@@ -61,4 +71,4 @@ export default class TweetCounts extends React.Component {
             </div>
         )
     }
-}
+})

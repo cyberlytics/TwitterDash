@@ -19,7 +19,6 @@ export default async function handler(req, res) {
         let GetRecentTweetCountsRequest = buildProtoRequest(req, ["query", "granularity"]);
         GetRecentTweetCountsRequest["start_date"] = convertToProtoTimeStamp(new Date(req.query.start_date))
         GetRecentTweetCountsRequest["end_date"] = convertToProtoTimeStamp(new Date(req.query.end_date));
-        console.log(GetRecentTweetCountsRequest);
         TREND_SERVICE_CLIENT.GetRecentTweetCounts(GetRecentTweetCountsRequest, dataCallBack);
     });
 }

@@ -26,7 +26,7 @@ export default class CountrySelection extends React.Component {
     render() {
         if (this.state.availableCountries.length == 0) { return (<></>); }
         return (
-            <Selection label="Country" onChange={this.props.onChange} defaultValue="Germany" raw_options={this.state.availableCountries}></Selection>
+            <Selection label="Country" onChange={this.props.onChange} defaultValue={this.props.defaultValue} raw_options={this.state.availableCountries}></Selection>
         );
     }
 }

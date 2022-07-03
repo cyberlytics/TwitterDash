@@ -21,6 +21,9 @@ let packageDefinition = protoLoader.loadSync(
 let protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 let twitterdash = protoDescriptor.twitterdash;
 
+const LAGGY = true;
+const DELAY = 200;
+
 const TREND_TYPE = {
   Topic: 0,
   Hashtag: 1
@@ -79,6 +82,7 @@ function generateRandomTrend(placement, country, name=null) {
 }
 
 async function GetCurrentTrendsInternal(GetCurrentTrendsRequest) {
+  if (LAGGY) {await new Promise(r => setTimeout(r, DELAY));}
   let country = null;
   if (GetCurrentTrendsRequest.hasOwnProperty("country")) {
     country = GetCurrentTrendsRequest.country;
@@ -107,6 +111,7 @@ async function GetCurrentTrends(call, callback) {
 }
 
 async function GetAvailableCountriesInternal() {
+  if (LAGGY) {await new Promise(r => setTimeout(r, DELAY));}
   let GetAvailableCountriesReply = {
     countries: Object.keys(WOEIDS)
   };
@@ -119,6 +124,7 @@ async function GetAvailableCountries(call, callback) {
 }
 
 async function GetRecentTrendsInternal(GetRecentTrendsRequest) {
+  if (LAGGY) {await new Promise(r => setTimeout(r, DELAY));}
   let hashtag = GetRecentTrendsRequest.hashtag;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
   if (GetRecentTrendsRequest.hasOwnProperty("end_date")) {
@@ -167,6 +173,7 @@ async function GetRecentTrends(call, callback) {
 }
 
 async function GetTrendsWithAvailableSentimentInternal(GetTrendsWithAvailableSentimentRequest) {
+  if (LAGGY) {await new Promise(r => setTimeout(r, DELAY));}
   let query = GetTrendsWithAvailableSentimentRequest.query;
   let limit = GetTrendsWithAvailableSentimentRequest.limit;
   let num_available = Math.floor(Math.random() * 100) + 1
@@ -188,6 +195,7 @@ async function GetTrendsWithAvailableSentiment(call, callback) {
 }
 
 async function GetCurrentSentimentInternal(GetCurrentSentimentRequest) {
+  if (LAGGY) {await new Promise(r => setTimeout(r, DELAY/10));}
   let trendName = GetCurrentSentimentRequest.trendName;
   let GetCurrentSentimentReply = {
     sentiment: Math.random() * 2 - 1
@@ -200,6 +208,7 @@ async function GetCurrentSentiment(call, callback) {
 }
 
 async function GetRecentSentimentsInternal(GetRecentSentimentsRequest) {
+  if (LAGGY) {await new Promise(r => setTimeout(r, DELAY));}
   let trendName = GetRecentSentimentsRequest.trendName;
   let granularity = GetRecentSentimentsRequest.granularity;
   let end_date = new gs.protos.google.protobuf.Timestamp.fromObject({seconds: Math.floor(Date.now() / 1000)});
