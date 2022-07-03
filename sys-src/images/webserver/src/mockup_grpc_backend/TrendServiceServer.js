@@ -7,6 +7,9 @@ let grpc = require('@grpc/grpc-js');
 let protoLoader = require('@grpc/proto-loader');
 const gs = require("@google-cloud/scheduler");
 
+const LAGGY = true;
+const DELAY = 200;
+
 let packageDefinition = protoLoader.loadSync(
   PROTO_PATH,
   {keepCase: true,
@@ -21,6 +24,7 @@ let protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 let twitterdash = protoDescriptor.twitterdash;
 
 async function GetRecentTweetCountsInternal(GetRecentTweetCountsRequest) {
+  if (LAGGY) {await new Promise(r => setTimeout(r, DELAY));}
   let now_seconds = Math.floor(Date.now() / 1000)
   let one_week_ago = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7))
   let one_week_ago_seconds = Math.floor(one_week_ago.getTime() / 1000)

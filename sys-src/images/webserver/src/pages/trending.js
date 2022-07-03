@@ -28,7 +28,7 @@ export default class Trending extends React.Component {
                 <main className={styles.main}>
                     <Navigation active={"Trending Now"}></Navigation>
                     <div className="content">
-                        <CountrySelection onChange={this.onCountrySelectChange}></CountrySelection>
+                        <CountrySelection onChange={this.onCountrySelectChange} defaultValue={"Germany"}></CountrySelection>
                         <LimitSelection onChange={this.onLimitSelectChange} defaultValue={this.state.num_results}></LimitSelection>
                         <Trends num_results={this.state.num_results} country={this.state.country}></Trends>
                     </div>
