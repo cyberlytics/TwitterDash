@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
 import TweetCountsChart from "../components/tweet_count_chart";
 import Navigation from "../components/Navigation";
 import {TextField} from "@mui/material";
@@ -49,25 +48,29 @@ export default withRouter(class TweetCounts extends React.Component {
 
     render() {
         return (
-            <div className={styles.container}>
-                <main className={styles.main}>
+            <div className={"container"}>
+                <div className={"main"}>
                     <Navigation active={"Tweet Volume History"}></Navigation>
                     <div className="content">
-                        <TimeIntervalPicker start_date={this.state.start_date} minDate={this.minDate} maxDate={this.maxDate} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
-                        <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
-                        <div className={"TextFieldWrapper"}>
-                            <TextField
-                                className={"TextFieldMUI"}
-                                label="Trend"
-                                onKeyDown={this.onKeyDownInput}
-                                defaultValue={this.props.router.query.trendName ? this.props.router.query.trendName : ""}
-                            />
+                        <div className={"contentRow"}>
+                            <TimeIntervalPicker start_date={this.state.start_date} minDate={this.minDate} maxDate={this.maxDate} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
                         </div>
-                        <div id="tweet_counts_chart">
+                        <div className={"contentRow"}>
+                            <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
+                            <div className={"TextFieldWrapper"}>
+                                <TextField
+                                    className={"TextFieldMUI"}
+                                    label="Trend"
+                                    onKeyDown={this.onKeyDownInput}
+                                    defaultValue={this.props.router.query.trendName ? this.props.router.query.trendName : ""}
+                                />
+                            </div>
+                        </div>
+                        <div className={"results"}>
                             <TweetCountsChart hashtag={this.state.selected_hashtag} start_date={this.state.start_date} end_date={this.state.end_date} granularity={this.state.granularity}></TweetCountsChart>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
         )
     }

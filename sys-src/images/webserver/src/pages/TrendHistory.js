@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
 import Navigation from "../components/Navigation";
 import TrendHistoryChart from "../components/TrendHistoryChart";
 import {Autocomplete} from "@mui/material";
@@ -104,28 +103,31 @@ export default withRouter(class TrendHistory extends React.Component {
 
     render() {
         return (
-            <div className={styles.container}>
-                <main className={styles.main}>
+            <div className={"container"}>
+                <div className={"main"}>
                     <Navigation active={"Trend History"}></Navigation>
                     <div className="content">
-                        <CountrySelection onChange={this.onCountrySelectChange} defaultValue={this.props.router.query.country ? this.props.router.query.country : "Germany"}></CountrySelection>
-                        <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} minDate={null} maxDate={this.maxDate} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
-                        <Autocomplete
-                            className={"autocomplete"}
-                            onChange={this.autoCompleteHandleChange}
-                            autoHighlight
-                            disablePortal
-                            id="autocomplete_Trend"
-                            options={this.state.listOfOptions}
-                            sx={{ width: 300 }}
-                            value={this.state.selected_hashtag}
-                            renderInput={(params) => <TextField onChange={this.delayDataRetrieval} {...params} label="Trend" />}
-                        />
-                        <div id="tweet_counts_chart">
+                        <div className={"contentRow"}>
+                            <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} minDate={null} maxDate={this.maxDate} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
+                        </div>
+                        <div className={"contentRow"}>
+                            <CountrySelection onChange={this.onCountrySelectChange} defaultValue={this.props.router.query.country ? this.props.router.query.country : "Germany"}></CountrySelection>
+                            <Autocomplete
+                                className={"autocomplete"}
+                                onChange={this.autoCompleteHandleChange}
+                                autoHighlight
+                                disablePortal
+                                id="autocomplete_Trend"
+                                options={this.state.listOfOptions}
+                                value={this.state.selected_hashtag}
+                                renderInput={(params) => <TextField onChange={this.delayDataRetrieval} {...params} label="Trend" />}
+                            />
+                        </div>
+                        <div className={"results"}>
                             <TrendHistoryChart trendName={this.state.selected_hashtag_graph} start_date={this.state.start_date} end_date={this.state.end_date} country={this.state.country}></TrendHistoryChart>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
         )
     }

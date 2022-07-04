@@ -1,9 +1,8 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import {Button} from "@mui/material";
+import React from "react";
+import { DataGrid } from '@mui/x-data-grid';
 import { withRouter } from 'next/router'
 
-const _ = require("lodash");
+import _ from "lodash";
 
 const cols = [
     { field: "placement", headerName: "Placement", flex: 1, cellClassName: "clickableCell"},
@@ -85,7 +84,9 @@ export default withRouter(class Trends extends React.Component {
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
         json_promise.then((data) => {
-            this.processData(data);
+            if (!_.isEmpty(data)) {
+                this.processData(data);
+            }
         });
     }
 
@@ -106,8 +107,8 @@ export default withRouter(class Trends extends React.Component {
                 <DataGrid
                     rows={this.state.data}
                     columns={cols}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
+                    pageSize={8}
+                    rowsPerPageOptions={[8]}
                     onCellClick={this.onCellClick}
                     autoHeight
                     disableSelectionOnClick
