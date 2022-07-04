@@ -77,9 +77,11 @@ export default class SentimentHistoryChart extends React.Component {
         });
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
-        json_promise.then((data) => this.setState({
-            data: data
-        }));
+        json_promise.then((data) => {
+            if (!_.isEmpty(data)) {
+                this.setState({data})
+            }
+        });
     }
 
     componentDidUpdate(prevProps) {

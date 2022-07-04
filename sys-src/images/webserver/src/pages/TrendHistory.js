@@ -120,7 +120,6 @@ export default withRouter(class TrendHistory extends React.Component {
                                 disablePortal
                                 id="autocomplete_Trend"
                                 options={this.state.listOfOptions}
-                                sx={{ width: 300 }}
                                 value={this.state.selected_hashtag}
                                 renderInput={(params) => <TextField onChange={this.delayDataRetrieval} {...params} label="Trend" />}
                             />
