@@ -53,17 +53,21 @@ export default withRouter(class TweetCounts extends React.Component {
                 <main className={styles.main}>
                     <Navigation active={"Tweet Volume History"}></Navigation>
                     <div className="content">
-                        <TimeIntervalPicker start_date={this.state.start_date} minDate={this.minDate} maxDate={this.maxDate} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
-                        <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
-                        <div className={"TextFieldWrapper"}>
-                            <TextField
-                                className={"TextFieldMUI"}
-                                label="Trend"
-                                onKeyDown={this.onKeyDownInput}
-                                defaultValue={this.props.router.query.trendName ? this.props.router.query.trendName : ""}
-                            />
+                        <div className={"contentRow"}>
+                            <TimeIntervalPicker start_date={this.state.start_date} minDate={this.minDate} maxDate={this.maxDate} end_date={this.state.end_date} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
                         </div>
-                        <div id="tweet_counts_chart">
+                        <div className={"contentRow"}>
+                            <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity}></GranularitySelection>
+                            <div className={"TextFieldWrapper"}>
+                                <TextField
+                                    className={"TextFieldMUI"}
+                                    label="Trend"
+                                    onKeyDown={this.onKeyDownInput}
+                                    defaultValue={this.props.router.query.trendName ? this.props.router.query.trendName : ""}
+                                />
+                            </div>
+                        </div>
+                        <div className={"results"}>
                             <TweetCountsChart hashtag={this.state.selected_hashtag} start_date={this.state.start_date} end_date={this.state.end_date} granularity={this.state.granularity}></TweetCountsChart>
                         </div>
                     </div>

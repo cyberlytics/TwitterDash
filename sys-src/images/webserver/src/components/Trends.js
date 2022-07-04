@@ -106,8 +106,8 @@ export default withRouter(class Trends extends React.Component {
                 <DataGrid
                     rows={this.state.data}
                     columns={cols}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
+                    pageSize={8}
+                    rowsPerPageOptions={[8]}
                     onCellClick={this.onCellClick}
                     autoHeight
                     disableSelectionOnClick

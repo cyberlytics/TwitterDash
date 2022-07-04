@@ -107,20 +107,24 @@ export default withRouter(class SentimentHistory extends React.Component {
                 <main className={styles.main}>
                     <Navigation active={"Sentiment History"}></Navigation>
                     <div className="content">
-                        <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} minDate={null} maxDate={this.maxDate} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
-                        <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity} excludeMinute={true}></GranularitySelection>
-                        <Autocomplete
-                            className={"autocomplete"}
-                            onChange={this.autoCompleteHandleChange}
-                            autoHighlight
-                            disablePortal
-                            id="autocomplete_sentiment"
-                            options={this.state.listOfOptions}
-                            sx={{ width: 300 }}
-                            value={this.state.selected_hashtag}
-                            renderInput={(params) => <TextField onChange={this.delayDataRetrieval} {...params} label="Trend" />}
-                        />
-                        <div id="tweet_counts_chart">
+                        <div className={"contentRow"}>
+                            <TimeIntervalPicker start_date={this.state.start_date} end_date={this.state.end_date} minDate={null} maxDate={this.maxDate} handleNewDate={this.handleNewDate}></TimeIntervalPicker>
+                        </div>
+                        <div className={"contentRow"}>
+                            <GranularitySelection onChange={this.onGranularitySelectChange} defaultValue={this.state.granularity} excludeMinute={true}></GranularitySelection>
+                            <Autocomplete
+                                className={"autocomplete"}
+                                onChange={this.autoCompleteHandleChange}
+                                autoHighlight
+                                disablePortal
+                                id="autocomplete_sentiment"
+                                options={this.state.listOfOptions}
+                                sx={{ width: 300 }}
+                                value={this.state.selected_hashtag}
+                                renderInput={(params) => <TextField onChange={this.delayDataRetrieval} {...params} label="Trend" />}
+                            />
+                        </div>
+                        <div className={"results"}>
                             <SentimentHistoryChart trendName={this.state.selected_hashtag_graph} start_date={this.state.start_date} end_date={this.state.end_date} granularity={this.state.granularity}></SentimentHistoryChart>
                         </div>
                     </div>
