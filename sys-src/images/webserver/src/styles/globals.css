@@ -68,23 +68,18 @@ tr:nth-child(even) {
 }
 
 .content {
-  margin-top: 2em;
-  width: 60%;
-}
-
-.autocomplete {
-  margin: auto;
   margin-top: 10px;
+  width: 60%;
 }
 
 .Selection, .TextFieldMUI, .TimePicker{
   width: 100%;
 }
 
-.SelectionWrapper, .TextFieldWrapper, .Wrapper{
-  width:300px;
-  margin: auto;
-  margin-top: 10px;
+.SelectionWrapper, .TextFieldWrapper, .Wrapper, .autocomplete {
+  width: 46%;
+  float: left;
+  margin: 10px 2% 0;
 }
 
 .tableWrapper {
@@ -95,4 +90,14 @@ tr:nth-child(even) {
 .clickableCell:hover {
   background-color: rgba(29, 155, 240, 0.8);
   cursor: pointer;
+}
+
+.contentRow {
+  width: 100%;
+  overflow: hidden;
+}
+
+.results {
+  margin-top: 20px;
+  text-align: center;
 }
