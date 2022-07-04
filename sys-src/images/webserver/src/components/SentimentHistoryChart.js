@@ -48,7 +48,8 @@ export const options = {
             }
         },
         y: {
-            beginAtZero: true
+            min: -1,
+            max: 1
         }
     },
     elements: {
