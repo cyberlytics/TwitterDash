@@ -13,12 +13,14 @@ export default class Home extends React.Component {
 
                 <Navigation active={"Twitter Dash"}></Navigation>
                 <div className={"main"}>
-                    <h1>
-                        Twitter Dash
-                    </h1>
-                    <h2>Introduction to Twitter Dash</h2>
+                    <div className={"content"}>
+                        <h1>
+                            Twitter Dash
+                        </h1>
+                        <h2>Introduction to Twitter Dash</h2>
                         <p>
-                            Welcome to Twitter Dash! Twitter Dash allows you to:
+                            Welcome to Twitter Dash! This is a project for the course "Big Data And Cloud Computing" (BDCC)
+                            for the summer semester 2022. Twitter Dash allows you to:
                         </p>
                         <ul>
                             <li>Look at current trends by location</li>
@@ -27,10 +29,60 @@ export default class Home extends React.Component {
                             <li>Display the change in ranking over time</li>
                         </ul>
 
-                    <h2>Technical description of Twitter Dash ...</h2>
-                    <p>Usage description of Twitter Dash ...</p>
-                    <p>Authors of Twitter Dash ...</p>
-
+                        <h2>Usage description of Twitter Dash</h2>
+                        <p>
+                            The website is split into 5 pages.
+                            You can navigate to the other pages by clicking on the corresponding name in the
+                            navigation bar at the top of your screen.
+                        </p>
+                        <h3>
+                            Twitter Dash
+                        </h3>
+                        <p>
+                            This is page you are currently looking at. It contains supplementary information about the projekt and serves as a quasi tutorial.
+                        </p>
+                        <h3>
+                            Trending Now
+                        </h3>
+                        <p>
+                            This page allows you to look at the current trends in a certain country. Simply choose a country
+                            from the available countries and a maximum limit for the number of results and you're good to go!
+                            The result table contains multiple columns, some of which are sortable, just try it out!
+                            You will notice, that some of the cells change color, once you hover over them. If you click on those,
+                            you'll be referred to the other pages on this website, so you won't have to type so much. How handy!
+                        </p>
+                        <h3>Tweet Volume History</h3>
+                        <p>
+                            If you want to check the number of tweets with a certain hashtag or trend, you've come to the right place.
+                            Just enter your query and the website will give you the result. It's also possible to change the granularity,
+                            as well as the start and end date. However, due to certain limitations with the Twitter API, the range of valid dates is limited.
+                        </p>
+                        <h3>
+                            Sentiment History
+                        </h3>
+                        <p>
+                            This page lets you check the history of the sentiment to a certain topic. The controls are analogous to "Tweet Volume History".
+                            The only difference is, that the search field uses an autocomplete functionality.
+                        </p>
+                        <h3>
+                            Trend History
+                        </h3>
+                        <p>
+                            This page allows you to investigate the change in ranking history for a certain trend and country.
+                            Once again, it is possible to define a start and end date.
+                        </p>
+                        <h2>Developers of Twitter Dash</h2>
+                        <p>
+                            <ul>
+                                <li>Hahn Bastian</li>
+                                <li>Kleber Martin</li>
+                                <li>Klier Andreas</li>
+                                <li>Kreussel Lukas</li>
+                                <li>Paris Felix</li>
+                                <li>Ziegler Andreas</li>
+                            </ul>
+                        </p>
+                    </div>
                 </div>
             </div>
         )
