@@ -1,8 +1,8 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import React from "react";
+import { DataGrid } from '@mui/x-data-grid';
 import { withRouter } from 'next/router'
 
-const _ = require("lodash");
+import _ from "lodash";
 
 const cols = [
     { field: "placement", headerName: "Placement", flex: 1, cellClassName: "clickableCell"},

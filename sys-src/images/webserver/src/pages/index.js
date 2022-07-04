@@ -1,10 +1,6 @@
 import Head from 'next/head'
-import Link from 'next/link'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import Trends from '../components/Trends'
-import TweetCountsChart from '../components/tweet_count_chart'
-import React, { useEffect, useState, Fragment } from "react";
+import React from "react";
 import Navigation from "../components/Navigation";
 
 export default class Home extends React.Component {

@@ -1,8 +1,6 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React from "react";
 import styles from "../styles/Home.module.css";
-import Link from "next/link";
 import Trends from "../components/Trends";
-import Selection from "../components/Selection";
 import CountrySelection from "../components/CountrySelection";
 import LimitSelection from "../components/LimitSelection"
 import Navigation from "../components/Navigation";
