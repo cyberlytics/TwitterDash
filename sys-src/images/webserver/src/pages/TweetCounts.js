@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
 import TweetCountsChart from "../components/tweet_count_chart";
 import Navigation from "../components/Navigation";
 import {TextField} from "@mui/material";
@@ -49,8 +48,8 @@ export default withRouter(class TweetCounts extends React.Component {
 
     render() {
         return (
-            <div className={styles.container}>
-                <main className={styles.main}>
+            <div className={"container"}>
+                <div className={"main"}>
                     <Navigation active={"Tweet Volume History"}></Navigation>
                     <div className="content">
                         <div className={"contentRow"}>
@@ -71,7 +70,7 @@ export default withRouter(class TweetCounts extends React.Component {
                             <TweetCountsChart hashtag={this.state.selected_hashtag} start_date={this.state.start_date} end_date={this.state.end_date} granularity={this.state.granularity}></TweetCountsChart>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
         )
     }

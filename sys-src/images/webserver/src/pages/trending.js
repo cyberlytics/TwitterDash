@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
 import Trends from "../components/Trends";
 import CountrySelection from "../components/CountrySelection";
 import LimitSelection from "../components/LimitSelection"
@@ -22,8 +21,8 @@ export default class Trending extends React.Component {
 
     render() {
         return (
-            <div className={styles.container}>
-                <main className={styles.main}>
+            <div className={"container"}>
+                <div className={"main"}>
                     <Navigation active={"Trending Now"}></Navigation>
                     <div className="content">
                         <div className={"contentRow"}>
@@ -34,7 +33,7 @@ export default class Trending extends React.Component {
                             <Trends num_results={this.state.num_results} country={this.state.country}></Trends>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
         )
     }
