@@ -1,6 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import {Button} from "@mui/material";
 import { withRouter } from 'next/router'
 
 const _ = require("lodash");
@@ -85,7 +84,9 @@ export default withRouter(class Trends extends React.Component {
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
         json_promise.then((data) => {
-            this.processData(data);
+            if (!_.isEmpty(data)) {
+                this.processData(data);
+            }
         });
     }
 

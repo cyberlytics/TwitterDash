@@ -119,7 +119,6 @@ export default withRouter(class SentimentHistory extends React.Component {
                                 disablePortal
                                 id="autocomplete_sentiment"
                                 options={this.state.listOfOptions}
-                                sx={{ width: 300 }}
                                 value={this.state.selected_hashtag}
                                 renderInput={(params) => <TextField onChange={this.delayDataRetrieval} {...params} label="Trend" />}
                             />
