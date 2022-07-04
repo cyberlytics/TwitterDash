@@ -48,13 +48,13 @@ export default class Home extends React.Component {
                             This page allows you to look at the current trends in a certain country. Simply choose a country
                             from the available countries and a maximum limit for the number of results and you're good to go!
                             The result table contains multiple columns, some of which are sortable, just try it out!
-                            You will notice, that some of the cells change color, once you hover over them. If you click on those,
+                            You will notice that some of the cells change color, once you hover over them. If you click on those,
                             you'll be referred to the other pages on this website, so you won't have to type so much. How handy!
                         </p>
                         <h3>Tweet Volume History</h3>
                         <p>
                             If you want to check the number of tweets with a certain hashtag or trend, you've come to the right place.
-                            Just enter your query and the website will give you the result. It's also possible to change the granularity,
+                            Just enter your query and the website will give you the result. It's also possible to change the granularity
                             as well as the start and end date. However, due to certain limitations with the Twitter API, the range of valid dates is limited.
                         </p>
                         <h3>
@@ -62,7 +62,7 @@ export default class Home extends React.Component {
                         </h3>
                         <p>
                             This page lets you check the history of the sentiment to a certain topic. The controls are analogous to "Tweet Volume History".
-                            The only difference is, that the search field uses an autocomplete functionality.
+                            The only difference is that the search field uses an autocomplete functionality.
                         </p>
                         <h3>
                             Trend History
