@@ -70,7 +70,9 @@ export default class Navigation extends React.Component {
     render() {
         return (
             <div className="topnav">
-                {this.state.nav}
+                <div className={"navItems"}>
+                    {this.state.nav}
+                </div>
             </div>
         );
     }

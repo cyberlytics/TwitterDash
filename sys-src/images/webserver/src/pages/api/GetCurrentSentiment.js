@@ -1,5 +1,5 @@
 import {DATABASE_READER_CLIENT} from "../../util/DatabaseReaderClient"
-import {buildProtoRequest, convertToProtoTimeStamp} from "../../util/util";
+import {buildProtoRequest} from "../../util/util";
 
 export default async function handler(req, res) {
     return new Promise((resolve, reject) => {

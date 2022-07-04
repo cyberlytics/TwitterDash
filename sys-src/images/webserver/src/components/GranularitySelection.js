@@ -4,7 +4,7 @@ import Selection from "./Selection";
 export default class GranularitySelection extends React.Component {
     constructor(props) {
         super(props);
-        this.granularities = ["minute", "hour", "day"];
+        this.granularities = props.excludeMinute ? ["hour", "day"] : ["minute", "hour", "day"];
     }
 
     render() {
