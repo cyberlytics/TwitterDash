@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
 import Navigation from "../components/Navigation";
 import TrendHistoryChart from "../components/TrendHistoryChart";
 import {Autocomplete} from "@mui/material";
@@ -104,8 +103,8 @@ export default withRouter(class TrendHistory extends React.Component {
 
     render() {
         return (
-            <div className={styles.container}>
-                <main className={styles.main}>
+            <div className={"container"}>
+                <div className={"main"}>
                     <Navigation active={"Trend History"}></Navigation>
                     <div className="content">
                         <div className={"contentRow"}>
@@ -128,7 +127,7 @@ export default withRouter(class TrendHistory extends React.Component {
                             <TrendHistoryChart trendName={this.state.selected_hashtag_graph} start_date={this.state.start_date} end_date={this.state.end_date} country={this.state.country}></TrendHistoryChart>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
         )
     }
