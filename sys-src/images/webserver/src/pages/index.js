@@ -72,16 +72,14 @@ export default class Home extends React.Component {
                             Once again, it is possible to define a start and end date.
                         </p>
                         <h2>Developers of Twitter Dash</h2>
-                        <p>
-                            <ul>
-                                <li>Hahn Bastian</li>
-                                <li>Kleber Martin</li>
-                                <li>Klier Andreas</li>
-                                <li>Kreussel Lukas</li>
-                                <li>Paris Felix</li>
-                                <li>Ziegler Andreas</li>
-                            </ul>
-                        </p>
+                        <ul>
+                            <li>Hahn Bastian</li>
+                            <li>Kleber Martin</li>
+                            <li>Klier Andreas</li>
+                            <li>Kreussel Lukas</li>
+                            <li>Paris Felix</li>
+                            <li>Ziegler Andreas</li>
+                        </ul>
                     </div>
                 </div>
             </div>
