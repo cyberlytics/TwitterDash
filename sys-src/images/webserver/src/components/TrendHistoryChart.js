@@ -77,9 +77,11 @@ export default class SentimentHistoryChart extends React.Component {
         });
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
-        json_promise.then((data) => this.setState({
-            data: data
-        }));
+        json_promise.then((data) => {
+            if (!_.isEmpty(data)) {
+                this.setState({data})
+            }
+        });
     }
 
     componentDidUpdate(prevProps) {
@@ -92,6 +94,7 @@ export default class SentimentHistoryChart extends React.Component {
 
     render() {
         if (!this.props.trendName) return <p>Please enter your search term ...</p>
+        if (!this.props.country) return <p>Please select a country ...</p>
         if (!this.state.data) return <p>Hang on ...</p>
 
         let displayData = this.state.data;

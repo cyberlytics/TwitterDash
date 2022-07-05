@@ -1,18 +1,18 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import {Button} from "@mui/material";
+import React from "react";
+import { DataGrid } from '@mui/x-data-grid';
+import { withRouter } from 'next/router'
 
-const _ = require("lodash");
+import _ from "lodash";
 
 const cols = [
-    { field: "placement", headerName: "Placement", flex: 1},
+    { field: "placement", headerName: "Placement", flex: 1, cellClassName: "clickableCell"},
     { field: "trendName", headerName: "Trend", sortable: false, flex: 1},
-    { field: "sentiment", headerName: "Sentiment", flex: 1},
-    { field: "tweetVolume24", headerName: "Tweet Volume 24h", flex: 1}
+    { field: "sentiment", headerName: "Sentiment", flex: 1, cellClassName: "clickableCell"},
+    { field: "tweetVolume24", headerName: "Tweet Volume 24h", flex: 1, cellClassName: "clickableCell"}
 ]
 
 
-export default class Trends extends React.Component {
+export default withRouter(class Trends extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,6 +21,35 @@ export default class Trends extends React.Component {
 
         this.processData = this.processData.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.onCellClick = this.onCellClick.bind(this);
+    }
+
+    onCellClick(params) {
+        switch(params.field) {
+            case "sentiment":
+                this.props.router.push({
+                    pathname: "/SentimentHistory",
+                    query: {trendName: params.row.trendName}
+                });
+                break;
+            case "placement":
+                this.props.router.push({
+                    pathname: "/TrendHistory",
+                    query: {
+                        trendName: params.row.trendName,
+                        country: this.props.country
+                    }
+                });
+                break;
+            case "tweetVolume24":
+                this.props.router.push({
+                    pathname: "/TweetCounts",
+                    query: {
+                        trendName: params.row.trendName
+                    }
+                });
+                break;
+        }
     }
 
     async processData(data) {
@@ -55,7 +84,9 @@ export default class Trends extends React.Component {
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
         json_promise.then((data) => {
-            this.processData(data);
+            if (!_.isEmpty(data)) {
+                this.processData(data);
+            }
         });
     }
 
@@ -70,17 +101,19 @@ export default class Trends extends React.Component {
     }
 
     render() {
-        if (!this.state.data) return <p>No data!</p>
+        if (!this.state.data) return <p>Hang on ...</p>
         return (
             <div className={"tableWrapper"}>
                 <DataGrid
                     rows={this.state.data}
                     columns={cols}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
+                    pageSize={8}
+                    rowsPerPageOptions={[8]}
+                    onCellClick={this.onCellClick}
                     autoHeight
+                    disableSelectionOnClick
                 />
             </div>
         );
     }
-}
+})

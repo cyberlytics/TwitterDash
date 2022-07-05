@@ -1,6 +1,6 @@
-import React, { Fragment } from "react";
-import {Autocomplete, TextField} from "@mui/material";
+import React from "react";
 import Selection from "./Selection";
+import _ from "lodash";
 
 export default class CountrySelection extends React.Component {
     constructor(props) {
@@ -15,7 +15,11 @@ export default class CountrySelection extends React.Component {
         let fetch_promise = fetch(query);
         let json_promise = fetch_promise.then((res) => res.json())
         json_promise.then((data) => {
-            this.setState({availableCountries: data})
+            if (!_.isEmpty(data)) {
+                this.setState({
+                    availableCountries: data
+                })
+            }
         });
     }
 
@@ -26,7 +30,7 @@ export default class CountrySelection extends React.Component {
     render() {
         if (this.state.availableCountries.length == 0) { return (<></>); }
         return (
-            <Selection label="Country" onChange={this.props.onChange} defaultValue="Germany" raw_options={this.state.availableCountries}></Selection>
+            <Selection label="Country" onChange={this.props.onChange} defaultValue={this.props.defaultValue} raw_options={this.state.availableCountries}></Selection>
         );
     }
 }
