@@ -35,7 +35,7 @@ builder.Services.AddTransient<ITwitterTrendsRepository>((_) =>
     new TwitterTrendsRepository(
         client
         .GetDatabase("TwitterDash")
-        .GetCollection<TwitterTrends>("Trends")));
+        .GetCollection<TwitterTrends>("Trends"), new woeid()));
 
 builder.Services.AddTransient<ISentimentRepository>((_) =>
     new SentimentRepository(

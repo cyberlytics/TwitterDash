@@ -36,7 +36,7 @@ namespace DatabaseService.Tests
             trendCollection = database.GetCollection<TwitterTrends>("TrendsTest");
             sentimentCollection = database.GetCollection<Sentiment>("SentimentTest");
 
-            trendRepository = new TwitterTrendsRepository(trendCollection);
+            trendRepository = new TwitterTrendsRepository(trendCollection, new woeid());
             sentimentRepository = new SentimentRepository(sentimentCollection);
             WOEID = new woeid();
         }

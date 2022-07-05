@@ -28,7 +28,7 @@ namespace DatabaseService.Tests
             IMongoDatabase database = client.GetDatabase("TwitterDashTest");
             collection = database.GetCollection<TwitterTrends>("TrendsTest");
 
-            repository = new TwitterTrendsRepository(collection);
+            repository = new TwitterTrendsRepository(collection, new woeid());
         }
 
         [TearDown]
@@ -140,7 +140,7 @@ namespace DatabaseService.Tests
                 },
             };
 
-            var actual = await repository.GetRecentTrends(null, null, "");
+            var actual = await repository.GetRecentTrends(null, null, "","");
 
             Assert.That(actual, Has.Exactly(0).Items);
         }
@@ -150,6 +150,7 @@ namespace DatabaseService.Tests
         {
             var trends = new List<TwitterTrends>() {
                 new TwitterTrends() {
+                    Country = 23424829,
                     Trends = new() {
                         new() { name = "#bigdata" },
                         new() { name = "#cloudcomputing" },
@@ -157,6 +158,7 @@ namespace DatabaseService.Tests
                 },
                 new TwitterTrends()
                 {
+                    Country = 23424829,
                     Trends = new() {
                             new() { name = "#unit" },
                             new() { name = "#testing" },
@@ -171,7 +173,7 @@ namespace DatabaseService.Tests
                 await repository.StoreTrends(trend);
             }
 
-            var result = await repository.GetRecentTrends(null, null, resName);
+            var result = await repository.GetRecentTrends(null, null, resName, "Germany");
 
             Assert.Multiple(() =>
             {
@@ -188,6 +190,7 @@ namespace DatabaseService.Tests
             
             var trends = new List<TwitterTrends>() {
                 new TwitterTrends() {
+                    Country = 23424829,
                     DateTime = new DateTime(2022, 10, 20, 0, 0, 0),
                     Trends = new() {
                         new() { name = "#testing" },
@@ -195,6 +198,7 @@ namespace DatabaseService.Tests
                 },
                 new TwitterTrends()
                 {
+                    Country = 23424829,
                     DateTime = new DateTime(2022, 11, 20, 0, 0, 0),
                     Trends = new() {
                             new() { name = "#testing" },
@@ -202,6 +206,7 @@ namespace DatabaseService.Tests
                 },
                 new TwitterTrends()
                 {
+                    Country = 23424829,
                     DateTime = new DateTime(2022, 12, 20, 0, 0, 0),
                     Trends = new() {
                             new() { name = "#testing" },
@@ -216,7 +221,7 @@ namespace DatabaseService.Tests
                 await repository.StoreTrends(trend);
             }
 
-            var result = await repository.GetRecentTrends(startTime, endTime, resName);
+            var result = await repository.GetRecentTrends(startTime, endTime, resName,"Germany");
 
             Assert.Multiple(() =>
             {

@@ -128,9 +128,9 @@ namespace DatabaseService.Tests
             
         }
 
-        [TestCase("Brazil", "#test1", 2)]
-        [TestCase("Brazil", "#test2", 1)]
-        [TestCase("Brazil", "#testNope", 0)]
+        [TestCase("Brazil", "#test1", 0)]
+        [TestCase("Mexico", "#test2", 1)]
+        [TestCase("Brazil", "#test5", 1)]
         [TestCase("Lummerland", "#Jim Knopf", 0)]
         public async Task GetRecentTrends_Should_Return_Recent_Trends(string Country, string Hastag, int count)
         {
@@ -152,7 +152,7 @@ namespace DatabaseService.Tests
             });
         }
 
-        [TestCase("01/02/2020", "01/02/2022", 2)]
+        [TestCase("01/02/2020", "01/02/2022", 1)]
         [TestCase("10/10/2021", "01/02/2022", 1)]
 
         public async Task GetRecentTrends_of_Timeframe_Should_Return_Recent_Trends(string startDate, string endDate, int count)
@@ -162,7 +162,7 @@ namespace DatabaseService.Tests
             var request = new Twitterdash.GetRecentTrendsRequest
             {
                 Country = "Brazil",
-                Hashtag = "#test1",
+                Hashtag = "#test5",
                 StartDate = Timestamp.FromDateTime(Convert.ToDateTime(startDate).ToUniversalTime()),
                 EndDate = Timestamp.FromDateTime(Convert.ToDateTime(endDate).ToUniversalTime()),
             };
