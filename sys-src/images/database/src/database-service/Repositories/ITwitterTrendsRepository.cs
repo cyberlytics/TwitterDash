@@ -7,6 +7,6 @@ namespace DatabaseService.Repositories
         Task StoreTrends(TwitterTrends trends);
         Task<List<int>> GetAvailableCountries();
         Task<TwitterTrends> GetCurrentTrends(int? woeid);
-        Task<List<TwitterTrends>> GetRecentTrends(DateTime? start, DateTime? end, string hashtag);
+        Task<List<TwitterTrends>> GetRecentTrends(DateTime? start, DateTime? end, string hashtag, string country);
     }
 }

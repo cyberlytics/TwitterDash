@@ -7,10 +7,12 @@ namespace DatabaseService.Repositories
     public class TwitterTrendsRepository : ITwitterTrendsRepository
     {
         private IMongoCollection<TwitterTrends> collection;
+        private readonly woeid woeid;
 
-        public TwitterTrendsRepository(IMongoCollection<TwitterTrends> collection)
+        public TwitterTrendsRepository(IMongoCollection<TwitterTrends> collection,woeid woeid)
         {
             this.collection = collection;
+            this.woeid=woeid;
         }
 
         public async Task<List<int>> GetAvailableCountries()
@@ -32,22 +34,24 @@ namespace DatabaseService.Repositories
             }
         }
 
-        public async Task<List<TwitterTrends>> GetRecentTrends(DateTime? startDate, DateTime? endDate, string hashtag)
+        public async Task<List<TwitterTrends>> GetRecentTrends(DateTime? startDate, DateTime? endDate, string hashtag,string country)
         {
             List<TwitterTrends> result = new List<TwitterTrends>();
             if (startDate != null && endDate != null && startDate < endDate)
             {
                 result =  await collection.Find(x =>
-                x.DateTime < endDate
-                && x.DateTime > startDate
-                && x.Trends.Any(y => y.name == hashtag))
-                .ToListAsync();
+                x.DateTime <= endDate
+                && x.DateTime >= startDate
+                && x.Country == woeid.getWOEID(country)
+                && x.Trends.Any(y => y.name == hashtag)
+                ).ToListAsync();
             }
             else
             {
                 result =  await collection.Find(x =>
-                 x.Trends.Any(y => y.name == hashtag))
-                .ToListAsync();
+                 x.Country == woeid.getWOEID(country)
+                 && x.Trends.Any(y => y.name == hashtag)
+                 ).ToListAsync();
             }
             for (int i = 0; i < result.Count; i++)
             {
